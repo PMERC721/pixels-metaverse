@@ -1,0 +1,35 @@
+{
+  "rules": {
+    "no-useless-constructor": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/explicit-member-accessibility": "off",
+    "@typescript-eslint/explicit-function-return-type": [
+      "off",
+      {
+        "allowExpressions": true,
+        "allowTypedFunctionExpressions": true
+      }
+    ],
+    "@typescript-eslint/interface-name-prefix": 0,
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-use-before-define": "off",
+    "@typescript-eslint/no-parameter-properties": 0,
+    "@typescript-eslint/camelcase": [
+      "off",
+      {
+        "properties": "always"
+      }
+    ],
+    "no-console": "off",
+    "eqeqeq": [
+      "warn",
+      "always"
+    ],
+    "prettier/prettier": "off",
+    "@typescript-eslint/indent": "off",
+    "no-eval": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "@typescript-eslint/no-array-constructor": "off"
+  },
+  "extends": ["react-app"]
+}

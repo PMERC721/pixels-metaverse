@@ -1,0 +1,79 @@
+{
+  "name": "pixels-metaverse",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@ant-design/icons": "^4.6.4",
+    "@craco/craco": "^6.2.0",
+    "@openzeppelin/contracts": "^4.3.1",
+    "@tailwindcss/postcss7-compat": "^2.2.8",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "@truffle/hdwallet-provider": "1.2.3",
+    "@types/jest": "^27.0.1",
+    "@types/lodash": "^4.14.172",
+    "@types/node": "^16.7.2",
+    "@types/react": "^17.0.19",
+    "@types/react-dom": "^17.0.9",
+    "@types/react-router-dom": "^5.1.8",
+    "@walletconnect/web3-provider": "^1.6.5",
+    "antd": "^4.16.13",
+    "authereum": "^0.1.14",
+    "bignumber.js": "^9.0.1",
+    "bitski": "^0.11.0-beta.4",
+    "blockies-ts": "^1.0.0",
+    "ethereumjs-util": "^7.0.7",
+    "i18next": "^21.3.3",
+    "lodash": "^4.17.21",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-i18next": "^11.12.0",
+    "react-pixels-metaverse": "^0.0.5",
+    "react-router-dom": "^5.2.1",
+    "react-scripts": "4.0.3",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat",
+    "typescript": "^4.3.5",
+    "web-vitals": "^1.0.1",
+    "web3": "^1.5.2",
+    "web3modal": "^1.9.4"
+  },
+  "scripts": {
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "deploy": "bash deploy.sh",
+    "push": "git add . && git commit -m '人生何曾驻旧足，前端处处是新旅' && git push",
+    "converted": "truffle-contract-json-converted-html"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^9",
+    "babel-plugin-import": "^1.13.3",
+    "contract-json-converted-html": "^0.0.10",
+    "craco-less": "^1.20.0",
+    "craco-plugin-react-hot-reload": "^0.1.0",
+    "eosjs": "^22.1.0",
+    "i18next-browser-languagedetector": "^6.1.2",
+    "postcss": "^7",
+    "postcss-cli": "^8.3.1",
+    "react-hot-loader": "^4.13.0"
+  }
+}
