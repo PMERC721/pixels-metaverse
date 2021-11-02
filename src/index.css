@@ -106,28 +106,6 @@ input{
   color: rgba(255, 255, 255, 0.7) !important
 }
 
-/* .ant-btn{
-  color: rgba(255, 255, 255, 0.7) !important;
-  background-color: #bfbfbf !important;
-  border: none !important;
-}
-
-.ant-btn-primary{
-  background-color: #EF4444 !important;
-} *//* 
-
-.ant-modal-content{
-
-  background-color: #bfbfbf !important;
-  border: none !important;
-}
-
-.ant-modal-header{
-  background-color: #bfbfbf !important;
-
-  border: none !important;
-} */
-
 #loading{
   background: rgba(0, 0, 0, 0.2);
   height: 100%;

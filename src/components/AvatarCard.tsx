@@ -7,7 +7,7 @@ import {
 } from "../pixels-metaverse";
 import { useLocation } from "react-router-dom";
 import { useUserInfo } from "./UserProvider";
-import { fetchBuyGoods, fetchOutfit, useRequest } from "../helpers/api";
+import { fetchBuyGoods, fetchOutfit, useRequest } from "../hook/api";
 import { categoryData } from "../pages/produced/components/Submit";
 
 export const AvatarCard = ({ item, type }: {

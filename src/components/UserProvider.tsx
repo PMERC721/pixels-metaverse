@@ -3,7 +3,7 @@ import * as React from "react";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { createContext, Dispatch } from "react";
 import { fetchUserInfo, usePixelsMetaverseContract } from "../pixels-metaverse";
-import { fetchGetGoodsIdList, useRequest } from "../helpers/api";
+import { fetchGetGoodsIdList, useRequest } from "../hook/api";
 
 export const UserInfoContext = createContext(
   {} as {

@@ -1,17 +1,10 @@
-import './App.css';
-import { HashRouter, Switch, Route, useLocation } from "react-router-dom";
-import { Website } from './pages/home';
-import { PixelsMetaverse } from './pages/play';
-import { Produced } from './pages/produced';
-import { useWeb3js, Web3jsProvider } from './eos-api/hook';
-import bgSvg from "./assets/image/bg.svg"
+import { HashRouter, useLocation } from "react-router-dom";
+import { useWeb3js, Web3jsProvider } from './hook/web3';
 import { Loading, LoadingProvider } from './components/Loading';
 import { UserInfoProvider } from './components/UserProvider';
-import { PersonCenter } from './pages/person-center';
-import { Mall } from './pages/mall';
 import { PixelsMetaverseContextProvider } from './pixels-metaverse';
 import { Header } from './components/Header';
-import React from 'react';
+import bgSvg from "./assets/image/bg.svg"
 import { Routes } from './routes';
 
 declare global {

@@ -1,7 +1,7 @@
 import { isEmpty } from "lodash";
 import { Button, message } from "antd";
 import { AppstoreOutlined } from "@ant-design/icons";
-import { fetchRegister, fetchSetConfig, useRequest } from "../../../helpers/api";
+import { fetchRegister, fetchSetConfig, useRequest } from "../../../hook/api";
 import { useLocation } from "react-router";
 import { useUserInfo } from "../../../components/UserProvider";
 import { fetchUserInfo, PixelsMetaverseHandleImg, usePixelsMetaverseContract, usePixelsMetaverseHandleImg } from "../../../pixels-metaverse";

@@ -4,7 +4,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Dictionary, isEmpty, keys, map } from 'lodash';
 import { useUserInfo } from '../../../components/UserProvider';
 import { fetchUserInfo, usePixelsMetaverseContract, usePixelsMetaverseHandleImg } from '../../../pixels-metaverse';
-import { fetchApplication, fetchGetGoodsIdList, fetchPostGoods, fetchRegister, useRequest } from '../../../helpers/api';
+import { fetchApplication, fetchGetGoodsIdList, fetchPostGoods, fetchRegister, useRequest } from '../../../hook/api';
 const { Option } = Select;
 
 const Label = ({ children }: { children: ReactNode }) => {

@@ -1,7 +1,30 @@
+import React, { createContext, ReactNode, useState, useContext, Dispatch, useCallback } from "react";
 import Web3 from "web3";
 
-export const getWeb3 = () =>
-  new Promise((resolve, reject) => {
+export const Web3jsContext = createContext(
+  {} as {
+    accounts: any;
+    contract: any;
+    setAccounts: Dispatch<React.SetStateAction<any>>;
+    setContract: Dispatch<React.SetStateAction<any>>;
+  },
+);
+
+export const useWeb3js = () => useContext(Web3jsContext);
+
+export const Web3jsProvider = ({ children }: { children: ReactNode }) => {
+  const [accounts, setAccounts] = useState(null);
+  const [contract, setContract] = useState(null);
+
+  return (
+    <Web3jsContext.Provider value={{ accounts, contract, setAccounts, setContract }}>
+      {children}
+    </Web3jsContext.Provider>
+  )
+}
+
+export const useMyWeb3 = () => {
+  return useCallback(() => new Promise<Web3>((resolve, reject) => {
     // Wait for loading completion to avoid race conditions with web3 injection timing.
     window.addEventListener("load", async () => {
       // Modern dapp browsers...
@@ -33,6 +56,5 @@ export const getWeb3 = () =>
         resolve(web3);
       }
     });
-  });
-
-export default getWeb3;
+  }), [])
+}

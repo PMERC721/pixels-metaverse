@@ -1,7 +1,7 @@
 import { find } from "lodash";
 import { message } from "antd";
 import { useUserInfo } from "../../../components/UserProvider";
-import { fetchBuyGoods, useRequest } from "../../../helpers/api";
+import { fetchBuyGoods, useRequest } from "../../../hook/api";
 import { categoryData } from "../../produced/components/Submit";
 import { useHistory } from "react-router";
 import { PixelsMetaverseImgByPositionData } from "../../../pixels-metaverse";

@@ -1,16 +1,15 @@
 import { useHistory } from "react-router";
 import { useLocation } from "react-router-dom";
-import { useWeb3js } from "../eos-api/hook";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Web3 from "web3";
 import Web3Modal from "web3modal";
-import { getWeb3 } from "../eos-api/getWeb3";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import Authereum from "authereum";
 import { Bitski } from "bitski";
 import { ellipseAddress, getChainData } from "../helpers/utilities";
 import { useTranslation } from "react-i18next"
 import { Button, Dropdown, Menu } from "antd";
+import { useWeb3js, useMyWeb3 } from "../hook/web3";
 import i18n from "i18next";
 
 interface IWeb3InfoProps {
@@ -83,6 +82,7 @@ const useGetWeb3Info = () => {
     networkId,
     web3Modal
   }, setWeb3Info] = useState<IWeb3InfoProps>({})
+  const getMyWeb3 = useMyWeb3()
 
   const resetApp = async () => {
     await web3Modal?.clearCachedProvider();
@@ -148,7 +148,7 @@ const useGetWeb3Info = () => {
       web3 = initWeb3(provider);
       chainId = await web3?.eth.getChainId();
     } catch (error) {
-      web3 = await getWeb3()
+      web3 = await getMyWeb3()
       chainId = await web3?.eth.getChainId();
     }
 
