@@ -36,7 +36,7 @@ export const Website = () => {
     <>
       <main className="mx-auto max-w-7xl px-4">
         <div className="sm:text-center lg:text-left lg:pt-40">
-          <h1 className="tracking-tight font-extrabold text-gray-200 sm:text-4xl" style={{ fontSize: "2.5em" }}>
+          <h1 className="tracking-tight font-extrabold text-gray-200 sm:text-4xl text-2xl">
             <p className="block md:mb-8" >欢迎来到，我的像素元宇宙！</p>
             <p className="font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-green-300 to-blue-500 animate-pulse">Hello! Pixels Metaverse!</p>
           </h1>
@@ -47,7 +47,7 @@ export const Website = () => {
           <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start lg:mt-12 text-2xl">
             <div className="rounded-md shadow transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
               <div className="cursorP w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white hover:text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
-                onClick={() => { history.push("app") }}>
+                onClick={() => history.push("app")}>
                 Get started
               </div>
             </div>

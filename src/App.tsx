@@ -10,7 +10,7 @@ import { UserInfoProvider } from './components/UserProvider';
 import { PersonCenter } from './pages/person-center';
 import { Mall } from './pages/mall';
 import { PixelsMetaverseContextProvider } from './pixels-metaverse';
-import Header from './components/Header';
+import { Header } from './components/Header';
 import React from 'react';
 import { Routes } from './routes';
 

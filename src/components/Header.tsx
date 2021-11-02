@@ -1,4 +1,3 @@
-import { transitions } from "../styles";
 import { useHistory } from "react-router";
 import { useLocation } from "react-router-dom";
 import { useWeb3js } from "../eos-api/hook";
@@ -11,7 +10,7 @@ import Authereum from "authereum";
 import { Bitski } from "bitski";
 import { ellipseAddress, getChainData } from "../helpers/utilities";
 import { useTranslation } from "react-i18next"
-import { Dropdown, Menu } from "antd";
+import { Button, Dropdown, Menu } from "antd";
 import i18n from "i18next";
 
 interface IWeb3InfoProps {
@@ -27,6 +26,7 @@ interface IWeb3InfoProps {
 const nav = [
   { label: "首页", path: "/app" },
   { label: "制作虚拟物品", path: "/produced" },
+  { label: "集市", path: "/mall" },
   { label: "个人中心", path: "/person-center" },
 ]
 
@@ -187,7 +187,7 @@ const useGetWeb3Info = () => {
   }
 }
 
-const Header = () => {
+export const Header = () => {
   const { connected, address, chainId, killSession, toConnect, web3, networkId } = useGetWeb3Info();
   const { t } = useTranslation()
   const chainData = chainId ? getChainData(chainId) : null;
@@ -206,92 +206,45 @@ const Header = () => {
   }, [web3, networkId, address])
 
   return (
-    <div className="flex px-4 items-center justify-end text-l fixed w-full header">
-      <div style={{
-        marginBottom: "1px",
-        height: "70px",
-        display: "flex",
-        alignItems: "center",
-        flex: 1,
-        justifyContent: "space-between"
-      }}>
-        <div className="text-2xl cursor-pointer" onClick={() => { history.push("/") }}>像素元宇宙，从头开始</div>
-        <div className="flex justify-around items-center w-96">
-          {nav.map(item => {
-            return <div key={item?.label} style={{ color: pathname === item?.path ? "#EF4444" : "rgba(225,225,225,.9)" }} className="cursor-pointer hover:text-red-500"
-              onClick={() => { history.push(item?.path) }}>{item?.label}</div>
-          })}
+    <div className="flex px-4 items-center justify-between text-l fixed w-full h-16 bg-white bg-opacity-10 text-white text-opacity-70">
+      <div className="text-2xl cursor-pointer" onClick={() => history.push("/")}>像素元宇宙</div>
+      <div className="flex justify-around items-center w-96">
+        {nav.map(item => {
+          return (<div
+            key={item?.label}
+            style={{ color: pathname === item?.path ? "#EF4444" : "rgba(225,225,225,.9)" }}
+            className="cursor-pointer hover:text-red-500"
+            onClick={() => history.push(item?.path)}
+          >{item?.label}</div>)
+        })}
+      </div>
+      <div className="flex justify-end">
+        <div className="mr-4 flex items-center bg-white bg-opacity-10" style={{ borderRadius: 20 }}>
+          <input
+            className="px-4 bg-transparent outline-none focus:outline-none w-60"
+            placeholder="请输入以太坊钱包地址"
+            onChange={(e) => setInputStr(e.target.value)}
+          />
+          <Button type="primary" size="large" className="w-24"
+            style={{ borderRadius: 0, borderTopRightRadius: 20, borderBottomRightRadius: 20 }}
+            onClick={() => history.push(`/app${inputStr ? "?address=" + inputStr : ""}`)}
+          >查询</Button>
         </div>
-        <div className="flex justify-end" style={{ width: 500 }}>
-          <div className="mr-4 flex items-center search-box">
-            <input
-              className="py-2 pl-4 mr-2 bg-transparent search"
-              placeholder="请输入以太坊钱包地址"
-              onChange={(e) => { setInputStr(e.target.value) }}
-            />
-            <div className="flex items-center justify-center h-full w-20 bg-red-500 cursor-pointer hover:text-white"
-              style={{ borderTopRightRadius: 20, borderBottomRightRadius: 20 }}
-              onClick={() => {
-                history.push(`/app${inputStr ? "?address=" + inputStr : ""}`)
-              }}>查询</div>
-          </div>
 
-          {address && chainData ? (
-            <div className="bg-black contect px-4 rounded">
-              <div style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                position: "relative",
-                fontWeight: 500
-              }}>
-                <div
-                  style={{
-                    transition: transitions.base,
-                    fontWeight: "bold",
-                    margin: connected ? "0px auto 1em" : "0"
-                  }}>{ellipseAddress(address)}</div>
-                <div
-                  style={{
-                    transition: transitions.button,
-                    fontSize: "12px",
-                    fontFamily: "monospace",
-                    position: "absolute",
-                    top: "20px",
-                    opacity: connected ? 1 : 0,
-                    visibility: connected ? "visible" : "hidden",
-                    pointerEvents: connected ? "auto" : "none",
-                    left: 0
-                  }}>
-                  {chainData.name}
-                </div>
-                <div style={{
-                  transition: transitions.button,
-                  fontSize: "12px",
-                  fontFamily: "monospace",
-                  position: "absolute",
-                  right: 0,
-                  top: "20px",
-                  opacity: 0.7,
-                  visibility: connected ? "visible" : "hidden",
-                  pointerEvents: connected ? "auto" : "none",
-                  cursor: "pointer"
-                }} onClick={killSession}>
-                  {"断开连接"}
-                </div>
-              </div>
-            </div>)
-            : <div className="flex items-center justify-center rounded cursor-pointer contect w-24" style={{ height: 40 }} onClick={() => {
-              toConnect()
-            }} >连接钱包</div>
-          }
-          <Dropdown overlay={menu} placement="bottomLeft">
-            <div className="flex items-center justify-center rounded cursor-pointer contect ml-4" style={{ height: 40, minWidth: 80, marginTop: -1 }}>{t("home.content")}</div>
-          </Dropdown>
-        </div>
+        {address && chainData && connected ? (
+          <div className="px-4 rounded bg-white bg-opacity-10 relative w-48">
+            <div className="font-bold">{ellipseAddress(address, 10)}</div>
+            <div className="flex justify-between text-xs">
+              {chainData.name}<span className="cursor-pointer hover:text-white" onClick={killSession}>断开连接</span>
+            </div>
+          </div>)
+          : <div className="flex items-center justify-center rounded cursor-pointer bg-white bg-opacity-10 w-24 hover:text-white"
+            onClick={toConnect}>连接钱包</div>
+        }
+        <Dropdown overlay={menu} placement="bottomLeft">
+          <div className="flex items-center justify-center rounded cursor-pointer bg-white bg-opacity-10 w-24 hover:text-white ml-4">{t("home.content")}</div>
+        </Dropdown>
       </div>
     </div >
   );
 };
-
-export default Header;
