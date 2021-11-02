@@ -1,49 +1,54 @@
-# 像素元宇宙
+[中文](https://github.com/PixelsMetaverse/pixels-metaverse/blob/main/README-ZH.md) / English
 
-## 像素元宇宙简介：
-像素元宇宙是一个百分百由玩家自主绘制的世界，在元宇宙中，每个居民都可以将现实中的一切进行复制和克隆。宇宙居民不受随机数的约束，可以自主决定自己的宇宙身份、外貌、装备以及资产等。宇宙中有各种身份和职能供居民选择，如他们可以选择医生、警察或者商人等等。作为医生，他可以改变居民的性别或者是样貌。作为商人，他可以制作眼镜、口罩、帽子等等产品进行出售。
+# Pixels Metaverse 
 
-## 像素元宇宙特点
+## Pixels Metaverse Introduction：
+Pixel Metaverse was born during the competition of the first Metaverse Training Camp held by the Pure White Matrix and Metaverse Foundation in early September, and was independently completed by [xiangzhengfeng](https://github.com/xiangzhengfeng) individuals over a period of 15 days and won the first place in the competition. The developer's personal energy was limited and he was left to the Pixels Metaverse team for development and maintenance.
 
-* 高度自治化: 像素元宇宙是一个高度自治且去中心化的，用户所有资产都是在链上，不可篡改和伪造。所有资产不存储于任何中心化的服务器，仅仅在区块链获取到数据后通过开源的前端UI组件即可绘制用户的区块链身份等信息，不与任何资源链接做绑定。
+The pixel universe is a world drawn 100 percent by the player, in which every resident can copy and clone everything in reality. Cosmic inhabitants are not bound by random numbers and can decide for themselves their cosmic identity, appearance, equipment and assets. There are various identities and functions in the universe for residents to choose from, such as the choice of doctors, policemen or businessmen. As a doctor, he can change the sex or appearance of the residents. As a businessman, he can make glasses, masks, hats and other products for sale.
 
-* 万物资产化: 像素元宇宙合约继承了ERC721标准的所有接口和功能，所有资产均可全链流通。宇宙中所有物品、器官、资产等都是ERC721标准的TOKEN，宇宙中的一切都进行了TOKEN化。
+## Pixels Metaverse Features
 
-* 资产乐高化: 用户可通过合约来重组配置自己，重组性特别强。商人制作的产品越精细，居民可组合性越强，宇宙越清晰越丰富，是真正的实现了NFT碎片化。
+* Highly autonomous: The pixel universe is a highly autonomous and decentralized, user-owned assets that are chained and cannot be tampered with or forged. All assets are not stored on any centralized server, and information such as the user's blockchain identity can be drawn through the open-source front-end UI component only after the blockchain has been acquired, and is not tied to any resource links.
 
-* 宇宙层级化: 像素元宇宙分为5个层级，每个层级都是一个独立的合约，所有资产又同处于一个ERC721合约。每个层级的居民有不同的行为和样式。如层次分明层宇宙的居民只有有跑跳等功能，而洞察秋毫层宇宙却可以进行竞技类游戏。宇宙可支持像素越细，宇宙功能则会越丰富。宇宙不断社会化，发展越趋近于现实世界。
+* Assetization of Everything: The Pixel Universe contract inherits all the interfaces and functions of the ERC721 standard, and all assets can be fully chained. All the objects, organs, assets, etc. in the universe are ERC721 standard TOKEN, everything in the universe has been TOKEN.
 
-## 像素元宇宙现状和未来
+* Lego: Users can reconfigure and configure themselves through contracts, which are particularly strong. The more refined the products produced by merchants, the more composable the residents are, the clearer and richer the universe, and the true realization of NFT fragmentation.
 
-当前元宇宙仅仅支持20px像素的绘制，也就是仅仅支持绘制头部信息，也寓意着像素元宇宙，从头开始。当前居民可以上传器官或物品图片，通过算法生成像素画。商家可通过对该像素画的复制来生成和发行该像素部位对应的资产。居民可购买该资产并决定是否配置资产到链上身份。
+* Cosmic hierarchy: The pixel universe is divided into five levels, each of which is a separate contract, and all assets are in the same ERC721 contract. Residents at each level have different behaviors and styles. Such as the hierarchical layer of the universe residents only have the function of running and jumping, and insight into the autumn milli-layer universe can play competitive games. The thinner the universe can support pixels, the richer its functions will be. The universe is constantly socialized, and its development is getting closer to the real world.
 
-当前宇宙初始有10000个原始居民名额，是为创世像素元宇宙居民。当宇宙升级到渺若烟云层时，也就是可绘制身体以及四肢时。原始居民可以选择自己的职业和性别或身份，在选择一定时间后可以通过男女配对来生育子女，每个子女成人后也可以通过配对生育他们的子女。宇宙总人口1024000，直到达到宇宙总人口便不
-再新增居民。
+## The status quo and future of the Pixels Metaverse 
 
-最高层级的元宇宙可以体验到大部分现实世界的生活，居民可通过木工身份来建造宇宙的房屋和家具等等，而出租车司机可以通过自身携带的属性将居民快速的送往目的地，而没有交通工具的居民仅仅只能花费更多的时间和精力。居民可以体验生老病死、富贵美丑等，满足你内心深处对于自己理想身份的所有幻想。
+The current metacosm supports only 20px pixel drawing, that is, only the drawing of head information, which also implies the pixel universe, starting from scratch. Current residents can upload images of organs or objects and generate pixel paintings using algorithms. Merchants can generate and distribute assets corresponding to that pixel site by copying the pixel painting. Residents can purchase the asset and decide whether to allocate the asset to chain identity.
 
-未来宇宙的场景可以很丰富，这一切都是在所有居民共同作用下实现的。所以，加入像素元宇宙吧，让我们去创建自己的宇宙。在像素元宇宙的世界里，自由翱翔吧。
+The current universe initially had 10,000 primitive inhabitants, which were residents of the Genesis Pixel Universe. When the universe escalates into a cloud of smoke, it is when the body and limbs can be drawn. The original inhabitants can choose their occupation and gender or identity, and after a certain period of time they can have children through a pair of men and women, and each child can have children by pairing them. The total population of the universe is 1024,000, until the total population of the universe is reached
+Add new residents.
+
+The metacosm at the highest level can experience most real-world life, where residents can build houses and furniture through carpentry, and so on, while taxi drivers can quickly get residents to their destinations without transportation, while residents without transportation can only spend more time and energy. Residents can experience the old and the sick, rich and ugly, and so on, to satisfy your innermost fantasy of their ideal identity.
+
+The scenes of the future universe can be abundant, all of which are realized by the joint action of all the inhabitants. So, join the pixel universe, let's create our own universe. In the world of the pixel universe, fly freely.
 
 
-## 项目启动
+
+## The project starts
 ```sh
 1. yarn
 2. yarn start
 ```
 
-> 当前项目基于truffle框架开发，如果仅仅只是查看项目可无需安装，若需重新部署合约，则需要安装truffle，具体可参考该[truffle框架文档](https://learnblockchain.cn/docs/truffle/index.html)
+> The current project is based on the truffle framework development, if just looking at the project does not require installation, if you need to redeploy the contract, you need to install truffle, specifically refer to [the truffle framework documentation](https://learnblockchain.cn/docs/truffle/index.html)
 
-> 合约部署后需要设置721合约token的发行者，可自行编写代码调用接口，或者是安装 [contract-json-converted-html](https://github.com/xiangzhengfeng/truffle-contract-json-converted-html) npm包，将truffle生成的智能合约json文件直接转换成html文件，可以自动生成可视化的页面进行调用和查看数据。
+> After the contract is deployed, the publisher of the 721 contract token needs to be set up, and can write the code to invoke the interface, or install it [contract-json-converted-html](https://github.com/xiangzhengfeng/truffle-contract-json-converted-html) The npm package, which converts the smart contract json file generated by truffle directly into an html file, automatically generates visual pages to call and view data.
 
 
 ## react-pixels-metaverse
-项目中将所有绘制进行了封装和抽离，任何项目方或网站都可以安装 [react-pixels-metaverse](https://github.com/PixelsMetaverse/react-pixels-metaverse) 该npm包，并在自己的项目中引入UI组件，传入用户地址或身份数据即可生成他的像素元宇宙身份图案。
+All drawings are encapsulated and pulled out of the project, and any project party or website can be installed [react-pixels-metaverse](https://github.com/PixelsMetaverse/react-pixels-metaverse) 
+The npm package, and the introduction of UI components in its own project, passe in the user's address or identity data to generate his pixel universe identity pattern.
 
+## The current task
+1. Redesign the project structure and refocus the project, separating transaction and circulation functions such as NFT and economic models to ensure that the project is operating in compliance.
+2. Optimize the contract as a whole, add some fields, and remove some code or variables that don't need to be chained, and optimize the contract as a whole to ensure a significant reduction in gas consumption.
 
-## 当前任务
-1. 因参赛时间紧，故使用了web3modal，然而他的css样式与项目本身的tailwind差异较大，所以是重新编写相关代码。
-2. 对合约进行优化，增加部分字段以及移除某些无需上链的代码或变量，对合约整体进行一次优化，确保gas消耗有较大的降低。
-
-## 下一步计划
-1. 对项目整体进行优化，使其兼容移动端网页
-2. 优化加解密数据算法，使其gas消耗最小化
+## Next plan
+1. Optimize the overall project to be compatible with mobile web pages
+2. Optimize the decryption data algorithm to minimize gas consumption
