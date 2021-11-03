@@ -35,7 +35,7 @@ export const AvatarCard = ({ item, type }: {
 
   return (
     <div
-      key={item?.id + accounts?.newworkId}
+      key={item?.id + accounts?.networkId}
       className="mt-2 item-avatar p-2 flex justify-between border-gray-500 border-b"
     >
       <PixelsMetaverseImgByPositionData

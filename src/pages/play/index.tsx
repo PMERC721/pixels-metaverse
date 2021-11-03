@@ -18,7 +18,7 @@ export const PixelsMetaverse = () => {
   const { goodsList, userInfo, goodsId } = useUserInfo()
   const convertedPostion = useConvertedPostion()
   const a = useParams()
-  console.log(a)
+  //console.log(a)
 
   /* 
   

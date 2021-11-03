@@ -3,21 +3,18 @@ import Web3 from "web3";
 
 export const Web3jsContext = createContext(
   {} as {
-    accounts: any;
-    contract: any;
-    setAccounts: Dispatch<React.SetStateAction<any>>;
-    setContract: Dispatch<React.SetStateAction<any>>;
+    web3?: Web3;
+    setWeb3: Dispatch<React.SetStateAction<Web3 | undefined>>;
   },
 );
 
 export const useWeb3js = () => useContext(Web3jsContext);
 
 export const Web3jsProvider = ({ children }: { children: ReactNode }) => {
-  const [accounts, setAccounts] = useState(null);
-  const [contract, setContract] = useState(null);
+  const [web3, setWeb3] = useState<Web3>();
 
   return (
-    <Web3jsContext.Provider value={{ accounts, contract, setAccounts, setContract }}>
+    <Web3jsContext.Provider value={{ web3, setWeb3 }}>
       {children}
     </Web3jsContext.Provider>
   )

@@ -36,9 +36,9 @@ const menu = () => {
 
   return (
     <Menu>
-      <Menu.Item onClick={() => changeLanguage("cn")}>简体</Menu.Item>
-      <Menu.Item onClick={() => changeLanguage("hk")}>繁体</Menu.Item>
-      <Menu.Item onClick={() => changeLanguage("en")}>英文</Menu.Item>
+      <Menu.Item key="cd" onClick={() => changeLanguage("cn")}>简体</Menu.Item>
+      <Menu.Item key="hk" onClick={() => changeLanguage("hk")}>繁体</Menu.Item>
+      <Menu.Item key="en" onClick={() => changeLanguage("en")}>英文</Menu.Item>
     </Menu>
   )
 }
@@ -194,16 +194,12 @@ export const Header = () => {
   const history = useHistory()
   const [inputStr, setInputStr] = useState("")
   const { pathname } = useLocation()
-  const { setAccounts } = useWeb3js()
+  const { setWeb3 } = useWeb3js()
 
   useEffect(() => {
     if (!web3) return
-    setAccounts({
-      web3,
-      networkId,
-      address
-    })
-  }, [web3, networkId, address])
+    setWeb3(web3)
+  }, [web3])
 
   return (
     <div className="flex px-4 items-center justify-between text-l fixed w-full h-16 bg-white bg-opacity-10 text-white text-opacity-70">
