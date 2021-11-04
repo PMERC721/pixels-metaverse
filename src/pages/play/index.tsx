@@ -8,11 +8,11 @@ import { useLocation, useParams } from "react-router-dom";
 import {
   PixelsMetaverseHandleImgProvider,
   useConvertedPostion,
-  usePixelsMetaverseContract
+  usePixelsMetaverse
 } from "../../pixels-metaverse";
 
 export const PixelsMetaverse = () => {
-  const { accounts } = usePixelsMetaverseContract()
+  const { accounts } = usePixelsMetaverse()
   const { search } = useLocation()
   const address = search ? search.split("=")[1] : accounts?.address
   const { goodsList, userInfo, goodsId } = useUserInfo()

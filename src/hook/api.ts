@@ -3,7 +3,7 @@ import { IMerchandise } from "../pages/produced/components/Submit";
 import { useLoading } from "../components/Loading";
 import { message } from "antd";
 import { cloneDeep, map } from "lodash";
-import { IArgContract, usePixelsMetaverseContract } from "../pixels-metaverse";
+import { IArgContract, usePixelsMetaverse } from "../pixels-metaverse";
 
 export interface IHandle {
   onSuccess?: () => void,
@@ -18,7 +18,7 @@ export const useRequest = (
   }: IHandle = {},
   delay: any[] = []
 ) => {
-  const { accounts, contract } = usePixelsMetaverseContract()
+  const { accounts, contract } = usePixelsMetaverse()
   const { closeDelayLoading, openLoading, closeLoading } = useLoading()
 
   return useCallback(async (arg?: any) => {

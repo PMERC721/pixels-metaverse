@@ -142,12 +142,10 @@ const useGetWeb3Info = () => {
 
   const toConnect = async () => {
     const provider = await web3Modal?.connect();
-    console.log(provider)
     let web3: Web3, chainId: number;
     try {
       await subscribeProvider(provider);
       web3 = initWeb3(provider);
-      console.log(web3?.currentProvider, web3?.currentProvider === provider)
       chainId = await web3?.eth.getChainId();
     } catch (error) {
       web3 = await getMyWeb3()

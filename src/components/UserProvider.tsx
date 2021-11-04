@@ -2,7 +2,7 @@ import { Dictionary, isEmpty } from "lodash";
 import * as React from "react";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { createContext, Dispatch } from "react";
-import { fetchUserInfo, usePixelsMetaverseContract } from "../pixels-metaverse";
+import { fetchUserInfo, usePixelsMetaverse } from "../pixels-metaverse";
 import { fetchGetGoodsIdList, useRequest } from "../hook/api";
 
 export const UserInfoContext = createContext(
@@ -22,7 +22,7 @@ export const UserInfoProvider = ({ children }: { children: ReactNode }) => {
   const [userInfo, setUserInfo] = useState<Dictionary<any>>({});
   const [goodsList, setGoodsList] = useState<any[]>([]);
   const [goodsId, setGoodsId] = useState<number | undefined>();
-  const { accounts, contract } = usePixelsMetaverseContract()
+  const { accounts, contract } = usePixelsMetaverse()
   const getUserInfo = useRequest(fetchUserInfo)
 
   useEffect(() => {

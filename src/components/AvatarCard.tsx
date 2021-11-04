@@ -2,7 +2,7 @@ import message from "antd/lib/message";
 import { cloneDeep, find } from "lodash";
 import {
   PixelsMetaverseImgByPositionData,
-  usePixelsMetaverseContract,
+  usePixelsMetaverse,
   usePixelsMetaverseHandleImg
 } from "../pixels-metaverse";
 import { useLocation } from "react-router-dom";
@@ -13,7 +13,7 @@ import { categoryData } from "../pages/produced/components/Submit";
 export const AvatarCard = ({ item, type }: {
   item: any, type: string
 }) => {
-  const { accounts } = usePixelsMetaverseContract()
+  const { accounts } = usePixelsMetaverse()
   const { setSelectList } = usePixelsMetaverseHandleImg()
   const { search } = useLocation()
   const address = search ? search.split("=")[1] : accounts?.address

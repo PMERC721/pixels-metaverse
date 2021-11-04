@@ -2,12 +2,12 @@ import React from "react"
 import { filter, isEmpty } from "lodash";
 import { useLocation } from "react-router";
 import { useUserInfo } from "../../components/UserProvider";
-import { PixelsMetaverseHandleImgProvider, usePixelsMetaverseContract, useGetPositionStr } from "../../pixels-metaverse";
+import { PixelsMetaverseHandleImgProvider, usePixelsMetaverse, useGetPositionStr } from "../../pixels-metaverse";
 import { BaseInfo } from "./components/BaseInfo";
 import { AssetsInfo } from "./components/AssetsInfo";
 
 export const PersonCenter = () => {
-  const { accounts } = usePixelsMetaverseContract()
+  const { accounts } = usePixelsMetaverse()
   const { goodsList, userInfo } = useUserInfo()
   const { search } = useLocation()
   const address = search ? search.split("=")[1] : accounts.address

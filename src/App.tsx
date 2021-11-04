@@ -23,7 +23,6 @@ declare global {
 export const Main = () => {
   const { pathname } = useLocation()
   const { web3 } = useWeb3js()
-  console.log(web3)
 
   return (
     <div className="relative bg-white overflow-hidden" style={{ minWidth: 1400, minHeight: 600 }}>

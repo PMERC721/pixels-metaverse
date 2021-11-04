@@ -3,7 +3,7 @@ import { Tooltip, Select, message, Modal, Button } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Dictionary, isEmpty, keys, map } from 'lodash';
 import { useUserInfo } from '../../../components/UserProvider';
-import { fetchUserInfo, usePixelsMetaverseContract, usePixelsMetaverseHandleImg } from '../../../pixels-metaverse';
+import { fetchUserInfo, usePixelsMetaverse, usePixelsMetaverseHandleImg } from '../../../pixels-metaverse';
 import { fetchApplication, fetchGetGoodsIdList, fetchPostGoods, fetchRegister, useRequest } from '../../../hook/api';
 const { Option } = Select;
 
@@ -94,7 +94,7 @@ export const Submit = () => {
   const [positionData, setPostionData] = useState("")
   const [shopName, setShopName] = useState("")
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const { accounts } = usePixelsMetaverseContract()
+  const { accounts } = usePixelsMetaverse()
   const { userInfo, setUserInfo, setGoodsList } = useUserInfo()
   const address = accounts?.address
   const getUserInfo = useRequest(fetchUserInfo)

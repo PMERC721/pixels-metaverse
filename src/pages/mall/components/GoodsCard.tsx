@@ -4,7 +4,8 @@ import { useUserInfo } from "../../../components/UserProvider";
 import { fetchBuyGoods, useRequest } from "../../../hook/api";
 import { categoryData } from "../../produced/components/Submit";
 import { useHistory } from "react-router";
-import { PixelsMetaverseImgByPositionData } from "../../../pixels-metaverse";
+import { PixelsMetaverseImgByPositionData, PixelsMetaverseImgByPositionData2 } from "../../../pixels-metaverse";
+import React from "react";
 
 export const GoodsCard = ({ item, i }: { item: any, i: number }) => {
 	const { setGoodsList } = useUserInfo()
@@ -25,7 +26,8 @@ export const GoodsCard = ({ item, i }: { item: any, i: number }) => {
 				width: 216,
 				marginRight: i % 5 === 4 ? 0 : 17
 			}}>
-			<PixelsMetaverseImgByPositionData data={{ ...item, positions: item.data, goodsData: [item] }} size={200} style={{ borderRadius: 4, background: item?.bgColor || userInfo?.user?.bgColor || "#e1e1e11a", cursor: "pointer", boxShadow: "0px 0px 5px rgba(225,225,225,0.3)" }} />
+			{/* <PixelsMetaverseImgByPositionData data={{ ...item, positions: item.data, goodsData: [item] }} size={200} style={{ borderRadius: 4, background: item?.bgColor || userInfo?.user?.bgColor || "#e1e1e11a", cursor: "pointer", boxShadow: "0px 0px 5px rgba(225,225,225,0.3)" }} /> */}
+			<PixelsMetaverseImgByPositionData2 data={item} size={["50%", "50%"]} style={{ borderRadius: 4, background: item?.bgColor || userInfo?.user?.bgColor || "#e1e1e11a", cursor: "pointer", boxShadow: "0px 0px 5px rgba(225,225,225,0.3)" }} />
 			<div className="flex flex-col justify-between flex-1 mt-4" style={{ fontSize: 12, width: 200 }}>
 				<div className="text-right flex-1" style={{ height: 40, textOverflow: "ellipsis", overflow: "hidden" }}>{item?.name || "卡姿兰大眼睛，你值得拥有,还在等什么，快点装备我吧"}</div>
 				<div className="flex justify-between items-center mt-2">

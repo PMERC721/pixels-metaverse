@@ -2,14 +2,14 @@ import React from "react"
 import { filter, isEmpty, map } from "lodash";
 import { useLocation } from "react-router";
 import { useUserInfo } from "../../../components/UserProvider";
-import { usePixelsMetaverseContract } from "../../../pixels-metaverse";
+import { usePixelsMetaverse } from "../../../pixels-metaverse";
 import { AvatarCard } from "../../../components/AvatarCard";
 import { NoData } from "../../../components/NoData";
 
 export const AssetsInfo = ({ outfitEdList, noOutfitEdList }: {
   noOutfitEdList: any[], outfitEdList: any[]
 }) => {
-  const { accounts } = usePixelsMetaverseContract()
+  const { accounts } = usePixelsMetaverse()
   const { search } = useLocation()
   const { goodsList } = useUserInfo()
   const address = search ? search.split("=")[1] : accounts.address

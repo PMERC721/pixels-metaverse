@@ -4,7 +4,7 @@ import { AppstoreOutlined } from "@ant-design/icons";
 import { fetchRegister, fetchSetConfig, useRequest } from "../../../hook/api";
 import { useLocation } from "react-router";
 import { useUserInfo } from "../../../components/UserProvider";
-import { fetchUserInfo, PixelsMetaverseHandleImg, usePixelsMetaverseContract, usePixelsMetaverseHandleImg } from "../../../pixels-metaverse";
+import { fetchUserInfo, PixelsMetaverseHandleImg, usePixelsMetaverse, usePixelsMetaverseHandleImg } from "../../../pixels-metaverse";
 import React, { ReactNode } from "react";
 
 const InfoLabel = ({ children, label }: { children: ReactNode, label: string }) => {
@@ -18,7 +18,7 @@ const InfoLabel = ({ children, label }: { children: ReactNode, label: string }) 
 
 export const BaseInfo = () => {
   const { setConfig, config, canvas2Ref } = usePixelsMetaverseHandleImg()
-  const { accounts } = usePixelsMetaverseContract()
+  const { accounts } = usePixelsMetaverse()
   const { search } = useLocation()
   const { userInfo, setUserInfo } = useUserInfo()
   const address = search ? search.split("=")[1] : accounts.address
