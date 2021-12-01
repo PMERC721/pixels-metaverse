@@ -6,11 +6,13 @@ import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import Authereum from "authereum";
 import { Bitski } from "bitski";
-import { ellipseAddress, getChainData } from "../helpers/utilities";
+import { ellipseAddress, getChainData, warning } from "../helpers/utilities";
 import { useTranslation } from "react-i18next"
 import { Button, Dropdown, Menu } from "antd";
 import { useWeb3js, useMyWeb3 } from "../hook/web3";
 import i18n from "i18next";
+import { IChainData } from "../helpers/types";
+import { isEmpty } from "lodash";
 
 interface IWeb3InfoProps {
   connected?: boolean;
@@ -20,6 +22,7 @@ interface IWeb3InfoProps {
   networkId?: number,
   web3Modal?: Web3Modal,
   addressBalance?: string,
+  chainData?: IChainData
 }
 
 const nav = [
@@ -80,7 +83,8 @@ const useGetWeb3Info = () => {
     chainId,
     web3,
     networkId,
-    web3Modal
+    web3Modal,
+    chainData
   }, setWeb3Info] = useState<IWeb3InfoProps>({})
   const getMyWeb3 = useMyWeb3()
 
@@ -89,7 +93,17 @@ const useGetWeb3Info = () => {
     setWeb3Info((pre) => ({ ...pre, ...INITIAL_STATE }));
   };
 
-  const network = useMemo(() => chainId ? getChainData(chainId).network : "mainnet", [chainId]);
+  useEffect(() => {
+    if (chainId) {
+      const chainData = getChainData(chainId)
+      if (!chainData) {
+        warning(parseInt(String(chainId)))
+      }
+      setWeb3Info((pre) => ({ ...pre, chainData: chainData || null }));
+    }
+  }, [chainId])
+
+  const network = useMemo(() => !isEmpty(chainData) ? chainData?.network : "mainnet", [chainData]);
 
   useEffect(() => {
     const web3Modal = new Web3Modal({
@@ -98,7 +112,7 @@ const useGetWeb3Info = () => {
       providerOptions: getProviderOptions()
     });
     setWeb3Info((pre) => ({ ...pre, web3Modal }));
-  }, [])
+  }, [network])
 
   useEffect(() => {
     if (web3Modal?.cachedProvider) {
@@ -183,22 +197,23 @@ const useGetWeb3Info = () => {
     killSession,
     toConnect,
     web3,
-    networkId
+    networkId,
+    chainData
   }
 }
 
 export const Header = () => {
-  const { connected, address, chainId, killSession, toConnect, web3, networkId } = useGetWeb3Info();
+  const { connected, address, killSession, toConnect, web3, chainData } = useGetWeb3Info();
   const { t } = useTranslation()
-  const chainData = chainId ? getChainData(chainId) : null;
   const history = useHistory()
   const [inputStr, setInputStr] = useState("")
   const { pathname } = useLocation()
-  const { setWeb3 } = useWeb3js()
+  const web3js = useWeb3js()
 
   useEffect(() => {
-    if (!web3) return
-    setWeb3(web3)
+    if (!web3 || web3js.web3) return
+    console.log(web3, web3js.web3)
+    web3js?.setWeb3(web3)
   }, [web3])
 
   return (
@@ -227,11 +242,11 @@ export const Header = () => {
           >查询</Button>
         </div>
 
-        {address && chainData && connected ? (
+        {address && !isEmpty(chainData) && connected ? (
           <div className="px-4 rounded bg-white bg-opacity-10 relative w-48">
             <div className="font-bold">{ellipseAddress(address, 10)}</div>
             <div className="flex justify-between text-xs">
-              {chainData.name}<span className="cursor-pointer hover:text-white" onClick={killSession}>断开连接</span>
+              {chainData?.name}<span className="cursor-pointer hover:text-white" onClick={killSession}>断开连接</span>
             </div>
           </div>)
           : <div className="flex items-center justify-center rounded cursor-pointer bg-white bg-opacity-10 w-24 hover:text-white"

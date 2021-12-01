@@ -40,6 +40,11 @@ contract PixelsMetavers {
     }
     mapping(bytes32 => BaseInfo) public baseInfo;
 
+    struct GoodInfo {
+        Goods googs;
+        BaseInfo baseInfo;
+    }
+
     uint256[] public goodsList;
 
     modifier MustExist(uint256 id) {
@@ -81,6 +86,11 @@ contract PixelsMetavers {
 
     function getGoodsList() public view returns (uint256[] memory) {
         return goodsList;
+    }
+
+    function getGoods(uint256 id) public view returns (GoodInfo memory) {
+        Goods storage g = goods[id];
+        return GoodInfo(g, baseInfo[g.data]);
     }
 
     function postGoods(
