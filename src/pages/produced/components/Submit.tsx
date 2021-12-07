@@ -114,7 +114,7 @@ export const Submit = () => {
 
   const postGoods = useRequest(fetchPostGoods, {
     onSuccess: () => {
-      message.success("商品发布成功！")
+      message.success("物品发布成功！")
       getGoodsIdList({ setValue: setGoodsList, newNumber: Number(amount) })
       setIsModalVisible(false)
       setMerchandies({
@@ -192,19 +192,19 @@ export const Submit = () => {
 
   const checkData = useCallback(() => {
     if (!name) {
-      message.warn("请输入商品名称");
+      message.warn("请输入物品名称");
       return;
     }
     if (!category) {
-      message.warn("请选择商品种类");
+      message.warn("请选择物品种类");
       return;
     }
     if (!amount) {
-      message.warn("请输入商品数量");
+      message.warn("请输入物品数量");
       return;
     }
     if (!price) {
-      message.warn("请输入商品价格");
+      message.warn("请输入物品价格");
       return;
     }
     return true;
@@ -218,9 +218,9 @@ export const Submit = () => {
         </Tooltip>
       </div>
       { !userInfo?.account?.includes("0000000000000000000000000") && userInfo?.isMerchant ? <div>
-        <Label>商品名称</Label>
-        <Input value={name} placeholder="商品名称" maxLength={15} onChange={(e) => setMerchandies((pre) => ({ ...pre, name: e.target.value }))} />
-        <Label>商品种类</Label>
+        <Label>名称</Label>
+        <Input value={name} placeholder="物品名称" maxLength={15} onChange={(e) => setMerchandies((pre) => ({ ...pre, name: e.target.value }))} />
+        <Label>种类</Label>
         <Select
           className="select outline-none :focus:outline-none h-10 bg-white bg-opacity-20 rounded w-full"
           bordered={false}
@@ -228,23 +228,23 @@ export const Submit = () => {
           size="large"
           style={{ fontSize: 14, color: "rgba(255, 255, 255, 0.1) !important" }}
           value={category}
-          placeholder="请选择商品种类"
+          placeholder="请选择种类"
           optionFilterProp="children"
           onChange={(e: string) => { setMerchandies((pre) => ({ ...pre, category: e })) }}
         >
           {map(categoryData, item => <Option key={item.value} value={item.value}>{item.label}</Option>)}
         </Select>
-        <Label>商品数量(最多可发行9个)</Label>
-        <Input value={amount} placeholder="商品数量" maxLength={1} onChange={(e) => setMerchandies((pre) => ({ ...pre, amount: mustNum(e) }))} />
-        <Label>商品价格(ETH)</Label>
-        <Input value={price} placeholder="商品价格" maxLength={5} onChange={(e) => setMerchandies((pre) => ({ ...pre, price: mustNum(e) }))} />
+        <Label>数量(最多可发行9个)</Label>
+        <Input value={amount} placeholder="物品数量" maxLength={1} onChange={(e) => setMerchandies((pre) => ({ ...pre, amount: mustNum(e) }))} />
+        <Label>价格(ETH)</Label>
+        <Input value={price} placeholder="物品价格" maxLength={5} onChange={(e) => setMerchandies((pre) => ({ ...pre, price: mustNum(e) }))} />
         <div className="flex items-center mt-4 mb-1">
-          <div>商品权重</div>
-          <Tooltip placement="top" className="cursor-pointer" title={`商品权重指当前商品在商家自己的商店中的排名，权重越高排名越靠前。`} color="#29303d">
+          <div>权重</div>
+          <Tooltip placement="top" className="cursor-pointer" title={`物品权重指当前物品在商家自己的商店中的排名，权重越高排名越靠前。`} color="#29303d">
             <ExclamationCircleOutlined />
           </Tooltip>
         </div>
-        <Input value={weight} placeholder="商品权重" maxLength={10} onChange={(e) => setMerchandies((pre) => ({ ...pre, weight: mustNum(e) }))} />
+        <Input value={weight} placeholder="权重" maxLength={10} onChange={(e) => setMerchandies((pre) => ({ ...pre, weight: mustNum(e) }))} />
         <Button type="primary" size="large" className="mt-6 w-full rounded"
           onClick={() => {
             const is = checkData()
@@ -259,12 +259,12 @@ export const Submit = () => {
           }}
         >提交</Button>
       </div> : <div>
-        <Label>店铺名称</Label>
+        <Label>作坊名称</Label>
         <Input value={shopName} placeholder="店铺名称" maxLength={15} onChange={(e) => setShopName(e.target.value)} />
         <Button type="primary" size="large" className="mt-6 w-full rounded"
           onClick={() => {
             if (!shopName) {
-              message.warn("请输入店铺名称");
+              message.warn("请输入作坊名称");
               return;
             }
             application({ name: shopName })
@@ -278,14 +278,14 @@ export const Submit = () => {
       </div>}
 
       <Modal
-        title="是否发布商品"
+        title="是否发布物品"
         okText={positionData?.length >= 64 ? "资产多，我不担心，硬核提交" : "确认"}
         cancelText="取消"
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
       >
-        <p>是否确认发布该商品？</p>
+        <p>是否确认发布该物品？</p>
         <p>{positionData?.length >= 50 && "当前数据量较大，可能消耗的GAS较多，且有可能提交不成功，请问是否继续提交数据？"}</p>
       </Modal>
     </div >

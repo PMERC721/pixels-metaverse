@@ -31,7 +31,7 @@ export const AssetsInfo = ({ outfitEdList, noOutfitEdList }: {
           </div>}
           {!isEmpty(shopGoods) && <div className="flex-1 overflow-y-scroll">
             <div>
-              <div className="">店铺商品</div>
+              <div className="">收藏夹</div>
               {map(shopGoods, item => <AvatarCard key={item?.id} item={item} type="buyGoods" />)}
             </div>
           </div>}

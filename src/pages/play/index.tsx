@@ -1,6 +1,6 @@
 import { PersonCenter } from "./components/PersonCenter";
 import { Avatar } from "./components/Avatar";
-import { Merchants } from "./components/Merchants";
+import { Collection } from "./components/Collection";
 import { Dictionary, filter, isEmpty, map } from "lodash";
 import { useMemo } from "react";
 import { useUserInfo } from "../../components/UserProvider";
@@ -84,7 +84,7 @@ export const PixelsMetaverse = () => {
       <div className="flex justify-between bg-transparent flex-1 pt-20">
         <PersonCenter outfitEdList={outfitEdList} noOutfitEdList={noOutfitEdList} />
         <Avatar />
-        <Merchants />
+        <Collection />
       </div>
     </PixelsMetaverseHandleImgProvider>
   )

@@ -44,14 +44,14 @@ export const SearchQuery = ({ setData }: { setData: Dispatch<React.SetStateActio
       label: "按时间升序",
       value: "id-asc",
     },
-    {
+    /* {
       label: "按金额降序",
       value: "price-desc",
     },
     {
       label: "按金额升序",
       value: "price-asc",
-    },
+    }, */
   ]
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export const SearchQuery = ({ setData }: { setData: Dispatch<React.SetStateActio
         showSearch
         style={{ width: 330 }}
         allowClear
-        placeholder="选择地址"
+        placeholder="所有者地址"
         optionFilterProp="children"
         onChange={(val) => {
           setList((pre) => ({ ...pre, owner: val }))
@@ -88,7 +88,7 @@ export const SearchQuery = ({ setData }: { setData: Dispatch<React.SetStateActio
       <Select
         style={{ width: 150, marginLeft: 20 }}
         allowClear
-        placeholder="选择商品种类"
+        placeholder="物品类别"
         optionFilterProp="children"
         onChange={(val) => {
           setList((pre) => ({ ...pre, category: val }))
@@ -99,18 +99,18 @@ export const SearchQuery = ({ setData }: { setData: Dispatch<React.SetStateActio
       <Select
         style={{ width: 150, marginLeft: 20 }}
         allowClear
-        placeholder="选择是否出售"
+        placeholder="是否收藏"
         optionFilterProp="children"
         onChange={(val) => {
           setList((pre) => ({ ...pre, sale: val }))
         }}
       >
-        {map(keys(saleList), item => <Option key={item} value={item}>{item === "true" ? "未出售" : "已出售"}</Option>)}
+        {map(keys(saleList), item => <Option key={item} value={item}>{item === "true" ? "未收藏" : "已收藏"}</Option>)}
       </Select>
       <Select
         style={{ width: 200, marginLeft: 20 }}
         allowClear
-        placeholder="选择排序"
+        placeholder="排序"
         optionFilterProp="children"
         onChange={(val) => {
           setList((pre) => ({ ...pre, sort: val }))

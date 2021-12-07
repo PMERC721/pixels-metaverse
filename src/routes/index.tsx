@@ -1,7 +1,7 @@
 import { map } from "lodash"
 import { Route, Switch } from "react-router-dom"
 import { Website } from "../pages/home"
-import { Mall } from "../pages/mall"
+import { Lockers } from "../pages/lockers"
 import { PersonCenter } from "../pages/person-center"
 import { PixelsMetaverse } from "../pages/play"
 import { Produced } from "../pages/produced"
@@ -9,7 +9,7 @@ import { Produced } from "../pages/produced"
 export const routes = [
   { name: "首页", path: "/app", component: PixelsMetaverse },
   { name: "制作虚拟物品", path: "/produced", component: Produced },
-  { name: "集市", path: "/mall", component: Mall },
+  { name: "储物柜", path: "/lockers", component: Lockers },
   { name: "个人中心", path: "/person-center", component: PersonCenter },
   { name: "首页", path: "/", component: Website }
 ]

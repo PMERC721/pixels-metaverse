@@ -12,6 +12,8 @@
 
 # production
 /build
+play.md
+app.drawio
 
 # misc
 .DS_Store

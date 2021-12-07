@@ -8,7 +8,7 @@ import Authereum from "authereum";
 import { Bitski } from "bitski";
 import { ellipseAddress, getChainData, warning } from "../helpers/utilities";
 import { useTranslation } from "react-i18next"
-import { Button, Dropdown, Menu } from "antd";
+import { Button, Menu } from "antd";
 import { useWeb3js, useMyWeb3 } from "../hook/web3";
 import i18n from "i18next";
 import { IChainData } from "../helpers/types";
@@ -28,7 +28,7 @@ interface IWeb3InfoProps {
 const nav = [
   { label: "首页", path: "/app" },
   { label: "制作虚拟物品", path: "/produced" },
-  { label: "集市", path: "/mall" },
+  { label: "储物柜", path: "/lockers" },
   { label: "个人中心", path: "/person-center" },
 ]
 
@@ -252,9 +252,9 @@ export const Header = () => {
           : <div className="flex items-center justify-center rounded cursor-pointer bg-white bg-opacity-10 w-24 hover:text-white"
             onClick={toConnect}>连接钱包</div>
         }
-        <Dropdown overlay={menu} placement="bottomLeft">
+        {/* <Dropdown overlay={menu} placement="bottomLeft">
           <div className="flex items-center justify-center rounded cursor-pointer bg-white bg-opacity-10 w-24 hover:text-white ml-4">{t("home.content")}</div>
-        </Dropdown>
+        </Dropdown> */}
       </div>
     </div >
   );
