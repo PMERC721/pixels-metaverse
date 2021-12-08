@@ -27,8 +27,8 @@ interface IWeb3InfoProps {
 
 const nav = [
   { label: "首页", path: "/app" },
-  { label: "制作虚拟物品", path: "/produced" },
-  { label: "储物柜", path: "/lockers" },
+  { label: "作坊", path: "/produced" },
+  { label: "储物室", path: "/lockers" },
   { label: "个人中心", path: "/person-center" },
 ]
 
@@ -219,7 +219,7 @@ export const Header = () => {
   return (
     <div className="flex px-4 items-center justify-between text-l fixed w-full h-16 bg-white bg-opacity-10 text-white text-opacity-70">
       <div className="text-2xl cursor-pointer" onClick={() => history.push("/")}>像素元宇宙</div>
-      <div className="flex justify-around items-center w-96">
+      <div className="flex justify-around items-center w-80">
         {nav.map(item => {
           return (<div
             key={item?.label}

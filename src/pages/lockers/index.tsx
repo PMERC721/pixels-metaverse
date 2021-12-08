@@ -16,7 +16,7 @@ export const Lockers = () => {
           color: "rgba(225, 225, 225, 0.8)"
         }}>
         <div className="mb-4 flex justify-between">
-          <div className="text-2xl">储物柜</div>
+          <div className="text-2xl">储物室</div>
           <SearchQuery setData={setData} />
         </div>
         <DataStateBox
