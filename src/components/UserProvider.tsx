@@ -2,8 +2,8 @@ import { Dictionary, isEmpty } from "lodash";
 import * as React from "react";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { createContext, Dispatch } from "react";
-import { fetchUserInfo, usePixelsMetaverse } from "../pixels-metaverse";
-import { fetchGetGoodsIdList, useRequest } from "../hook/api";
+import { usePixelsMetaverse } from "../pixels-metaverse";
+import { fetchGetGoodsIdList, fetchUserInfo, useRequest } from "../hook/api";
 import { useWeb3Info } from "../hook/web3";
 
 export const UserInfoContext = createContext(
@@ -23,25 +23,25 @@ export const UserInfoProvider = ({ children }: { children: ReactNode }) => {
   const [userInfo, setUserInfo] = useState<Dictionary<any>>({});
   const [goodsList, setGoodsList] = useState<any[]>([]);
   const [goodsId, setGoodsId] = useState<number | undefined>();
-  const { web3Info: { address, networkId } } = useWeb3Info()
+  const { address, networkId } = useWeb3Info()
   const { contract } = usePixelsMetaverse()
   const getUserInfo = useRequest(fetchUserInfo)
 
   useEffect(() => {
     if (isEmpty(address)) return
-    getUserInfo({ address: address, setUserInfo })
+    //getUserInfo({ address: address, setUserInfo })
   }, [address, contract])
 
   const getGoodsIdList = useRequest(fetchGetGoodsIdList)
 
   useEffect(() => {
-    getGoodsIdList({ setValue: setGoodsList, newNumber: -1 })
+    //getGoodsIdList({ setValue: setGoodsList, newNumber: -1 })
   }, [address, contract])
 
   useEffect(() => {
     if (isEmpty(networkId)) return
     setGoodsList([])
-    getGoodsIdList({ setValue: setGoodsList, newNumber: -1 })
+    //getGoodsIdList({ setValue: setGoodsList, newNumber: -1 })
   }, [networkId])
 
   /* useEffect(()=>{

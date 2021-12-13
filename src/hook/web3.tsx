@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useState, useContext, Dispatch, useCallback, useEffect, useMemo } from "react";
+import { createContext, ReactNode, useState, useContext, useCallback, useEffect, useMemo } from "react";
 import Web3 from "web3";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
@@ -9,39 +9,31 @@ import { IChainData } from "../helpers/types";
 import { isEmpty } from "lodash";
 
 export const useMyWeb3 = () => {
-  return useCallback(() => new Promise<Web3>((resolve, reject) => {
-    // Wait for loading completion to avoid race conditions with web3 injection timing.
+  return useCallback(async (setWeb3: (web3: Web3) => void) => {
     window.addEventListener("load", async () => {
-      // Modern dapp browsers...
       if (window.ethereum) {
         const web3 = new Web3(window.ethereum);
         try {
-          // Request account access if needed
           await window.ethereum.enable();
-          // Acccounts now exposed
-          resolve(web3);
+          console.log("window.ethereum");
+          setWeb3(web3)
         } catch (error) {
-          reject(error);
+          //reject(error);
         }
-      }
-      // Legacy dapp browsers...
-      else if (window.web3) {
-        // Use Mist/MetaMask's provider.
+      } else if (window.web3) {
         const web3 = window.web3;
         console.log("Injected web3 detected.");
-        resolve(web3);
-      }
-      // Fallback to localhost; use dev console port by default...
-      else {
+        setWeb3(web3)
+      } else {
         const provider = new Web3.providers.HttpProvider(
           "http://127.0.0.1:8545"
         );
         const web3 = new Web3(provider);
         console.log("No web3 instance injected, using Local web3.");
-        resolve(web3);
+        setWeb3(web3)
       }
     });
-  }), [])
+  }, [])
 }
 
 interface IWeb3InfoProps {
@@ -67,8 +59,16 @@ const INITIAL_STATE: IWeb3InfoProps = {
 
 export const Web3InfoContext = createContext(
   {} as {
-    web3Info: IWeb3InfoProps;
-    setWeb3Info: Dispatch<React.SetStateAction<IWeb3InfoProps>>;
+    connected?: boolean;
+    address?: string;
+    chainId?: number;
+    web3?: Web3;
+    networkId?: number,
+    web3Modal?: Web3Modal,
+    addressBalance?: string,
+    chainData?: IChainData,
+    killSession?: () => void,
+    toConnect?: () => void,
   },
 );
 
@@ -104,9 +104,9 @@ export const useGetWeb3Info = () => {
     web3,
     networkId,
     web3Modal,
-    chainData
+    chainData,
+    addressBalance
   }, setWeb3Info] = useState<IWeb3InfoProps>({})
-  const getMyWeb3 = useMyWeb3()
 
   const resetApp = async () => {
     await web3Modal?.clearCachedProvider();
@@ -129,7 +129,7 @@ export const useGetWeb3Info = () => {
     const web3Modal = new Web3Modal({
       network,
       cacheProvider: true,
-      providerOptions: getProviderOptions()
+      //providerOptions: getProviderOptions()
     });
     setWeb3Info((pre) => ({ ...pre, web3Modal }));
   }, [network])
@@ -175,16 +175,18 @@ export const useGetWeb3Info = () => {
   }
 
   const toConnect = async () => {
-    const provider = await web3Modal?.connect();
-    let web3: Web3, chainId: number;
+    let web3: Web3;
     try {
+      const provider = await web3Modal?.connect();
       await subscribeProvider(provider);
       web3 = initWeb3(provider);
-      chainId = await web3?.eth.getChainId();
     } catch (error) {
-      web3 = await getMyWeb3()
-      chainId = await web3?.eth.getChainId();
+      const provider = new Web3.providers.HttpProvider(
+        "http://127.0.0.1:8545"
+      );
+      web3 = new Web3(provider);
     }
+    const chainId = await web3?.eth.getChainId();
 
     const accounts = await web3?.eth.getAccounts();
 
@@ -197,7 +199,6 @@ export const useGetWeb3Info = () => {
     setWeb3Info((pre) => ({
       ...pre,
       web3,
-      provider,
       connected: true,
       address,
       chainId,
@@ -206,11 +207,21 @@ export const useGetWeb3Info = () => {
     }));
   };
 
-  const killSession = () => {
-    resetApp()
-  }
-
   return {
+    connected,
+    address,
+    chainId,
+    killSession: resetApp,
+    toConnect,
+    web3,
+    networkId,
+    chainData,
+    addressBalance
+  }
+}
+
+export const Web3InfoProvider = ({ children }: { children: ReactNode }) => {
+  const {
     connected,
     address,
     chainId,
@@ -218,20 +229,22 @@ export const useGetWeb3Info = () => {
     toConnect,
     web3,
     networkId,
-    chainData
-  }
-}
-
-export const Web3InfoProvider = ({ children }: { children: ReactNode }) => {
-  const [web3Info, setWeb3Info] = useState<IWeb3InfoProps>(INITIAL_STATE);
-  const getWeb3Info = useGetWeb3Info()
-
-  useEffect(() => {
-    setWeb3Info((pre) => ({ ...pre, ...getWeb3Info }))
-  }, [getWeb3Info])
+    chainData,
+    addressBalance
+  } = useGetWeb3Info()
 
   return (
-    <Web3InfoContext.Provider value={{ web3Info, setWeb3Info }}>
+    <Web3InfoContext.Provider value={{
+      connected,
+      address,
+      chainId,
+      killSession,
+      toConnect,
+      web3,
+      networkId,
+      chainData,
+      addressBalance
+    }}>
       {children}
     </Web3InfoContext.Provider>
   )

@@ -13,7 +13,7 @@ import { useWeb3Info } from "../hook/web3";
 export const AvatarCard = ({ item, type }: {
   item: any, type: string
 }) => {
-  const { web3Info: { address: addresss, networkId } } = useWeb3Info()
+  const { address: addresss, networkId } = useWeb3Info()
   const { setSelectList } = usePixelsMetaverseHandleImg()
   const { search } = useLocation()
   const address = search ? search.split("=")[1] : addresss

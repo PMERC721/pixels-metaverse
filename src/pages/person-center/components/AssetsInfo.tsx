@@ -9,7 +9,7 @@ import { useWeb3Info } from "../../../hook/web3";
 export const AssetsInfo = ({ outfitEdList, noOutfitEdList }: {
   noOutfitEdList: any[], outfitEdList: any[]
 }) => {
-  const { web3Info: { address: addresss } } = useWeb3Info()
+  const { address: addresss } = useWeb3Info()
   const { search } = useLocation()
   const { goodsList } = useUserInfo()
   const address = search ? search.split("=")[1] : addresss

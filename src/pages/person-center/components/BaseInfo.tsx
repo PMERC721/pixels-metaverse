@@ -1,10 +1,10 @@
 import { isEmpty } from "lodash";
 import { Button, message } from "antd";
 import { AppstoreOutlined } from "@ant-design/icons";
-import { fetchRegister, fetchSetConfig, useRequest } from "../../../hook/api";
+import { fetchRegister, fetchSetConfig, fetchUserInfo, useRequest } from "../../../hook/api";
 import { useLocation } from "react-router";
 import { useUserInfo } from "../../../components/UserProvider";
-import { fetchUserInfo, PixelsMetaverseHandleImg, usePixelsMetaverseHandleImg } from "../../../pixels-metaverse";
+import {PixelsMetaverseHandleImg, usePixelsMetaverseHandleImg } from "../../../pixels-metaverse";
 import { ReactNode } from "react";
 import { useWeb3Info } from "../../../hook/web3";
 
@@ -19,7 +19,7 @@ const InfoLabel = ({ children, label }: { children: ReactNode, label: string }) 
 
 export const BaseInfo = () => {
   const { setConfig, config, canvas2Ref } = usePixelsMetaverseHandleImg()
-  const { web3Info: { address: addresss } } = useWeb3Info()
+  const { address: addresss } = useWeb3Info()
   const { search } = useLocation()
   const { userInfo, setUserInfo } = useUserInfo()
   const address = search ? search.split("=")[1] : addresss

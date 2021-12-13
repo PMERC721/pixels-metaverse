@@ -27,17 +27,17 @@ const App = () => {
     <div className="relative bg-white overflow-hidden" style={{ minWidth: 1400, minHeight: 600 }}>
       <div className="relative w-full h-full min-h-screen mx-auto bg-no-repeat md:bg-contain bg-cover bg-gray-900"
         style={{ backgroundImage: `url(${bgSvg})` }}>
-        <PixelsMetaverseContextProvider>
-          <LoadingProvider>
-            <Web3InfoProvider>
+        <Web3InfoProvider>
+          <PixelsMetaverseContextProvider>
+            <LoadingProvider>
               <UserInfoProvider>
                 {pathname !== "/" && <Header />}
                 <Routes />
                 <Loading />
               </UserInfoProvider>
-            </Web3InfoProvider>
-          </LoadingProvider>
-        </PixelsMetaverseContextProvider>
+            </LoadingProvider>
+          </PixelsMetaverseContextProvider>
+        </Web3InfoProvider>
       </div>
     </div>
   )

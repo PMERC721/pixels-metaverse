@@ -30,7 +30,7 @@ const menu = () => {
 }
 
 export const Header = () => {
-  const { web3Info: { connected, address, killSession, toConnect, chainData } } = useWeb3Info();
+  const { connected, address, killSession, toConnect, chainData } = useWeb3Info();
   const { t } = useTranslation()
   const history = useHistory()
   const [inputStr, setInputStr] = useState("")

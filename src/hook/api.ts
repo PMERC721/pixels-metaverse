@@ -3,8 +3,11 @@ import { IMerchandise } from "../pages/produced/components/Submit";
 import { useLoading } from "../components/Loading";
 import { message } from "antd";
 import { cloneDeep, map } from "lodash";
-import { IArgContract, usePixelsMetaverse } from "../pixels-metaverse";
+import { usePixelsMetaverse } from "../pixels-metaverse";
 import { useWeb3Info } from "./web3";
+import { Contract } from 'web3-eth-contract';
+
+export interface IArgContract { contract: Contract, accounts?: any, address?: any }
 
 export interface IHandle {
   onSuccess?: () => void,
@@ -19,7 +22,7 @@ export const useRequest = (
   }: IHandle = {},
   delay: any[] = []
 ) => {
-  const { web3Info: { address } } = useWeb3Info()
+  const { address } = useWeb3Info()
   const { contract } = usePixelsMetaverse()
   const { closeDelayLoading, openLoading, closeLoading } = useLoading()
 
@@ -68,7 +71,6 @@ export const fetchGetGoodsInfo = async (argContract: IArgContract, arg: { id: nu
 }
 
 export const fetchGetGoodsIdList = async (argContract: IArgContract, arg?: { setValue: Dispatch<React.SetStateAction<any[]>>, newNumber?: number }) => {
-  console.log(argContract?.contract, "idList")
   const idList = await argContract?.contract?.methods.getGoodsList().call();
   console.log(idList)
 

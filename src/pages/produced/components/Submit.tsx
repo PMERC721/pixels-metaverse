@@ -3,8 +3,8 @@ import { Tooltip, Select, message, Modal, Button } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Dictionary, isEmpty, keys, map } from 'lodash';
 import { useUserInfo } from '../../../components/UserProvider';
-import { fetchUserInfo, usePixelsMetaverseHandleImg } from '../../../pixels-metaverse';
-import { fetchApplication, fetchGetGoodsIdList, fetchPostGoods, fetchRegister, useRequest } from '../../../hook/api';
+import { usePixelsMetaverseHandleImg } from '../../../pixels-metaverse';
+import { fetchApplication, fetchGetGoodsIdList, fetchPostGoods, fetchRegister, fetchUserInfo, useRequest } from '../../../hook/api';
 import { useWeb3Info } from '../../../hook/web3';
 const { Option } = Select;
 
@@ -95,7 +95,7 @@ export const Submit = () => {
   const [positionData, setPostionData] = useState("")
   const [shopName, setShopName] = useState("")
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const { web3Info: { address: addresss } } = useWeb3Info()
+  const { address: addresss } = useWeb3Info()
   const { userInfo, setUserInfo, setGoodsList } = useUserInfo()
   const address = addresss
   const getUserInfo = useRequest(fetchUserInfo)

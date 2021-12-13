@@ -12,7 +12,7 @@ import {
 import { useWeb3Info } from "../../hook/web3";
 
 export const PixelsMetaverse = () => {
-  const { web3Info: { address: addresss } } = useWeb3Info()
+  const { address: addresss } = useWeb3Info()
   const { search } = useLocation()
   const address = search ? search.split("=")[1] : addresss
   const { goodsList, userInfo, goodsId } = useUserInfo()
