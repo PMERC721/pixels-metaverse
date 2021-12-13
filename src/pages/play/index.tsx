@@ -7,14 +7,14 @@ import { useUserInfo } from "../../components/UserProvider";
 import { useLocation, useParams } from "react-router-dom";
 import {
   PixelsMetaverseHandleImgProvider,
-  useConvertedPostion,
-  usePixelsMetaverse
+  useConvertedPostion
 } from "../../pixels-metaverse";
+import { useWeb3Info } from "../../hook/web3";
 
 export const PixelsMetaverse = () => {
-  const { accounts } = usePixelsMetaverse()
+  const { web3Info: { address: addresss } } = useWeb3Info()
   const { search } = useLocation()
-  const address = search ? search.split("=")[1] : accounts?.address
+  const address = search ? search.split("=")[1] : addresss
   const { goodsList, userInfo, goodsId } = useUserInfo()
   const convertedPostion = useConvertedPostion()
   const a = useParams()

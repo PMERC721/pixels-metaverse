@@ -2,15 +2,16 @@ import React from "react"
 import { filter, isEmpty } from "lodash";
 import { useLocation } from "react-router";
 import { useUserInfo } from "../../components/UserProvider";
-import { PixelsMetaverseHandleImgProvider, usePixelsMetaverse, useGetPositionStr } from "../../pixels-metaverse";
+import { PixelsMetaverseHandleImgProvider, useGetPositionStr } from "../../pixels-metaverse";
 import { BaseInfo } from "./components/BaseInfo";
 import { AssetsInfo } from "./components/AssetsInfo";
+import { useWeb3Info } from "../../hook/web3";
 
 export const PersonCenter = () => {
-  const { accounts } = usePixelsMetaverse()
+  const { web3Info: { address: addresss } } = useWeb3Info()
   const { goodsList, userInfo } = useUserInfo()
   const { search } = useLocation()
-  const address = search ? search.split("=")[1] : accounts.address
+  const address = search ? search.split("=")[1] : addresss
 
   const { noOutfitEdList, outfitEdList } = React.useMemo(() => {
     if (isEmpty(goodsList)) return {

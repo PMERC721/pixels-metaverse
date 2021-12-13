@@ -2,17 +2,17 @@ import React from "react"
 import { filter, isEmpty, map } from "lodash";
 import { useLocation } from "react-router";
 import { useUserInfo } from "../../../components/UserProvider";
-import { usePixelsMetaverse } from "../../../pixels-metaverse";
 import { AvatarCard } from "../../../components/AvatarCard";
 import { NoData } from "../../../components/NoData";
+import { useWeb3Info } from "../../../hook/web3";
 
 export const AssetsInfo = ({ outfitEdList, noOutfitEdList }: {
   noOutfitEdList: any[], outfitEdList: any[]
 }) => {
-  const { accounts } = usePixelsMetaverse()
+  const { web3Info: { address: addresss } } = useWeb3Info()
   const { search } = useLocation()
   const { goodsList } = useUserInfo()
-  const address = search ? search.split("=")[1] : accounts.address
+  const address = search ? search.split("=")[1] : addresss
   const shopGoods = React.useMemo(() => filter(goodsList, item => item?.owner === address && item?.isSale), [goodsList])
 
   return (

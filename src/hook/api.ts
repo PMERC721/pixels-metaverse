@@ -4,6 +4,7 @@ import { useLoading } from "../components/Loading";
 import { message } from "antd";
 import { cloneDeep, map } from "lodash";
 import { IArgContract, usePixelsMetaverse } from "../pixels-metaverse";
+import { useWeb3Info } from "./web3";
 
 export interface IHandle {
   onSuccess?: () => void,
@@ -18,14 +19,15 @@ export const useRequest = (
   }: IHandle = {},
   delay: any[] = []
 ) => {
-  const { accounts, contract } = usePixelsMetaverse()
+  const { web3Info: { address } } = useWeb3Info()
+  const { contract } = usePixelsMetaverse()
   const { closeDelayLoading, openLoading, closeLoading } = useLoading()
 
   return useCallback(async (arg?: any) => {
-    if (!contract || !accounts) return
+    if (!contract || !address) return
     try {
       !arg?.closeLoading && openLoading()
-      fetch({ accounts, contract }, arg).then(() => {
+      fetch({ address, contract }, arg).then(() => {
         closeDelayLoading()
         onSuccess && onSuccess()
       }).catch((error) => {
@@ -40,7 +42,7 @@ export const useRequest = (
       message.error(error?.message)
       onFail && onFail(error)
     }
-  }, [contract, accounts, ...delay])
+  }, [contract, address, ...delay])
 }
 
 export const fetchUserInfo = async (argContract: IArgContract, arg: { address: string, setUserInfo: Dispatch<any> }) => {
@@ -49,7 +51,7 @@ export const fetchUserInfo = async (argContract: IArgContract, arg: { address: s
 }
 
 export const fetchRegister = async (argContract: IArgContract) => {
-  await argContract?.contract.methods.register().send({ from: argContract?.accounts?.address });
+  await argContract?.contract.methods.register().send({ from: argContract?.address });
 }
 
 export const fetchGetGoodsInfo = async (argContract: IArgContract, arg: { id: number, setGoodsList: Dispatch<React.SetStateAction<any[]>> }) => {
@@ -69,7 +71,7 @@ export const fetchGetGoodsIdList = async (argContract: IArgContract, arg?: { set
   console.log(argContract?.contract, "idList")
   const idList = await argContract?.contract?.methods.getGoodsList().call();
   console.log(idList)
-  
+
   const len = idList.length || 0;
   if (arg?.newNumber === -1) {
     for (let i = len - 1; i >= 0; i--) {
@@ -91,11 +93,11 @@ export const fetchGetGoodsIdList = async (argContract: IArgContract, arg?: { set
 }
 
 export const fetchSetConfig = async (argContract: IArgContract, arg: { value: any }) => {
-  await argContract?.contract.methods.setConfig(arg.value.bgColor, arg.value.gridColor, arg.value.withGrid).send({ from: argContract?.accounts?.address });
+  await argContract?.contract.methods.setConfig(arg.value.bgColor, arg.value.gridColor, arg.value.withGrid).send({ from: argContract?.address });
 }
 
 export const fetchApplication = async (argContract: IArgContract, arg: { name: string }) => {
-  await argContract?.contract.methods.application(arg?.name).send({ from: argContract?.accounts?.address });
+  await argContract?.contract.methods.application(arg?.name).send({ from: argContract?.address });
 }
 
 export const fetchPostGoods = async (argContract: IArgContract, arg: { value: IMerchandise }) => {
@@ -106,19 +108,19 @@ export const fetchPostGoods = async (argContract: IArgContract, arg: { value: IM
     String(Number(arg?.value?.price) * (10 ** 18)),
     Number(arg?.value?.amount),
     arg?.value?.bgColor
-  ).send({ from: argContract?.accounts?.address });
+  ).send({ from: argContract?.address });
 }
 
 export const fetchBuyGoods = async (argContract: IArgContract, arg: { id: number, price: number, setGoodsList: Dispatch<React.SetStateAction<any[]>> }) => {
-  await argContract?.contract.methods.buyGoods(arg.id).send({ from: argContract?.accounts?.address, value: arg.price });
+  await argContract?.contract.methods.buyGoods(arg.id).send({ from: argContract?.address, value: arg.price });
   fetchGetGoodsInfo(argContract, { id: arg?.id, setGoodsList: arg?.setGoodsList })
 }
 
 export const fetchOutfit = async (argContract: IArgContract, arg: { value: any, setGoodsList: Dispatch<React.SetStateAction<any[]>> }) => {
-  await argContract?.contract.methods.outfit(arg?.value.id, arg?.value.isOutfit).send({ from: argContract?.accounts?.address });
+  await argContract?.contract.methods.outfit(arg?.value.id, arg?.value.isOutfit).send({ from: argContract?.address });
   fetchGetGoodsInfo(argContract, { id: arg?.value.id, setGoodsList: arg?.setGoodsList })
 }
 
 export const fetchSetPMT721 = async (argContract: IArgContract) => {
-  await argContract?.contract.methods.setPMT721("0xE13d961d6Fb3BADE2A64372360C348bD80C1075e").send({ from: argContract?.accounts?.address });
+  await argContract?.contract.methods.setPMT721("0xE13d961d6Fb3BADE2A64372360C348bD80C1075e").send({ from: argContract?.address });
 }

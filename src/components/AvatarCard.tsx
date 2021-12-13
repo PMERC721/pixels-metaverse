@@ -2,21 +2,21 @@ import message from "antd/lib/message";
 import { cloneDeep, find } from "lodash";
 import {
   PixelsMetaverseImgByPositionData,
-  usePixelsMetaverse,
   usePixelsMetaverseHandleImg
 } from "../pixels-metaverse";
 import { useLocation } from "react-router-dom";
 import { useUserInfo } from "./UserProvider";
 import { fetchBuyGoods, fetchOutfit, useRequest } from "../hook/api";
 import { categoryData } from "../pages/produced/components/Submit";
+import { useWeb3Info } from "../hook/web3";
 
 export const AvatarCard = ({ item, type }: {
   item: any, type: string
 }) => {
-  const { accounts } = usePixelsMetaverse()
+  const { web3Info: { address: addresss, networkId } } = useWeb3Info()
   const { setSelectList } = usePixelsMetaverseHandleImg()
   const { search } = useLocation()
-  const address = search ? search.split("=")[1] : accounts?.address
+  const address = search ? search.split("=")[1] : addresss
   const { setGoodsList } = useUserInfo()
 
   const outfit = useRequest(fetchOutfit, {
@@ -35,7 +35,7 @@ export const AvatarCard = ({ item, type }: {
 
   return (
     <div
-      key={item?.id + accounts?.networkId}
+      key={item?.id + networkId}
       className="mt-2 item-avatar p-2 flex justify-between border-gray-500 border-b"
     >
       <PixelsMetaverseImgByPositionData
@@ -62,7 +62,7 @@ export const AvatarCard = ({ item, type }: {
             <div className="p px-2 rounded-sm mr-2" style={{ background: "rgba(225, 225, 225, 0.1)" }}>ID: {item?.id}</div>
             <div className="p px-2 rounded-sm" style={{ background: "rgba(225, 225, 225, 0.1)" }}>{(find(categoryData, ite => ite?.value === item?.category) || {})?.label}</div>
           </div>
-          {accounts?.address === item?.owner && type === "assets" && <div className="p px-4 bg-red-500 rounded-sm cursor-pointer mt-2" onClick={() => {
+          {addresss === item?.owner && type === "assets" && <div className="p px-4 bg-red-500 rounded-sm cursor-pointer mt-2" onClick={() => {
             outfit({
               value: {
                 id: Number(item?.id),
