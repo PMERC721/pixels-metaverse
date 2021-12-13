@@ -9,7 +9,7 @@ import { Bitski } from "bitski";
 import { ellipseAddress, getChainData, warning } from "../helpers/utilities";
 import { useTranslation } from "react-i18next"
 import { Button, Menu } from "antd";
-import { useWeb3js, useMyWeb3 } from "../hook/web3";
+import { useMyWeb3 } from "../hook/web3";
 import i18n from "i18next";
 import { IChainData } from "../helpers/types";
 import { isEmpty } from "lodash";
@@ -208,13 +208,6 @@ export const Header = () => {
   const history = useHistory()
   const [inputStr, setInputStr] = useState("")
   const { pathname } = useLocation()
-  const web3js = useWeb3js()
-
-  useEffect(() => {
-    if (!web3 || web3js.web3) return
-    console.log(web3, web3js.web3)
-    web3js?.setWeb3(web3)
-  }, [web3])
 
   return (
     <div className="flex px-4 items-center justify-between text-l fixed w-full h-16 bg-white bg-opacity-10 text-white text-opacity-70">
@@ -233,7 +226,7 @@ export const Header = () => {
         <div className="mr-4 flex items-center bg-white bg-opacity-10" style={{ borderRadius: 20 }}>
           <input
             className="px-4 bg-transparent outline-none focus:outline-none w-60"
-            placeholder="请输入以太坊钱包地址"
+            placeholder="请输入用户钱包地址"
             onChange={(e) => setInputStr(e.target.value)}
           />
           <Button type="primary" size="large" className="w-24"

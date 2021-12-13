@@ -1,5 +1,4 @@
 import { HashRouter, useLocation } from "react-router-dom";
-import { useWeb3js, Web3jsProvider } from './hook/web3';
 import { Loading, LoadingProvider } from './components/Loading';
 import { UserInfoProvider } from './components/UserProvider';
 import { PixelsMetaverseContextProvider } from './pixels-metaverse';
@@ -22,13 +21,12 @@ declare global {
 
 export const Main = () => {
   const { pathname } = useLocation()
-  const { web3 } = useWeb3js()
 
   return (
     <div className="relative bg-white overflow-hidden" style={{ minWidth: 1400, minHeight: 600 }}>
       <div className="relative w-full h-full min-h-screen mx-auto bg-no-repeat md:bg-contain bg-cover bg-gray-900"
         style={{ backgroundImage: `url(${bgSvg})` }}>
-        <PixelsMetaverseContextProvider web3={web3}>
+        <PixelsMetaverseContextProvider>
           <LoadingProvider>
             <UserInfoProvider>
               {pathname !== "/" && <Header />}
@@ -45,9 +43,7 @@ export const Main = () => {
 const App = () => {
   return (
     <HashRouter>
-      <Web3jsProvider>
-        <Main />
-      </Web3jsProvider>
+      <Main />
     </HashRouter>
   );
 }

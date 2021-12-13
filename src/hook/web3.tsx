@@ -1,24 +1,5 @@
-import React, { createContext, ReactNode, useState, useContext, Dispatch, useCallback } from "react";
+import { useCallback } from "react";
 import Web3 from "web3";
-
-export const Web3jsContext = createContext(
-  {} as {
-    web3?: Web3;
-    setWeb3: Dispatch<React.SetStateAction<Web3 | undefined>>;
-  },
-);
-
-export const useWeb3js = () => useContext(Web3jsContext);
-
-export const Web3jsProvider = ({ children }: { children: ReactNode }) => {
-  const [web3, setWeb3] = useState<Web3>();
-
-  return (
-    <Web3jsContext.Provider value={{ web3, setWeb3 }}>
-      {children}
-    </Web3jsContext.Provider>
-  )
-}
 
 export const useMyWeb3 = () => {
   return useCallback(() => new Promise<Web3>((resolve, reject) => {
