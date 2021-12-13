@@ -1,10 +1,11 @@
-import { HashRouter, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Loading, LoadingProvider } from './components/Loading';
 import { UserInfoProvider } from './components/UserProvider';
 import { PixelsMetaverseContextProvider } from './pixels-metaverse';
 import { Header } from './components/Header';
 import bgSvg from "./assets/image/bg.svg"
 import { Routes } from './routes';
+import { Web3InfoProvider } from "./hook/web3";
 
 declare global {
   // tslint:disable-next-line
@@ -19,7 +20,7 @@ declare global {
   }
 }
 
-export const Main = () => {
+const App = () => {
   const { pathname } = useLocation()
 
   return (
@@ -28,24 +29,18 @@ export const Main = () => {
         style={{ backgroundImage: `url(${bgSvg})` }}>
         <PixelsMetaverseContextProvider>
           <LoadingProvider>
-            <UserInfoProvider>
-              {pathname !== "/" && <Header />}
-              <Routes />
-              <Loading />
-            </UserInfoProvider>
+            <Web3InfoProvider>
+              <UserInfoProvider>
+                {pathname !== "/" && <Header />}
+                <Routes />
+                <Loading />
+              </UserInfoProvider>
+            </Web3InfoProvider>
           </LoadingProvider>
         </PixelsMetaverseContextProvider>
       </div>
     </div>
   )
-}
-
-const App = () => {
-  return (
-    <HashRouter>
-      <Main />
-    </HashRouter>
-  );
 }
 
 export default App;
