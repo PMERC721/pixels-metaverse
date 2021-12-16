@@ -1,6 +1,6 @@
 import { useHistory } from "react-router";
 import { useLocation } from "react-router-dom";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { ellipseAddress } from "../helpers/utilities";
 import { useTranslation } from "react-i18next"
 import { Button, Menu } from "antd";
@@ -29,7 +29,7 @@ const menu = () => {
   )
 }
 
-export const Header = () => {
+export const Header = memo(() => {
   const { connected, address, killSession, toConnect, chainData } = useWeb3Info();
   const { t } = useTranslation()
   const history = useHistory()
@@ -78,4 +78,4 @@ export const Header = () => {
       </div>
     </div >
   );
-};
+});

@@ -2,7 +2,7 @@ import { PersonCenter } from "./components/PersonCenter";
 import { Avatar } from "./components/Avatar";
 import { Collection } from "./components/Collection";
 import { Dictionary, filter, isEmpty, map } from "lodash";
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { useUserInfo } from "../../components/UserProvider";
 import { useLocation, useParams } from "react-router-dom";
 import {
@@ -10,6 +10,7 @@ import {
   useConvertedPostion
 } from "../../pixels-metaverse";
 import { useWeb3Info } from "../../hook/web3";
+import { NoConnect } from "../../components/NoConnect";
 
 export const PixelsMetaverse = () => {
   const { address: addresss } = useWeb3Info()
@@ -67,7 +68,7 @@ export const PixelsMetaverse = () => {
   }, [outfitEdList])
 
   if (isEmpty(userInfo)) {
-    return <div className="flex justify-center item-center text-white pt-60">请链接钱包</div>
+    return <NoConnect />
   }
 
   return (

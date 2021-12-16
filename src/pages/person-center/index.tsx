@@ -7,13 +7,13 @@ import { BaseInfo } from "./components/BaseInfo";
 import { AssetsInfo } from "./components/AssetsInfo";
 import { useWeb3Info } from "../../hook/web3";
 import { useLoading } from "../../components/Loading";
+import { NoConnect } from "../../components/NoConnect";
 
 export const PersonCenter = () => {
   const { address: addresss } = useWeb3Info()
   const { goodsList, userInfo } = useUserInfo()
   const { search } = useLocation()
   const address = search ? search.split("=")[1] : addresss
-  const { contract } = usePixelsMetaverse()
   const { closeDelayLoading, openLoading, closeLoading } = useLoading()
 
   const { noOutfitEdList, outfitEdList } = React.useMemo(() => {
@@ -30,7 +30,7 @@ export const PersonCenter = () => {
   const positions = useGetPositionStr(outfitEdList)
 
   const getUserInfo = usePixelsMetaverseUserInfo({
-    onBeforeRequest: () => {
+    onRequestBefore: () => {
       console.log("请求数据了")
       openLoading()
     },
@@ -46,7 +46,7 @@ export const PersonCenter = () => {
   useEffect(() => {
     if (!address) return
     getUserInfo(address)
-  }, [contract, address])
+  }, [address])
 
   return (
     !isEmpty(userInfo) && positions ? <PixelsMetaverseHandleImgProvider size={240} showGrid={userInfo?.withGrid} data={{
@@ -61,6 +61,6 @@ export const PersonCenter = () => {
           <AssetsInfo outfitEdList={outfitEdList} noOutfitEdList={noOutfitEdList} />
         </div>
       </div>
-    </PixelsMetaverseHandleImgProvider> : <div className="flex justify-center item-center text-white pt-60">请链接钱包</div>
+    </PixelsMetaverseHandleImgProvider> : <NoConnect />
   )
 }
