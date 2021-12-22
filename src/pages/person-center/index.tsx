@@ -8,7 +8,6 @@ import { AssetsInfo } from "./components/AssetsInfo";
 import { useWeb3Info } from "../../hook/web3";
 import { useLoading } from "../../components/Loading";
 import { message } from "antd";
-import { DataStateBox } from "../../components/DataStateBox";
 
 export const PersonCenter = () => {
   const { address: addresss, networkId } = useWeb3Info()

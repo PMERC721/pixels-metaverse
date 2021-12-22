@@ -3,7 +3,6 @@ import { filter, isEmpty, map } from "lodash";
 import { useLocation } from "react-router";
 import { useUserInfo } from "../../../components/UserProvider";
 import { AvatarCard } from "../../../components/AvatarCard";
-import { NoData } from "../../../components/NoData";
 import { useWeb3Info } from "../../../hook/web3";
 import { DataStateBox } from "../../../components/DataStateBox";
 

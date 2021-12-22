@@ -1,8 +1,7 @@
-import { isEmpty, map } from "lodash";
+import { map } from "lodash";
 import { useHistory, useLocation } from "react-router-dom";
 import { AvatarCard } from "../../../components/AvatarCard";
 import { DataStateBox } from "../../../components/DataStateBox";
-import { NoData } from "../../../components/NoData";
 
 export const PersonCenter = ({
   outfitEdList,

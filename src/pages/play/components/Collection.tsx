@@ -1,9 +1,8 @@
-import { filter, isEmpty, map } from "lodash";
+import { filter, map } from "lodash";
 import React, { useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { AvatarCard } from "../../../components/AvatarCard";
 import { DataStateBox } from "../../../components/DataStateBox";
-import { NoData } from "../../../components/NoData";
 import { useUserInfo } from "../../../components/UserProvider";
 
 export const Collection = () => {
