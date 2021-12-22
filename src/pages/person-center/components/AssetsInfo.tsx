@@ -5,6 +5,7 @@ import { useUserInfo } from "../../../components/UserProvider";
 import { AvatarCard } from "../../../components/AvatarCard";
 import { NoData } from "../../../components/NoData";
 import { useWeb3Info } from "../../../hook/web3";
+import { DataStateBox } from "../../../components/DataStateBox";
 
 export const AssetsInfo = ({ outfitEdList, noOutfitEdList }: {
   noOutfitEdList: any[], outfitEdList: any[]
@@ -16,26 +17,24 @@ export const AssetsInfo = ({ outfitEdList, noOutfitEdList }: {
   const shopGoods = React.useMemo(() => filter(goodsList, item => item?.owner === address && item?.isSale), [goodsList])
 
   return (
-    <>
-      { (!isEmpty(outfitEdList) || !isEmpty(noOutfitEdList) || !isEmpty(shopGoods))
-        ? <div className="flex-1 flex justify-between">
-          {(!isEmpty(outfitEdList) || !isEmpty(noOutfitEdList)) && <div className="overflow-y-scroll flex-1 pr-4 border-r mr-4" style={{ borderColor: "rgba(225,225,225, 0.3" }}>
-            {!isEmpty(outfitEdList) && <div className="pb-8">
-              <div className="">已使用</div>
-              {map(outfitEdList, item => <AvatarCard key={item?.id} item={item} type="assets" />)}
-            </div>}
-            {!isEmpty(noOutfitEdList) && <div>
-              <div className="">未使用</div>
-              {map(noOutfitEdList, item => <AvatarCard key={item?.id} item={item} type="assets" />)}
-            </div>}
+    <DataStateBox data={[...outfitEdList, ...noOutfitEdList, ...shopGoods]}>
+      <div className="flex-1 flex justify-between">
+        <div className="overflow-y-scroll flex-1 pr-4 border-r mr-4"
+          style={{ borderColor: shopGoods?.length > 0 ? "rgba(225,225,225, 0.3" : "transparent", height: "calc(100vh - 170px)" }}>
+          {!isEmpty(outfitEdList) && <div className="pb-8">
+            <div>已使用</div>
+            {map(outfitEdList, item => <AvatarCard key={item?.id} item={item} type="assets" />)}
           </div>}
-          {!isEmpty(shopGoods) && <div className="flex-1 overflow-y-scroll">
-            <div>
-              <div className="">收藏夹</div>
-              {map(shopGoods, item => <AvatarCard key={item?.id} item={item} type="buyGoods" />)}
-            </div>
+          {!isEmpty(noOutfitEdList) && <div>
+            <div>未使用</div>
+            {map(noOutfitEdList, item => <AvatarCard key={item?.id} item={item} type="assets" />)}
           </div>}
-        </div> : <NoData />}
-    </>
+        </div>
+        {!isEmpty(shopGoods) && <div className="flex-1 overflow-y-scroll" style={{ height: "calc(100vh - 170px)" }}>
+          <div>收藏夹</div>
+          {map(shopGoods, item => <AvatarCard key={item?.id} item={item} type="buyGoods" />)}
+        </div>}
+      </div>
+    </DataStateBox>
   )
 }

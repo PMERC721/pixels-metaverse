@@ -50,7 +50,6 @@ input{
   width: 320px;
   background-color: transparent;
   box-shadow:  -5px 5px 10px rgba(225,225,225,0.3);
-  overflow: auto;
   border-radius: 10px;
   border-color: rgba(225,225,225,0.3);
   color: rgba(255, 255, 255, 0.7)

@@ -13,7 +13,7 @@
     "disConnect": "断开连接",
     "lang": "切换语言",
     "search": "查询",
-    "pleaseInputAddress": "请输入用户钱包地址"
+    "pleaseInputAddress": "请输入用户钱包地址/TOKEN ID"
   },
   "footer": {
     "tab": "首页",

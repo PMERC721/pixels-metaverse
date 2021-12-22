@@ -2,6 +2,7 @@ import { filter, isEmpty, map } from "lodash";
 import React, { useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { AvatarCard } from "../../../components/AvatarCard";
+import { DataStateBox } from "../../../components/DataStateBox";
 import { NoData } from "../../../components/NoData";
 import { useUserInfo } from "../../../components/UserProvider";
 
@@ -16,11 +17,11 @@ export const Collection = () => {
         <div>收藏夹</div>
         <div className="cursor-pointer hover:text-red-500" onClick={() => { history.push("/lockers") }}>去收藏更多</div>
       </div>
-      { !isEmpty(shopGoods)
-        ? <div className="overflow-y-scroll" style={{ height: "calc(100% - 30px)" }}>
+      <DataStateBox data={shopGoods}>
+        <div className="overflow-y-scroll" style={{ height: "calc(100% - 30px)" }}>
           {map(shopGoods, item => <AvatarCard key={item?.id} item={item} type={"homeBuyGoods"} />)}
         </div>
-        : <NoData />}
+      </DataStateBox>
     </div>
   );
 };

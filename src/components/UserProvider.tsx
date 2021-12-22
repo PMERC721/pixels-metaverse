@@ -29,25 +29,25 @@ export const UserInfoProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (isEmpty(address)) return
-    //getUserInfo({ address: address, setUserInfo })
+    getUserInfo({ address: address, setUserInfo })
   }, [address, contract])
 
   const getGoodsIdList = useRequest(fetchGetGoodsIdList)
 
   useEffect(() => {
-    //getGoodsIdList({ setValue: setGoodsList, newNumber: -1 })
+    getGoodsIdList({ setValue: setGoodsList, newNumber: -1 })
   }, [address, contract])
 
   useEffect(() => {
     if (isEmpty(networkId)) return
     setGoodsList([])
-    //getGoodsIdList({ setValue: setGoodsList, newNumber: -1 })
+    getGoodsIdList({ setValue: setGoodsList, newNumber: -1 })
   }, [networkId])
 
-  /* useEffect(()=>{
+  useEffect(()=>{
     if(!goodsId) return
-    getGoodsInfo({ id: goodsId, setGoodsList })
-  }, [goodsId]) */
+    //getGoodsInfo({ id: goodsId, setGoodsList })
+  }, [goodsId])
 
   return (
     <UserInfoContext.Provider value={{ userInfo, setUserInfo, goodsList, setGoodsList, goodsId, setGoodsId }}>

@@ -37,7 +37,7 @@ export const Header = memo(() => {
   const { pathname } = useLocation()
 
   return (
-    <div className="flex px-4 items-center justify-between text-l fixed w-full h-16 bg-white bg-opacity-10 text-white text-opacity-70">
+    <div className="flex px-4 items-center justify-between text-l fixed w-full h-16 bg-white bg-opacity-10 text-white text-opacity-70 z-50">
       <div className="text-2xl cursor-pointer" onClick={() => history.push("/")}>像素元宇宙</div>
       <div className="flex justify-around items-center w-80">
         {nav.map(item => {
@@ -53,7 +53,7 @@ export const Header = memo(() => {
         <div className="mr-4 flex items-center bg-white bg-opacity-10" style={{ borderRadius: 20 }}>
           <input
             className="px-4 bg-transparent outline-none focus:outline-none w-60"
-            placeholder="请输入用户钱包地址"
+            placeholder="请输入用户钱包地址/物品ID"
             onChange={(e) => setInputStr(e.target.value)}
           />
           <Button type="primary" size="large" className="w-24"

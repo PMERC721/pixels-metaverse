@@ -10,7 +10,7 @@ import {
   useConvertedPostion
 } from "../../pixels-metaverse";
 import { useWeb3Info } from "../../hook/web3";
-import { NoConnect } from "../../components/NoConnect";
+import { DataStateBox } from "../../components/DataStateBox";
 
 export const PixelsMetaverse = () => {
   const { address: addresss } = useWeb3Info()
@@ -66,10 +66,6 @@ export const PixelsMetaverse = () => {
     }
     return `${str}${min}`
   }, [outfitEdList])
-
-  if (isEmpty(userInfo)) {
-    return <NoConnect />
-  }
 
   return (
     <PixelsMetaverseHandleImgProvider

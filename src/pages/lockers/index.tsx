@@ -8,6 +8,7 @@ export const Lockers = () => {
   const [data, setData] = React.useState<any[]>([])
 
   return (
+
     <main className="pt-20">
       <div className="m-auto p-6 rounded-md w-5/6"
         style={{
@@ -19,12 +20,13 @@ export const Lockers = () => {
           <div className="text-2xl">储物室</div>
           <SearchQuery setData={setData} />
         </div>
-        <DataStateBox
-          data={data}
-          classCSS="flex flex-wrap overflow-y-scroll"
-          styleCSS={{ height: "calc(100vh - 170px)" }}
-        >
-          {map(data, (item, i) => <GoodsCard key={i} item={item} i={i} />)}
+        <DataStateBox data={data}>
+          <div
+            className="flex flex-wrap overflow-scroll" style={{
+              height: "calc(100vh - 170px)"
+            }}>
+            {map(data, (item, i) => <GoodsCard key={i} item={item} i={i} />)}
+          </div>
         </DataStateBox>
       </div>
     </main>

@@ -7,10 +7,11 @@ import { BaseInfo } from "./components/BaseInfo";
 import { AssetsInfo } from "./components/AssetsInfo";
 import { useWeb3Info } from "../../hook/web3";
 import { useLoading } from "../../components/Loading";
-import { NoConnect } from "../../components/NoConnect";
+import { message } from "antd";
+import { DataStateBox } from "../../components/DataStateBox";
 
 export const PersonCenter = () => {
-  const { address: addresss } = useWeb3Info()
+  const { address: addresss, networkId } = useWeb3Info()
   const { goodsList, userInfo } = useUserInfo()
   const { search } = useLocation()
   const address = search ? search.split("=")[1] : addresss
@@ -39,17 +40,25 @@ export const PersonCenter = () => {
       closeDelayLoading()
     },
     onFail: (arg) => {
-      console.log(arg, "请求数据失败")
+      message.error({
+        content: arg?.message,
+        style: {
+          width: 500,
+          margin: "auto"
+        }
+      })
+      closeDelayLoading()
     }
   })
 
   useEffect(() => {
-    if (!address) return
+    if (!address || !networkId) return
     getUserInfo(address)
-  }, [address])
+    console.log("networkId", networkId)
+  }, [address, networkId])
 
   return (
-    !isEmpty(userInfo) && positions ? <PixelsMetaverseHandleImgProvider size={240} showGrid={userInfo?.withGrid} data={{
+    <>{positions && <PixelsMetaverseHandleImgProvider size={240} showGrid={userInfo?.withGrid} data={{
       positions: positions,
       size: 'large',
       bgColor: userInfo?.bgColor,
@@ -61,6 +70,7 @@ export const PersonCenter = () => {
           <AssetsInfo outfitEdList={outfitEdList} noOutfitEdList={noOutfitEdList} />
         </div>
       </div>
-    </PixelsMetaverseHandleImgProvider> : <NoConnect />
+    </PixelsMetaverseHandleImgProvider>}
+    </>
   )
 }

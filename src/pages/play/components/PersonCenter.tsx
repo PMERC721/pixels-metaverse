@@ -1,6 +1,7 @@
 import { isEmpty, map } from "lodash";
 import { useHistory, useLocation } from "react-router-dom";
 import { AvatarCard } from "../../../components/AvatarCard";
+import { DataStateBox } from "../../../components/DataStateBox";
 import { NoData } from "../../../components/NoData";
 
 export const PersonCenter = ({
@@ -23,8 +24,8 @@ export const PersonCenter = ({
           onClick={() => { history.push(`/person-center${address ? "?address=" + address : ""}`) }}
         >查看更多</div>
       </div>
-      {(!isEmpty(outfitEdList) || !isEmpty(noOutfitEdList))
-        ? <div
+      <DataStateBox data={[...outfitEdList, ...noOutfitEdList]}>
+        <div
           className="overflow-y-scroll"
           style={{ height: "calc(100% - 30px)" }}>
           <div className="mt-2 pb-4">
@@ -36,7 +37,7 @@ export const PersonCenter = ({
             {map(noOutfitEdList, item => <AvatarCard key={item?.id} item={item} type="assets" />)}
           </div>
         </div>
-        : <NoData />}
+      </DataStateBox>
     </div>
   );
 };
