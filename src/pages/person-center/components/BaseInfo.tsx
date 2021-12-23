@@ -60,11 +60,11 @@ export const BaseInfo = () => {
       <div className="overflow-y-scroll" style={{ height: "calc(100% - 240px)" }}>
         <InfoLabel label="账户">
           <div className="overflow-x-scroll w-48">
-            {userInfo?.account || "0x000000000000000000000000000000000000000000000000000"}
+            {address || "0x000000000000000000000000000000000000000000000000000"}
           </div>
         </InfoLabel>
         <InfoLabel label="类型">
-          {userInfo?.account?.includes("0000000000000000000000000")
+          {userInfo?.id === "0"
             ? <div className="cursor-pointer text-red-500" onClick={fetch}>去激活账户</div>
             : <div>{userInfo?.isMerchant ? "商户" : "用户"}</div>}
         </InfoLabel>
@@ -81,16 +81,11 @@ export const BaseInfo = () => {
             onChange={(e) => setConfig((pre) => ({ ...pre, bgColor: e.target.value }))} />
         </InfoLabel>
         <Button type="primary" size="large" className="mt-6 bg-red-500 cursor-pointer h-10 w-full hover:text-white"
-          style={{ cursor: isCurUser ? "pointer" : "no-drop" }}
+          style={{ cursor: isCurUser && userInfo?.id !== "0" ? "pointer" : "no-drop" }}
           onClick={() => {
-            if (isCurUser) {
-              goSetConfig({
-                value: {
-                  bgColor: config?.bgColor,
-                  gridColor: config?.gridColor,
-                  withGrid: config?.withGrid
-                }
-              })
+            console.log(`${config?.bgColor || ""}|${config?.withGrid ? config?.gridColor : ""}`)
+            if (isCurUser && userInfo?.id !== "0") {
+              goSetConfig({ config: `${config?.bgColor || ""}|${config?.withGrid ? config?.gridColor : ""}` })
             }
           }}
         >{address?.toUpperCase() === addresss?.toUpperCase() ? "更新设置" : "不可更新设置"}</Button>

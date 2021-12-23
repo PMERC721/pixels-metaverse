@@ -64,7 +64,7 @@ contract PixelsMetavers {
         _owner = msg.sender;
     }
 
-    //118008 ropsten 118458 local
+    //118008 ropsten 97333 local
     function register() public {
         require(user[msg.sender].id == 0, "You are already a platform user!");
         require(
@@ -75,7 +75,7 @@ contract PixelsMetavers {
         user[msg.sender].id = amount;
     }
 
-    //65023 67528  bgColor: '#c18686', gridColor: '#472a2a'  132457
+    //47900  bgColor: '#c18686', gridColor: '#472a2a'  132457
     function setConfig(string memory other) public MustUser(msg.sender) {
         user[msg.sender].other = other;
     }

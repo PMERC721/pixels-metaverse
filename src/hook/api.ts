@@ -94,8 +94,8 @@ export const fetchGetGoodsIdList = async (argContract: IArgContract, arg?: { set
   }
 }
 
-export const fetchSetConfig = async (argContract: IArgContract, arg: { value: any }) => {
-  await argContract?.contract.methods.setConfig(arg.value.bgColor, arg.value.gridColor, arg.value.withGrid).send({ from: argContract?.address });
+export const fetchSetConfig = async (argContract: IArgContract, arg: { config: string }) => {
+  await argContract?.contract.methods.setConfig(arg.config).send({ from: argContract?.address });
 }
 
 export const fetchApplication = async (argContract: IArgContract, arg: { name: string }) => {
