@@ -27,6 +27,10 @@ contract PMT721 is ERC721 {
         _mint(msg.sender, ++_tokenId);
     }
 
+    function burn(uint256 id) public MustMinter(msg.sender) {
+        _burn(id);
+    }
+
     function exits(uint256 id) public view returns (bool) {
         return _exists(id);
     }

@@ -63,7 +63,7 @@ export const Loading = () => {
           <div className="object" id="object_one"></div>
         </div>
         {show && <div id="close-loading" onClick={closeLoading}><CloseCircleOutlined /></div>}
-        {show && <div id="close-text" >上链速度较慢，请耐心等待哦。</div>}
+        {show && <div id="close-text" >上链以及获取速度较慢，请耐心等待哦。</div>}
       </div>
     </div>
   );

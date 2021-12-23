@@ -17,7 +17,7 @@ export const DataStateBox = ({
   classCSS?: string;
   emptyDesc?: string;
 }) => {
-  const { connected } = useWeb3Info();
+  const { connected, networkId } = useWeb3Info();
 
   return (
     <div
@@ -26,7 +26,7 @@ export const DataStateBox = ({
     >
       {isEmpty(data)
         ? <div className="w-full h-full flex justify-center items-center opacity-70">
-          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={connected ? "暂无数据" : emptyDesc} style={{ color: "#fff" }} />
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={connected && networkId ? [3, 5777].includes(networkId) ? "暂无数据" : "请切换至 Ropsten 网络" : emptyDesc} style={{ color: "#fff" }} />
         </div>
         : children}
     </div>

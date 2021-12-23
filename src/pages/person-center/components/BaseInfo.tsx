@@ -4,8 +4,8 @@ import { AppstoreOutlined } from "@ant-design/icons";
 import { fetchRegister, fetchSetConfig, fetchUserInfo, useRequest } from "../../../hook/api";
 import { useLocation } from "react-router";
 import { useUserInfo } from "../../../components/UserProvider";
-import {PixelsMetaverseHandleImg, usePixelsMetaverseHandleImg } from "../../../pixels-metaverse";
-import { ReactNode } from "react";
+import { PixelsMetaverseHandleImg, usePixelsMetaverseHandleImg } from "../../../pixels-metaverse";
+import { ReactNode, useMemo } from "react";
 import { useWeb3Info } from "../../../hook/web3";
 
 const InfoLabel = ({ children, label }: { children: ReactNode, label: string }) => {
@@ -44,6 +44,8 @@ export const BaseInfo = () => {
     }
   }, [address])
 
+  const isCurUser = useMemo(() => address?.toUpperCase() === addresss?.toUpperCase(), [addresss, address])
+
   return (
     <div className="pr-8 mr-4 border-r border-white border-opacity-30">
       <PixelsMetaverseHandleImg
@@ -79,15 +81,17 @@ export const BaseInfo = () => {
             onChange={(e) => setConfig((pre) => ({ ...pre, bgColor: e.target.value }))} />
         </InfoLabel>
         <Button type="primary" size="large" className="mt-6 bg-red-500 cursor-pointer h-10 w-full hover:text-white"
-          disabled={address?.toUpperCase() !== addresss?.toUpperCase()}
+          style={{ cursor: isCurUser ? "pointer" : "no-drop" }}
           onClick={() => {
-            goSetConfig({
-              value: {
-                bgColor: config?.bgColor,
-                gridColor: config?.gridColor,
-                withGrid: config?.withGrid
-              }
-            })
+            if (isCurUser) {
+              goSetConfig({
+                value: {
+                  bgColor: config?.bgColor,
+                  gridColor: config?.gridColor,
+                  withGrid: config?.withGrid
+                }
+              })
+            }
           }}
         >{address?.toUpperCase() === addresss?.toUpperCase() ? "更新设置" : "不可更新设置"}</Button>
       </div>

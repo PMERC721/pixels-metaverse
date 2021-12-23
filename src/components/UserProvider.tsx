@@ -44,8 +44,8 @@ export const UserInfoProvider = ({ children }: { children: ReactNode }) => {
     getGoodsIdList({ setValue: setGoodsList, newNumber: -1 })
   }, [networkId])
 
-  useEffect(()=>{
-    if(!goodsId) return
+  useEffect(() => {
+    if (!goodsId) return
     //getGoodsInfo({ id: goodsId, setGoodsList })
   }, [goodsId])
 

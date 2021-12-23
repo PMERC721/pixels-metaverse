@@ -8,8 +8,8 @@ import { fetchApplication, fetchGetGoodsIdList, fetchPostGoods, fetchRegister, f
 import { useWeb3Info } from '../../../hook/web3';
 const { Option } = Select;
 
-const Label = ({ children }: { children: ReactNode }) => {
-  return <div className="pt-4 mb-1">{children}<span className="text-red-500">&nbsp;*</span></div>
+const Label = ({ children, noNeed }: { children: ReactNode, noNeed?: boolean }) => {
+  return <div className="pt-4 mb-1">{children}{!noNeed &&<span className="text-red-500">*</span>}</div>
 }
 
 const Input = (props: InputHTMLAttributes<HTMLInputElement>) => {
@@ -93,7 +93,6 @@ export const Submit = () => {
     weight: "",
   })
   const [positionData, setPostionData] = useState("")
-  const [shopName, setShopName] = useState("")
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { address: addresss } = useWeb3Info()
   const { userInfo, setUserInfo, setGoodsList } = useUserInfo()
@@ -204,21 +203,19 @@ export const Submit = () => {
       message.warn("请输入物品数量");
       return;
     }
-    if (!price) {
-      message.warn("请输入物品价格");
-      return;
-    }
     return true;
   }, [name, category, amount, price]);
 
+  const isUser = useMemo(() => !userInfo?.account?.includes("0000000000000000000000000"), [userInfo]);
+
   return (
-    <div className="rounded-md text-gray-300 w-72 overflow-y-auto p-4 bg-white bg-opacity-10">
+    <div className="rounded-md text-gray-300 w-72 p-4 bg-white bg-opacity-10">
       <div className="flex items-center text-2xl text-gray-300">制作虚拟物品&nbsp;
           <Tooltip placement="right" className="cursor-pointer" title={`建议各部位分开创建，组合性更强。`} color="#29303d">
           <ExclamationCircleOutlined />
         </Tooltip>
       </div>
-      { !userInfo?.account?.includes("0000000000000000000000000") && userInfo?.isMerchant ? <div>
+      { isUser ? <div className="overflow-y-scroll" style={{ height: 480 }}>
         <Label>名称</Label>
         <Input value={name} placeholder="物品名称" maxLength={15} onChange={(e) => setMerchandies((pre) => ({ ...pre, name: e.target.value }))} />
         <Label>种类</Label>
@@ -235,17 +232,24 @@ export const Submit = () => {
         >
           {map(categoryData, item => <Option key={item.value} value={item.value}>{item.label}</Option>)}
         </Select>
-        <Label>数量(最多可发行9个)</Label>
+        <Label>数量(最多可制作99个)</Label>
+        <Input value={amount} placeholder="物品数量" maxLength={2} onChange={(e) => setMerchandies((pre) => ({ ...pre, amount: mustNum(e) }))} />
+        <Label noNeed>开始时间(毫秒)</Label>
         <Input value={amount} placeholder="物品数量" maxLength={1} onChange={(e) => setMerchandies((pre) => ({ ...pre, amount: mustNum(e) }))} />
-        <Label>价格(ETH)</Label>
-        <Input value={price} placeholder="物品价格" maxLength={5} onChange={(e) => setMerchandies((pre) => ({ ...pre, price: mustNum(e) }))} />
         <div className="flex items-center mt-4 mb-1">
-          <div>权重</div>
-          <Tooltip placement="top" className="cursor-pointer" title={`物品权重指当前物品在商家自己的商店中的排名，权重越高排名越靠前。`} color="#29303d">
+          <div>层级</div>
+          <Tooltip placement="top" className="cursor-pointer" title={`当前绘制的物品显示的层级，越高越显示在外层`} color="#29303d">
             <ExclamationCircleOutlined />
           </Tooltip>
         </div>
-        <Input value={weight} placeholder="权重" maxLength={10} onChange={(e) => setMerchandies((pre) => ({ ...pre, weight: mustNum(e) }))} />
+        <Input value={amount} placeholder="物品数量" maxLength={1} onChange={(e) => setMerchandies((pre) => ({ ...pre, amount: mustNum(e) }))} />
+        <div className="flex items-center mt-4 mb-1">
+          <div>本体URL</div>
+          <Tooltip placement="top" className="cursor-pointer" title={`当前绘制的图片的URL地址`} color="#29303d">
+            <ExclamationCircleOutlined />
+          </Tooltip>
+        </div>
+        <Input value={weight} placeholder="本体URL地址" maxLength={10} onChange={(e) => setMerchandies((pre) => ({ ...pre, weight: mustNum(e) }))} />
         <Button type="primary" size="large" className="mt-6 w-full rounded"
           onClick={() => {
             const is = checkData()
@@ -259,23 +263,9 @@ export const Submit = () => {
             setIsModalVisible(true);
           }}
         >提交</Button>
-      </div> : <div>
-        <Label>作坊名称</Label>
-        <Input value={shopName} placeholder="店铺名称" maxLength={15} onChange={(e) => setShopName(e.target.value)} />
-        <Button type="primary" size="large" className="mt-6 w-full rounded"
-          onClick={() => {
-            if (!shopName) {
-              message.warn("请输入作坊名称");
-              return;
-            }
-            application({ name: shopName })
-          }}
-          disabled={userInfo?.account?.includes("0000000000000000000000000")}
-        >申请入驻</Button>
-        {userInfo?.account?.includes("0000000000000000000000000") && <div className="mt-4">你还不是宇宙创始居民，请
-        <span className="text-red-500 cursor-pointer" onClick={() => {
-            register()
-          }}>激活</span>自己的元宇宙身份！</div>}
+      </div> : <div className="flex items-center justify-center h-full text-lg">
+        <div className="mt-4">你还不是宇宙创始居民，请
+        <span className="text-red-500 cursor-pointer" onClick={register}>激活</span>自己的元宇宙身份！</div>
       </div>}
 
       <Modal
