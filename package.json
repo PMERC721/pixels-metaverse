@@ -67,7 +67,7 @@
   "devDependencies": {
     "autoprefixer": "^9",
     "babel-plugin-import": "^1.13.3",
-    "contract-json-converted-html": "^0.0.10",
+    "contract-json-converted-html": "^0.0.12",
     "craco-less": "^1.20.0",
     "craco-plugin-react-hot-reload": "^0.1.0",
     "eosjs": "^22.1.0",

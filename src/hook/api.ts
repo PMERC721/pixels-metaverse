@@ -102,14 +102,16 @@ export const fetchApplication = async (argContract: IArgContract, arg: { name: s
   await argContract?.contract.methods.application(arg?.name).send({ from: argContract?.address });
 }
 
-export const fetchPostGoods = async (argContract: IArgContract, arg: { value: IMerchandise }) => {
-  await argContract?.contract.methods.postGoods(
+export const fetchMake = async (argContract: IArgContract, arg: { value: IMerchandise }) => {
+  await argContract?.contract.methods.make(
     arg?.value?.name,
     arg?.value?.category,
     arg?.value?.data,
-    String(Number(arg?.value?.price) * (10 ** 18)),
-    Number(arg?.value?.amount),
-    arg?.value?.bgColor
+    "",
+    0,
+    0,
+    0,
+    Number(arg?.value?.amount)
   ).send({ from: argContract?.address });
 }
 

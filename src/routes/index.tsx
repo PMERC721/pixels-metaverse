@@ -11,7 +11,7 @@ export const routes = [
   { name: "制作虚拟物品", path: "/produced", component: Produced },
   { name: "储物柜", path: "/lockers", component: Lockers },
   { name: "个人中心", path: "/person-center", component: PersonCenter },
-  { name: "首页", path: "/", component: Website }
+  { name: "首页", path: "/", component: Website },
 ]
 
 export const Routes = () => {

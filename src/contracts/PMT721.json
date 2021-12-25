@@ -17573,12 +17573,6 @@
     "version": "0.8.0+commit.c7dfd78e.Emscripten.clang"
   },
   "networks": {
-    "1": {
-      "events": {},
-      "links": {},
-      "address": "0x9A534628B4062E123cE7Ee2222ec20B86e16Ca8F",
-      "transactionHash": "0x57bde4c2465e2b00e1d12d633195ca70a6a433741f9a15e6ed29eb141e463ec5"
-    },
     "3": {
       "events": {},
       "links": {},
