@@ -23,8 +23,8 @@ contract PMT721 is ERC721 {
         _owner = msg.sender;
     }
 
-    function mint() public MustMinter(msg.sender) {
-        _mint(msg.sender, ++_tokenId);
+    function mint(address to) public MustMinter(msg.sender) {
+        _mint(to, ++_tokenId);
     }
 
     function burn(uint256 id) public MustMinter(msg.sender) {

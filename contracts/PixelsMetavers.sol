@@ -19,16 +19,16 @@ contract PixelsMetavers {
 
     struct Material {
         uint256 id;
-        uint16 time;
-        uint16 position;
-        uint16 zIndex;
-        uint16 isCompose;
+        uint256 compose;
+        string time;
+        string position;
+        string zIndex;
         address owner;
         bytes32 data;
     }
     mapping(uint256 => Material) public material;
     mapping(uint256 => uint256[]) public composes; // 合成
-    mapping(address => uint256[]) public collection; // 收藏
+    mapping(address => uint256[]) public collection; //非用户也能收藏
 
     struct BaseInfo {
         string data;
@@ -42,6 +42,7 @@ contract PixelsMetavers {
     struct MaterialInfo {
         Material material;
         BaseInfo baseInfo;
+        uint256[] composes;
     }
 
     modifier MustExist(uint256 id) {
@@ -106,7 +107,9 @@ contract PixelsMetavers {
     // 已验证
     function getMaterial(uint256 id) public view returns (MaterialInfo memory) {
         Material storage m = material[id];
-        return MaterialInfo(m, baseInfo[m.data]);
+        BaseInfo memory b = baseInfo[m.data];
+        uint256[] memory c = composes[id];
+        return MaterialInfo(m, b, c);
     }
 
     // 已验证 356245
@@ -118,12 +121,11 @@ contract PixelsMetavers {
         uint256 num
     ) public MustUser(msg.sender) {
         bytes32 d = keccak256(abi.encodePacked(data));
+        require(d != keccak256(abi.encodePacked("")), "Data cannot empty!");
         require(baseInfo[d].userId == 0, "Only Make Once Times!");
 
         for (uint256 i; i < num; i++) {
-            IPMT721(PMT721).mint();
-            uint256 id = IPMT721(PMT721).currentID();
-            material[id] = Material(id, 0, 0, 0, 0, msg.sender, d);
+            _make(d);
         }
         baseInfo[d] = BaseInfo(
             data,
@@ -134,35 +136,38 @@ contract PixelsMetavers {
         );
     }
 
-    function reMake(uint256 id, uint256 num)
-        public
-        MustUser(msg.sender)
-        MustExist(id)
-    {
+    function reMake(uint256 id, uint256 num) public MustOwner(msg.sender, id) {
         Material storage m = material[id];
         require(
             baseInfo[m.data].userId == user[msg.sender].id,
             "Only Owner Can Do It!"
         );
         for (uint256 i; i < num; i++) {
-            IPMT721(PMT721).mint();
-            uint256 ID = IPMT721(PMT721).currentID();
-            material[ID] = Material(ID, 0, 0, 0, 0, msg.sender, m.data);
+            _make(m.data);
         }
     }
 
-    // 158551
+    function _make(bytes32 data) private {
+        IPMT721(PMT721).mint(msg.sender);
+        uint256 id = IPMT721(PMT721).currentID();
+        material[id] = Material(id, 0, "", "", "", msg.sender, data);
+    }
+
+    //
     function collect(uint256 id) public payable MustExist(id) {
+        Material memory m = material[id];
+        require(m.owner != msg.sender, "This your material");
         collection[msg.sender].push(id);
     }
 
-    function cancelCollect(uint256 index) public MustUser(msg.sender) {
-        uint256[] memory c = collection[msg.sender];
-        require(c.length > index, "index not exist");
+    function cancelCollect(uint256 id, uint256 index) public MustExist(id) {
+        require(index < collection[msg.sender].length, "Not this index value");
         collection[msg.sender][index] = 0;
     }
 
     function compose(uint256[] memory ids) public MustUser(msg.sender) {
+        _make(keccak256(abi.encodePacked("")));
+        uint256 curID = IPMT721(PMT721).currentID();
         for (uint256 i; i < ids.length; i++) {
             uint256 id = ids[i];
             Material memory m = material[id];
@@ -170,38 +175,31 @@ contract PixelsMetavers {
                 msg.sender == m.owner,
                 "The current item is not your asset!"
             );
-            material[id].isCompose = 1;
+            material[id].compose = curID;
             IPMT721(PMT721).safeTransferFrom(msg.sender, address(this), id);
         }
-
-        IPMT721(PMT721).mint();
-        uint256 currentID = IPMT721(PMT721).currentID();
-        material[currentID] = Material(currentID, 0, 0, 0, 0, msg.sender, "");
-        composes[currentID] = ids;
+        composes[curID] = ids;
     }
 
-    function cancelCompose(uint256 id)
-        public
-        MustOwner(msg.sender, id)
-    {
+    function cancelCompose(uint256 id) public {
         uint256[] memory c = composes[id];
         uint256 len = c.length;
         require(len > 1, "The id no composed");
         for (uint256 i; i < len; i++) {
             uint256 idd = c[i];
-            material[c[i]].isCompose = 0;
+            material[c[i]].compose = 0;
             IPMT721(PMT721).safeTransferFrom(address(this), msg.sender, idd);
         }
-        composes[id] = [0];
+        delete composes[id];
+        delete material[id];
         IPMT721(PMT721).burn(id);
-        material[id] = Material(0, 0, 0, 0, 0, address(0), "");
     }
 
-    function setTime(
+    function setConfig(
         uint256 id,
-        uint16 time,
-        uint16 position,
-        uint16 zIndex
+        string memory time,
+        string memory position,
+        string memory zIndex
     ) public MustOwner(msg.sender, id) {
         material[id].time = time;
         material[id].position = position;
@@ -214,11 +212,10 @@ contract PixelsMetavers {
         MustOwner(msg.sender, id)
     {
         uint256[] memory c = composes[ids];
-        uint256 len = c.length;
-        require(len > 1, "The id no composed");
+        require(c.length > 1, "The id no composed");
         Material memory m = material[id];
-        require(m.isCompose == 0, "The id subjion");
-        material[id].isCompose = 1;
+        require(m.compose == 0, "The id subjion");
+        material[id].compose = ids;
         composes[ids].push(id);
     }
 
@@ -230,7 +227,7 @@ contract PixelsMetavers {
         uint256 len = c.length;
         require(len > index, "The id no composed");
         uint256 id = c[index];
-        material[id].isCompose = 0;
+        material[id].compose = 0;
         composes[ids][index] = 0;
     }
 
@@ -242,14 +239,15 @@ contract PixelsMetavers {
     function transfer(
         address from,
         address to,
-        uint256 tokenId
+        uint256 id
     ) public {
-        Material memory m = material[tokenId];
+        Material memory m = material[id];
+        require(m.compose == 0, "This material composed!");
         if (to == address(0)) {
-            material[tokenId].owner = address(this);
+            delete material[id];
         }
-        if (m.owner == from && from != address(0)) {
-            material[tokenId].owner = to;
+        if (from != address(0)) {
+            material[id].owner = to;
         }
     }
 }
