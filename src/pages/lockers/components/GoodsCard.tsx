@@ -5,7 +5,7 @@ import { fetchCollect, useRequest } from "../../../hook/api";
 import { categoryData } from "../../produced/components/Submit";
 import { useHistory } from "react-router";
 import { PixelsMetaverseImgByPositionData, PixelsMetaverseImgByPositionData2 } from "../../../pixels-metaverse";
-import React from "react";
+import React, { useMemo } from "react";
 import { ellipseAddress } from "../../../helpers/utilities";
 import Checkbox from "antd/lib/checkbox/Checkbox";
 import { useWeb3Info } from "../../../hook/web3";
@@ -22,6 +22,13 @@ export const GoodsCard = ({ item, i, setComposeList }: { item: any, i: number, s
   const history = useHistory()
   const { userInfo } = useUserInfo()
 
+  const data = useMemo(()=>{
+    return {
+      ...item,
+      data: item?.baseInfo?.data
+    }
+  }, [item])
+
   return (
     <div
       key={item?.id}
@@ -30,7 +37,7 @@ export const GoodsCard = ({ item, i, setComposeList }: { item: any, i: number, s
         width: 216,
         marginRight: i % 5 === 4 ? 0 : 17
       }}>
-      <PixelsMetaverseImgByPositionData data={{ ...item, positions: item?.baseInfo?.data, goodsData: [item] }} size={200} style={{ borderRadius: 4, background: item?.bgColor || userInfo?.user?.bgColor || "#e1e1e11a", cursor: "pointer", boxShadow: "0px 0px 5px rgba(225,225,225,0.3)" }} />
+      <PixelsMetaverseImgByPositionData data={{ ...item, positions: item?.baseInfo?.data, goodsData: [data] }} size={200} style={{ borderRadius: 4, background: item?.bgColor || userInfo?.user?.bgColor || "#e1e1e11a", cursor: "pointer", boxShadow: "0px 0px 5px rgba(225,225,225,0.3)" }} />
       {/* <PixelsMetaverseImgByPositionData2 data={item} size={["50%", "50%"]} style={{ borderRadius: 4, background: item?.bgColor || userInfo?.user?.bgColor || "#e1e1e11a", cursor: "pointer", boxShadow: "0px 0px 5px rgba(225,225,225,0.3)" }} /> */}
       <div className="flex flex-col justify-between flex-1 mt-4" style={{ fontSize: 12, width: 200 }}>
         <div className="text-right flex-1" style={{ height: 40, textOverflow: "ellipsis", overflow: "hidden" }}>{item?.baseInfo?.name || "卡姿兰大眼睛，你值得拥有,还在等什么，快点装备我吧"}</div>
