@@ -155,10 +155,8 @@ export const Submit = () => {
       name,
       category,
       amount,
-      price,
-      weight,
       data: nftData,
-      bgColor: config?.bgColor || ""
+      decode: ""
     }
     postGoods({
       value: data
@@ -234,7 +232,7 @@ export const Submit = () => {
         </Select>
         <Label>数量(最多可制作99个)</Label>
         <Input value={amount} placeholder="物品数量" maxLength={2} onChange={(e) => setMerchandies((pre) => ({ ...pre, amount: mustNum(e) }))} />
-        <Label noNeed>开始时间(毫秒)</Label>
+        {/* <Label noNeed>开始时间(毫秒)</Label>
         <Input value={amount} placeholder="物品数量" maxLength={1} onChange={(e) => setMerchandies((pre) => ({ ...pre, amount: mustNum(e) }))} />
         <div className="flex items-center mt-4 mb-1">
           <div>层级</div>
@@ -250,7 +248,7 @@ export const Submit = () => {
           </Tooltip>
         </div>
         <Input value={weight} placeholder="本体URL地址" maxLength={10} onChange={(e) => setMerchandies((pre) => ({ ...pre, weight: mustNum(e) }))} />
-        <Button type="primary" size="large" className="mt-6 w-full rounded"
+         */}<Button type="primary" size="large" className="mt-6 w-full rounded"
           onClick={() => {
             const is = checkData()
             if (!is) return

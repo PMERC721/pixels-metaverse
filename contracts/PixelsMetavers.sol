@@ -28,7 +28,7 @@ contract PixelsMetavers {
     }
     mapping(uint256 => Material) public material;
     mapping(uint256 => uint256[]) public composes; // 合成
-    mapping(address => uint256[]) public collection; //非用户也能收藏
+    mapping(address => uint256[]) public collection; // 非用户也能收藏
 
     struct BaseInfo {
         string data;
@@ -57,7 +57,7 @@ contract PixelsMetavers {
 
     modifier MustOwner(address sender, uint256 id) {
         Material memory m = material[id];
-        require(sender == m.owner, "The current item is not your asset!");
+        require(sender == m.owner, "The current item is not your!");
         _;
     }
 
@@ -163,6 +163,14 @@ contract PixelsMetavers {
     function cancelCollect(uint256 id, uint256 index) public MustExist(id) {
         require(index < collection[msg.sender].length, "Not this index value");
         collection[msg.sender][index] = 0;
+    }
+
+    function getCollection(address from)
+        public
+        view
+        returns (uint256[] memory)
+    {
+        return collection[from];
     }
 
     function compose(uint256[] memory ids) public MustUser(msg.sender) {

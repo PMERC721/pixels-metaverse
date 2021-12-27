@@ -70,16 +70,19 @@ export const fetchGetGoodsInfo = async (argContract: IArgContract, arg: { id: nu
   })
 }
 
-export const fetchGetGoodsIdList = async (argContract: IArgContract, arg?: { setValue: Dispatch<React.SetStateAction<any[]>>, newNumber?: number }) => {
-  const idList = await argContract?.contract?.methods.getGoodsList().call();
-  console.log(idList)
+export const fetchCollectList = async (argContract: IArgContract, arg: { address: string, setList: Dispatch<React.SetStateAction<any[]>> }) => {
+  const list = await argContract?.contract.methods.collection(arg?.address, "1").call();
+  arg?.setList && arg?.setList(list)
+}
 
-  const len = idList.length || 0;
+export const fetchGetGoodsIdList = async (argContract: IArgContract, arg?: { setValue: Dispatch<React.SetStateAction<any[]>>, newNumber?: number }) => {
+  const len = await argContract?.contract?.methods.getMaterialLength().call();
+
   if (arg?.newNumber === -1) {
-    for (let i = len - 1; i >= 0; i--) {
-      let item = await argContract?.contract?.methods.goods(Number(idList[i])).call()
+    for (let i = len; i >= 1; i--) {
+      let item = await argContract?.contract?.methods.getMaterial(i).call()
       arg?.setValue && arg?.setValue((pre) => {
-        if (i === len - 1) {
+        if (i === len) {
           return [item]
         }
         return [...pre, item]
@@ -87,7 +90,7 @@ export const fetchGetGoodsIdList = async (argContract: IArgContract, arg?: { set
     }
   } else {
     for (let i = len - 1; i >= len - (arg?.newNumber || len); i--) {
-      let item = await argContract?.contract?.methods.goods(Number(idList[i])).call()
+      let item = await argContract?.contract?.methods.getMaterial(i + 1).call()
       arg?.setValue && !arg.newNumber && arg?.setValue((pre) => ([...pre, item]))
       arg?.setValue && arg.newNumber && arg?.setValue((pre) => ([item, ...pre]))
     }
@@ -108,9 +111,6 @@ export const fetchMake = async (argContract: IArgContract, arg: { value: IMercha
     arg?.value?.category,
     arg?.value?.data,
     "",
-    0,
-    0,
-    0,
     Number(arg?.value?.amount)
   ).send({ from: argContract?.address });
 }
@@ -118,6 +118,16 @@ export const fetchMake = async (argContract: IArgContract, arg: { value: IMercha
 export const fetchBuyGoods = async (argContract: IArgContract, arg: { id: number, price: number, setGoodsList: Dispatch<React.SetStateAction<any[]>> }) => {
   await argContract?.contract.methods.buyGoods(arg.id).send({ from: argContract?.address, value: arg.price });
   fetchGetGoodsInfo(argContract, { id: arg?.id, setGoodsList: arg?.setGoodsList })
+}
+
+export const fetchCollect = async (argContract: IArgContract, arg: { id: number, setGoodsList: Dispatch<React.SetStateAction<any[]>> }) => {
+  await argContract?.contract.methods.collect(arg.id).send({ from: argContract?.address });
+  //fetchGetGoodsInfo(argContract, { id: arg?.id, setGoodsList: arg?.setGoodsList })
+}
+
+export const fetchCompose = async (argContract: IArgContract, arg: { ids: string[] }) => {
+  console.log(arg?.ids)
+  await argContract?.contract.methods.compose(arg.ids).send({ from: argContract?.address });
 }
 
 export const fetchOutfit = async (argContract: IArgContract, arg: { value: any, setGoodsList: Dispatch<React.SetStateAction<any[]>> }) => {
