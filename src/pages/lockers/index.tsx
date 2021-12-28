@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { SearchQuery } from "./components/SearchQuery";
 import { GoodsCard } from "./components/GoodsCard";
 import { DataStateBox } from "../../components/DataStateBox";
-import { map } from "lodash";
+import { isEmpty, map } from "lodash";
 import { Button, message } from "antd";
 import { fetchCompose, useRequest } from "../../hook/api";
 
@@ -28,7 +28,7 @@ export const Lockers = () => {
           <div className="text-2xl">储物室</div>
           <SearchQuery setData={setData} />
         </div>
-        <div className="flex justify-end mb-4">
+        {!isEmpty(data) && <div className="flex justify-end mb-4">
           <Button
             type="primary"
             disabled={composeList?.length < 2}
@@ -37,11 +37,11 @@ export const Lockers = () => {
               compose({
                 ids: composeList
               })
-            }}>一键合成</Button></div>
+            }}>一键合成</Button></div>}
         <DataStateBox data={data}>
           <div
             className="flex flex-wrap overflow-scroll" style={{
-              height: "calc(100vh - 170px)"
+              height: "calc(100vh - 220px)"
             }}>
             {map(data, (item, i) => <GoodsCard key={i} item={item} i={i} setComposeList={setComposeList} />)}
           </div>

@@ -71,7 +71,7 @@ export const fetchGetGoodsInfo = async (argContract: IArgContract, arg: { id: nu
 }
 
 export const fetchCollectList = async (argContract: IArgContract, arg: { address: string, setList: Dispatch<React.SetStateAction<any[]>> }) => {
-  const list = await argContract?.contract.methods.collection(arg?.address, "1").call();
+  const list = await argContract?.contract.methods.getCollection(arg?.address).call();
   arg?.setList && arg?.setList(list)
 }
 

@@ -40,7 +40,7 @@ export const GoodsCard = ({ item, i, setComposeList }: { item: any, i: number, s
       <PixelsMetaverseImgByPositionData data={{ ...item, positions: item?.baseInfo?.data, goodsData: [data] }} size={200} style={{ borderRadius: 4, background: item?.bgColor || userInfo?.user?.bgColor || "#e1e1e11a", cursor: "pointer", boxShadow: "0px 0px 5px rgba(225,225,225,0.3)" }} />
       {/* <PixelsMetaverseImgByPositionData2 data={item} size={["50%", "50%"]} style={{ borderRadius: 4, background: item?.bgColor || userInfo?.user?.bgColor || "#e1e1e11a", cursor: "pointer", boxShadow: "0px 0px 5px rgba(225,225,225,0.3)" }} /> */}
       <div className="flex flex-col justify-between flex-1 mt-4" style={{ fontSize: 12, width: 200 }}>
-        <div className="text-right flex-1" style={{ height: 40, textOverflow: "ellipsis", overflow: "hidden" }}>{item?.baseInfo?.name || "卡姿兰大眼睛，你值得拥有,还在等什么，快点装备我吧"}</div>
+        <div className="text-right flex-1" style={{ height: 40, textOverflow: "ellipsis", overflow: "hidden" }}>{item?.baseInfo?.name || "这什么鬼"}</div>
         <div className="flex justify-between items-center mt-2">
           <div className="flex justify-between items-center">
             <div className="p px-2 rounded-sm mr-2 bg-white bg-opacity-10">ID: {item?.material?.id}</div>

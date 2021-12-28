@@ -9,7 +9,7 @@ import { useWeb3Info } from '../../../hook/web3';
 const { Option } = Select;
 
 const Label = ({ children, noNeed }: { children: ReactNode, noNeed?: boolean }) => {
-  return <div className="pt-4 mb-1">{children}{!noNeed &&<span className="text-red-500">*</span>}</div>
+  return <div className="pt-4 mb-1">{children}{!noNeed && <span className="text-red-500">*</span>}</div>
 }
 
 const Input = (props: InputHTMLAttributes<HTMLInputElement>) => {
@@ -204,7 +204,9 @@ export const Submit = () => {
     return true;
   }, [name, category, amount, price]);
 
-  const isUser = useMemo(() => !userInfo?.account?.includes("0000000000000000000000000"), [userInfo]);
+  console.log(userInfo)
+
+  const isUser = useMemo(() => userInfo?.id != "0", [userInfo]);
 
   return (
     <div className="rounded-md text-gray-300 w-72 p-4 bg-white bg-opacity-10">
@@ -213,7 +215,7 @@ export const Submit = () => {
           <ExclamationCircleOutlined />
         </Tooltip>
       </div>
-      { isUser ? <div className="overflow-y-scroll" style={{ height: 480 }}>
+      <div className="overflow-y-scroll" style={{ height: 480 }}>
         <Label>名称</Label>
         <Input value={name} placeholder="物品名称" maxLength={15} onChange={(e) => setMerchandies((pre) => ({ ...pre, name: e.target.value }))} />
         <Label>种类</Label>
@@ -248,8 +250,13 @@ export const Submit = () => {
           </Tooltip>
         </div>
         <Input value={weight} placeholder="本体URL地址" maxLength={10} onChange={(e) => setMerchandies((pre) => ({ ...pre, weight: mustNum(e) }))} />
-         */}<Button type="primary" size="large" className="mt-6 w-full rounded"
+         */}<Button
+          type="primary"
+          size="large"
+          className="mt-6 w-full rounded"
+          style={{ cursor: isUser ? "pointer" : "no-drop" }}
           onClick={() => {
+            if (!isUser) return
             const is = checkData()
             if (!is) return
             const positionData = getPositionStr()
@@ -261,10 +268,9 @@ export const Submit = () => {
             setIsModalVisible(true);
           }}
         >提交</Button>
-      </div> : <div className="flex items-center justify-center h-full text-lg">
-        <div className="mt-4">你还不是宇宙创始居民，请
-        <span className="text-red-500 cursor-pointer" onClick={register}>激活</span>自己的元宇宙身份！</div>
-      </div>}
+        {!isUser && <div className="mt-4">你还不是宇宙创始居民，请
+        <span className="text-red-500 cursor-pointer" onClick={register}>激活</span>自己的元宇宙身份！</div>}
+      </div>
 
       <Modal
         title="是否发布物品"

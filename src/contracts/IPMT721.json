@@ -359,10 +359,10 @@
     "absolutePath": "/Users/xiangzhengfeng/Desktop/mine/project/pixels-metaverse/contracts/IPMT721.sol",
     "exportedSymbols": {
       "IERC165": [
-        2688
+        2877
       ],
       "IERC721": [
-        2085
+        2274
       ],
       "IPMT721": [
         28
@@ -389,7 +389,7 @@
         "id": 2,
         "nodeType": "ImportDirective",
         "scope": 29,
-        "sourceUnit": 2086,
+        "sourceUnit": 2275,
         "src": "58:58:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -402,7 +402,7 @@
               "id": 4,
               "name": "IERC721",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 2085,
+              "referencedDeclaration": 2274,
               "src": "207:7:0"
             },
             "id": 5,
@@ -411,8 +411,8 @@
           }
         ],
         "contractDependencies": [
-          2085,
-          2688
+          2274,
+          2877
         ],
         "contractKind": "interface",
         "documentation": {
@@ -425,8 +425,8 @@
         "id": 28,
         "linearizedBaseContracts": [
           28,
-          2085,
-          2688
+          2274,
+          2877
         ],
         "name": "IPMT721",
         "nodeType": "ContractDefinition",
@@ -682,10 +682,10 @@
     "absolutePath": "/Users/xiangzhengfeng/Desktop/mine/project/pixels-metaverse/contracts/IPMT721.sol",
     "exportedSymbols": {
       "IERC165": [
-        2688
+        2877
       ],
       "IERC721": [
-        2085
+        2274
       ],
       "IPMT721": [
         28
@@ -712,7 +712,7 @@
         "id": 2,
         "nodeType": "ImportDirective",
         "scope": 29,
-        "sourceUnit": 2086,
+        "sourceUnit": 2275,
         "src": "58:58:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -725,7 +725,7 @@
               "id": 4,
               "name": "IERC721",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 2085,
+              "referencedDeclaration": 2274,
               "src": "207:7:0"
             },
             "id": 5,
@@ -734,8 +734,8 @@
           }
         ],
         "contractDependencies": [
-          2085,
-          2688
+          2274,
+          2877
         ],
         "contractKind": "interface",
         "documentation": {
@@ -748,8 +748,8 @@
         "id": 28,
         "linearizedBaseContracts": [
           28,
-          2085,
-          2688
+          2274,
+          2877
         ],
         "name": "IPMT721",
         "nodeType": "ContractDefinition",
@@ -1007,7 +1007,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-12-26T06:47:13.933Z",
+  "updatedAt": "2021-12-28T12:18:18.689Z",
   "devdoc": {
     "details": "Required interface of an ERC721 compliant contract.",
     "kind": "dev",

@@ -33,7 +33,7 @@ contract PixelsMetavers {
     struct BaseInfo {
         string data;
         string category;
-        string decode; // 解码方式
+        string decode;
         string name;
         uint256 userId;
     }
@@ -73,7 +73,7 @@ contract PixelsMetavers {
         _owner = msg.sender;
     }
 
-    //118008 ropsten 97333 local
+    // 73617
     function register() public {
         require(user[msg.sender].id == 0, "You are already a platform user!");
         require(
@@ -199,9 +199,18 @@ contract PixelsMetavers {
         return composes[id];
     }
 
-    function compose(uint256[] memory ids) public MustUser(msg.sender) lock {
-        _make(keccak256(abi.encodePacked("")));
+    function compose(
+        uint256[] memory ids,
+        string memory name,
+        string memory category,
+        string memory data,
+        string memory decode
+    ) public MustUser(msg.sender) lock {
         uint256 curID = IPMT721(PMT721).currentID();
+        uint256 nextID = curID + 1;
+        bytes32 d = keccak256(abi.encodePacked(curID + 1));
+        require(baseInfo[d].userId == 0, "The id composed");
+        _make(d);
         uint256 len = ids.length;
         require(len > 1, "The id no composed");
         for (uint256 i; i < len; i++) {
@@ -212,9 +221,16 @@ contract PixelsMetavers {
                 "The current item is not your asset!"
             );
             require(m.compose == 0, "The current item composed!");
-            material[id].compose = curID;
+            material[id].compose = nextID;
         }
-        composes[curID] = ids;
+        composes[nextID] = ids;
+        baseInfo[d] = BaseInfo(
+            data,
+            category,
+            decode,
+            name,
+            user[msg.sender].id
+        );
     }
 
     function cancelCompose(uint256 id) public MustOwner(msg.sender, id) lock {
@@ -224,7 +240,6 @@ contract PixelsMetavers {
         for (uint256 i; i < len; i++) {
             material[c[i]].compose = 0;
         }
-        IPMT721(PMT721).safeTransferFrom(msg.sender, address(this), id);
         IPMT721(PMT721).burn(id);
         delete composes[id];
     }
@@ -260,11 +275,12 @@ contract PixelsMetavers {
         PMT721 = IPMT721(pmt721);
     }
 
-    function _transfer(
+    function handleTransfer(
         address from,
         address to,
         uint256 id
-    ) private {
+    ) public lock {
+        require(msg.sender == address(PMT721), "Only PMT721 Can Do It!");
         Material memory m = material[id];
         require(m.compose == 0, "This material composed!");
         if (to == address(0)) {
@@ -279,7 +295,7 @@ contract PixelsMetavers {
         address from,
         address to,
         uint256 id
-    ) internal {
+    ) public {
         Material memory m = material[id];
         require(m.compose == 0, "This material composed!");
         if (to == address(0)) {
