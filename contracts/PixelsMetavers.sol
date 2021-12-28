@@ -45,6 +45,14 @@ contract PixelsMetavers {
         uint256[] composes;
     }
 
+    uint256 private unlocked = 1;
+    modifier lock() {
+        require(unlocked == 1, "LOCKED");
+        unlocked = 0;
+        _;
+        unlocked = 1;
+    }
+
     modifier MustExist(uint256 id) {
         require(IPMT721(PMT721).exits(id), "The product does not exist!");
         _;
@@ -65,46 +73,56 @@ contract PixelsMetavers {
         _owner = msg.sender;
     }
 
-    //118008 ropsten 97333 local 已验证
+    //118008 ropsten 97333 local
     function register() public {
         require(user[msg.sender].id == 0, "You are already a platform user!");
         require(
-            amount <= 10240000,
+            amount <= 1024000,
             "The number has exceeded the total population of the universe!"
         );
-        amount++;
-        user[msg.sender].id = amount;
+        user[msg.sender].id = ++amount;
     }
 
-    //47900  bgColor: '#c18686', gridColor: '#472a2a'  132457 已验证
+    // 132457
     function setConfig(string memory other) public MustUser(msg.sender) {
         user[msg.sender].other = other;
     }
 
-    // 已验证 修改 47731
+    // 47731
     function setRole(string memory role) public MustUser(msg.sender) {
         user[msg.sender].role = role;
     }
 
-    //  已验证 设置70903
+    // 70903
     function setAvater(uint256 id) public MustOwner(msg.sender, id) {
         user[msg.sender].avater = id;
     }
 
-    // 已验证 设置 206067
+    // 206067
     function resetUser(address to) public MustUser(msg.sender) {
         require(user[to].id == 0, "This address are already a platform user!");
-        user[to] = user[msg.sender];
-        user[to].avater = 0;
-        user[msg.sender] = User(0, user[msg.sender].avater, "", "");
+        User memory u = user[msg.sender];
+        user[to].id = u.id;
+        user[to].role = u.role;
+        user[msg.sender].id = 0;
+        user[msg.sender].role = "";
     }
 
-    // 已验证
+    function setConfigMaterial(
+        uint256 id,
+        string memory time,
+        string memory position,
+        string memory zIndex
+    ) public MustOwner(msg.sender, id) {
+        material[id].time = time;
+        material[id].position = position;
+        material[id].zIndex = zIndex;
+    }
+
     function getMaterialLength() public view returns (uint256) {
         return IPMT721(PMT721).currentID();
     }
 
-    // 已验证
     function getMaterial(uint256 id) public view returns (MaterialInfo memory) {
         Material storage m = material[id];
         BaseInfo memory b = baseInfo[m.data];
@@ -112,7 +130,7 @@ contract PixelsMetavers {
         return MaterialInfo(m, b, c);
     }
 
-    // 已验证 356245
+    // 356245
     function make(
         string memory name,
         string memory category,
@@ -122,18 +140,20 @@ contract PixelsMetavers {
     ) public MustUser(msg.sender) {
         bytes32 d = keccak256(abi.encodePacked(data));
         require(d != keccak256(abi.encodePacked("")), "Data cannot empty!");
-        require(baseInfo[d].userId == 0, "Only Make Once Times!");
 
         for (uint256 i; i < num; i++) {
             _make(d);
         }
-        baseInfo[d] = BaseInfo(
-            data,
-            category,
-            decode,
-            name,
-            user[msg.sender].id
-        );
+
+        if (baseInfo[d].userId == 0) {
+            baseInfo[d] = BaseInfo(
+                data,
+                category,
+                decode,
+                name,
+                user[msg.sender].id
+            );
+        }
     }
 
     function reMake(uint256 id, uint256 num) public MustOwner(msg.sender, id) {
@@ -175,7 +195,11 @@ contract PixelsMetavers {
         return collection[from];
     }
 
-    function compose(uint256[] memory ids) public MustUser(msg.sender) {
+    function getCompose(uint256 id) public view returns (uint256[] memory) {
+        return composes[id];
+    }
+
+    function compose(uint256[] memory ids) public MustUser(msg.sender) lock {
         _make(keccak256(abi.encodePacked("")));
         uint256 curID = IPMT721(PMT721).currentID();
         uint256 len = ids.length;
@@ -193,32 +217,16 @@ contract PixelsMetavers {
         composes[curID] = ids;
     }
 
-    function cancelCompose(uint256 id) public MustOwner(msg.sender, id) {
+    function cancelCompose(uint256 id) public MustOwner(msg.sender, id) lock {
         uint256[] memory c = composes[id];
         uint256 len = c.length;
         require(len > 1, "The id no composed");
         for (uint256 i; i < len; i++) {
-            uint256 idd = c[i];
-            material[idd].compose = 0;
+            material[c[i]].compose = 0;
         }
         IPMT721(PMT721).safeTransferFrom(msg.sender, address(this), id);
         IPMT721(PMT721).burn(id);
         delete composes[id];
-    }
-
-    function getCompose(uint256 ids) public view returns (uint256[] memory) {
-        return composes[ids];
-    }
-
-    function setConfig(
-        uint256 id,
-        string memory time,
-        string memory position,
-        string memory zIndex
-    ) public MustOwner(msg.sender, id) {
-        material[id].time = time;
-        material[id].position = position;
-        material[id].zIndex = zIndex;
     }
 
     function subjion(uint256 ids, uint256 id)
@@ -234,14 +242,15 @@ contract PixelsMetavers {
         composes[ids].push(id);
     }
 
-    function subtract(uint256 ids, uint256 index)
-        public
-        MustOwner(msg.sender, ids)
-    {
+    function subtract(
+        uint256 ids,
+        uint256 id,
+        uint256 index
+    ) public MustOwner(msg.sender, ids) {
         uint256[] memory c = composes[ids];
         uint256 len = c.length;
         require(len > index, "The id no composed");
-        uint256 id = c[index];
+        require(c[index] == id, "This index isnot id value");
         material[id].compose = 0;
         delete composes[ids][index];
     }
