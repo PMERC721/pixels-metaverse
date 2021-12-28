@@ -27,8 +27,8 @@ contract PixelsMetavers {
         bytes32 data;
     }
     mapping(uint256 => Material) public material;
-    mapping(uint256 => uint256[]) public composes; // 合成
-    mapping(address => uint256[]) public collection; // 非用户也能收藏
+    mapping(uint256 => uint256[]) public composes;
+    mapping(address => uint256[]) public collection;
 
     struct BaseInfo {
         string data;
@@ -279,10 +279,14 @@ contract PixelsMetavers {
         address from,
         address to,
         uint256 id
-    ) internal view {
+    ) internal {
         Material memory m = material[id];
         require(m.compose == 0, "This material composed!");
-        require(to != address(0), "This material composed!");
-        require(from != address(0), "This material composed!");
+        if (to == address(0)) {
+            delete material[id];
+        }
+        if (from != address(0)) {
+            material[id].owner = to;
+        }
     }
 }
