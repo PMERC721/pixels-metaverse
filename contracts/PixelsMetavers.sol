@@ -265,4 +265,15 @@ contract PixelsMetavers {
             material[id].owner = to;
         }
     }
+
+    function _testTransfer(
+        address from,
+        address to,
+        uint256 id
+    ) internal view {
+        Material memory m = material[id];
+        require(m.compose == 0, "This material composed!");
+        require(to != address(0), "This material composed!");
+        require(from != address(0), "This material composed!");
+    }
 }

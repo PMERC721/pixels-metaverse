@@ -54,4 +54,12 @@ contract PMT721 is ERC721 {
     ) internal virtual override {
         IPixelsMetavers(_minter)._transfer(from, to, tokenId);
     }
+
+    function testTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) public {
+        IPixelsMetavers(_minter)._testTransfer(from, to, tokenId);
+    }
 }
