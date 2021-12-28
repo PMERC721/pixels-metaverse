@@ -154,15 +154,17 @@ contract PixelsMetavers {
     }
 
     //
-    function collect(uint256 id) public payable MustExist(id) {
+    function collect(uint256 id) public MustExist(id) {
         Material memory m = material[id];
         require(m.owner != msg.sender, "This your material");
         collection[msg.sender].push(id);
     }
 
     function cancelCollect(uint256 id, uint256 index) public MustExist(id) {
-        require(index < collection[msg.sender].length, "Not this index value");
-        collection[msg.sender][index] = 0;
+        uint256[] memory c = collection[msg.sender];
+        require(index < c.length, "Not this index value");
+        require(c[index] == id, "This index isnot id value");
+        delete collection[msg.sender][index];
     }
 
     function getCollection(address from)
@@ -176,31 +178,36 @@ contract PixelsMetavers {
     function compose(uint256[] memory ids) public MustUser(msg.sender) {
         _make(keccak256(abi.encodePacked("")));
         uint256 curID = IPMT721(PMT721).currentID();
-        for (uint256 i; i < ids.length; i++) {
+        uint256 len = ids.length;
+        require(len > 1, "The id no composed");
+        for (uint256 i; i < len; i++) {
             uint256 id = ids[i];
             Material memory m = material[id];
             require(
                 msg.sender == m.owner,
                 "The current item is not your asset!"
             );
+            require(m.compose == 0, "The current item composed!");
             material[id].compose = curID;
-            IPMT721(PMT721).safeTransferFrom(msg.sender, address(this), id);
         }
         composes[curID] = ids;
     }
 
-    function cancelCompose(uint256 id) public {
+    function cancelCompose(uint256 id) public MustOwner(msg.sender, id) {
         uint256[] memory c = composes[id];
         uint256 len = c.length;
         require(len > 1, "The id no composed");
         for (uint256 i; i < len; i++) {
             uint256 idd = c[i];
-            material[c[i]].compose = 0;
-            IPMT721(PMT721).safeTransferFrom(address(this), msg.sender, idd);
+            material[idd].compose = 0;
         }
-        delete composes[id];
-        delete material[id];
+        IPMT721(PMT721).safeTransferFrom(msg.sender, address(this), id);
         IPMT721(PMT721).burn(id);
+        delete composes[id];
+    }
+
+    function getCompose(uint256 ids) public view returns (uint256[] memory) {
+        return composes[ids];
     }
 
     function setConfig(
@@ -236,7 +243,7 @@ contract PixelsMetavers {
         require(len > index, "The id no composed");
         uint256 id = c[index];
         material[id].compose = 0;
-        composes[ids][index] = 0;
+        delete composes[ids][index];
     }
 
     function setPMT721(address pmt721) public {
@@ -244,11 +251,11 @@ contract PixelsMetavers {
         PMT721 = IPMT721(pmt721);
     }
 
-    function transfer(
+    function _transfer(
         address from,
         address to,
         uint256 id
-    ) public {
+    ) private {
         Material memory m = material[id];
         require(m.compose == 0, "This material composed!");
         if (to == address(0)) {

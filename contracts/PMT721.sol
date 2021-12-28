@@ -27,7 +27,7 @@ contract PMT721 is ERC721 {
         _mint(to, ++_tokenId);
     }
 
-    function burn(uint256 id) public MustMinter(msg.sender) {
+    function burn(uint256 id) public {
         _burn(id);
     }
 
@@ -52,6 +52,6 @@ contract PMT721 is ERC721 {
         address to,
         uint256 tokenId
     ) internal virtual override {
-        IPixelsMetavers(_minter).transfer(from, to, tokenId);
+        IPixelsMetavers(_minter)._transfer(from, to, tokenId);
     }
 }

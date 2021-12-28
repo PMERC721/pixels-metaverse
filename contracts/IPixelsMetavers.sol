@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 interface IPixelsMetavers {
-    function transfer(
+    function _transfer(
         address from,
         address to,
         uint256 tokenId
