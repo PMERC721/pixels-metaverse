@@ -1,7 +1,6 @@
-import { isEmpty } from "lodash";
 import { Button, message } from "antd";
 import { AppstoreOutlined } from "@ant-design/icons";
-import { fetchRegister, fetchSetConfig, fetchUserInfo, useRequest } from "../../../hook/api";
+import { fetchSetConfig, useRequest } from "../../../hook/api";
 import { useLocation } from "react-router";
 import { useUserInfo } from "../../../components/UserProvider";
 import { PixelsMetaverseHandleImg, usePixelsMetaverseHandleImg } from "../../../pixels-metaverse";
@@ -21,14 +20,8 @@ export const BaseInfo = () => {
   const { setConfig, config, canvas2Ref } = usePixelsMetaverseHandleImg()
   const { address: addresss } = useWeb3Info()
   const { search } = useLocation()
-  const { userInfo, setUserInfo } = useUserInfo()
   const address = search ? search.split("=")[1] : addresss
-  const getUserInfo = useRequest(fetchUserInfo)
-
-  const getInfo = () => {
-    if (isEmpty(address)) return
-    getUserInfo({ address, setUserInfo })
-  }
+  const { userInfo, getInfo, register } = useUserInfo()
 
   const goSetConfig = useRequest(fetchSetConfig, {
     onSuccess: () => {
@@ -36,13 +29,6 @@ export const BaseInfo = () => {
       getInfo()
     }
   }, [config, address])
-
-  const fetch = useRequest(fetchRegister, {
-    onSuccess: () => {
-      message.success("激活账户成功！")
-      getInfo()
-    }
-  }, [address])
 
   const isCurUser = useMemo(() => address?.toUpperCase() === addresss?.toUpperCase(), [addresss, address])
 
@@ -65,7 +51,7 @@ export const BaseInfo = () => {
         </InfoLabel>
         <InfoLabel label="类型">
           {userInfo?.id === "0"
-            ? <div className="cursor-pointer text-red-500" onClick={fetch}>去激活账户</div>
+            ? <div className="cursor-pointer text-red-500" onClick={register}>去激活账户</div>
             : <div>{userInfo?.isMerchant ? "商户" : "用户"}</div>}
         </InfoLabel>
         <InfoLabel label="显示辅助线">

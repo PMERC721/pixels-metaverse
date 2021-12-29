@@ -1,6 +1,6 @@
 import { PersonCenter } from "./components/PersonCenter";
 import { Avatar } from "./components/Avatar";
-import { Collection } from "./components/Collection";
+import { Collections } from "./components/Collections";
 import { Dictionary, filter, isEmpty, map } from "lodash";
 import React, { useMemo } from "react";
 import { useUserInfo } from "../../components/UserProvider";
@@ -10,45 +10,41 @@ import {
   useConvertedPostion
 } from "../../pixels-metaverse";
 import { useWeb3Info } from "../../hook/web3";
-import { DataStateBox } from "../../components/DataStateBox";
+import { MaterialItem } from "../../components/Card";
 
 export const PixelsMetaverse = () => {
   const { address: addresss } = useWeb3Info()
   const { search } = useLocation()
   const address = search ? search.split("=")[1] : addresss
-  const { goodsList, userInfo, goodsId } = useUserInfo()
+  const { goodsList, userInfo, goodsId, collectList } = useUserInfo()
   const convertedPostion = useConvertedPostion()
   const a = useParams()
-  //console.log(a)
 
-  /* 
-  
-    const set = useRequest(fetchSetPMT721, {
-      onSuccess: () => {
-        message.success("设置成功！")
+  const { noCollectionList, avater, colectionList, onwerList } = useMemo(() => {
+    const noCollectionList: MaterialItem[] = [], colectionList: MaterialItem[] = [], onwerList: MaterialItem[] = [];
+    let avater: MaterialItem | undefined;
+    map(goodsList, (item: MaterialItem) => {
+      const isCollect = collectList?.includes(item?.material?.id);
+      const isCurAddress = address === item?.material?.owner
+      if (item?.material?.id === userInfo?.avater) {
+        avater = item;
+      } else if (isCollect) {
+        colectionList.push(item);
+      } else if (isCurAddress) {
+        onwerList.push(item)
+      } else {
+        noCollectionList.push(item);
       }
-    }, [address])
-    useEffect(() => {
-      set()
-    }, []) */
-
-  const { noOutfitEdList, outfitEdList } = useMemo(() => {
-    if (isEmpty(goodsList)) return {
-      outfitEdList: [],
-      noOutfitEdList: [],
-    }
-    return {
-      outfitEdList: filter(goodsList, item => !item?.isSale && item?.isOutfit && item?.owner === address),
-      noOutfitEdList: filter(goodsList, item => !item?.isSale && !item?.isOutfit && item?.owner === address)
-    }
-  }, [goodsList, address, goodsId])
+    })
+    return { noCollectionList, avater, colectionList, onwerList }
+  }, [goodsList, collectList, userInfo])
 
   const positions = useMemo(() => {
-    if (isEmpty(outfitEdList)) return "empty"
+    if (isEmpty(onwerList)) return "empty"
     let data: Dictionary<any> = {}
-    map(outfitEdList, item => {
+    map(onwerList, item => {
       const positionsData = convertedPostion({
-        positions: item?.data
+        positions: item?.baseInfo?.data
       })
       data = { ...data, ...positionsData }
     })
@@ -65,7 +61,7 @@ export const PixelsMetaverse = () => {
       str += `${parseInt(i.slice(1), 16).toString(36)}-${position}-`
     }
     return `${str}${min}`
-  }, [outfitEdList])
+  }, [onwerList])
 
   return (
     <PixelsMetaverseHandleImgProvider
@@ -79,9 +75,9 @@ export const PixelsMetaverse = () => {
       }}
     >
       <div className="flex justify-between bg-transparent flex-1 pt-20">
-        <PersonCenter outfitEdList={outfitEdList} noOutfitEdList={noOutfitEdList} />
+        <PersonCenter avater={avater} colectionList={colectionList} onwerList={onwerList} />
         <Avatar />
-        <Collection />
+        <Collections noCollectionList={noCollectionList} />
       </div>
     </PixelsMetaverseHandleImgProvider>
   )

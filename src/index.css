@@ -221,8 +221,20 @@ input{
   z-index: 10000;
 }
 
-
 .item-avatar:hover{
   background: rgba(225,225,225, 0.1);
   border-radius: 5px;
+}
+
+.ant-checkbox-inner{
+  background-color: transparent !important;
+}
+
+.ant-checkbox-disabled {
+  background-color: rgba(225,225,225, 0.15) !important;
+}
+
+.ant-input{
+  background-color: transparent !important;
+  caret-color: rgba(225,225,225);
 }

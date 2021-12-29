@@ -1,4 +1,4 @@
-import { Dispatch, useCallback } from "react";
+import { Dispatch, useCallback, useEffect, useState } from "react";
 import { IMerchandise } from "../pages/produced/components/Submit";
 import { useLoading } from "../components/Loading";
 import { message } from "antd";
@@ -70,9 +70,16 @@ export const fetchGetGoodsInfo = async (argContract: IArgContract, arg: { id: nu
   })
 }
 
-export const fetchCollectList = async (argContract: IArgContract, arg: { address: string, setList: Dispatch<React.SetStateAction<any[]>> }) => {
+export const fetchCollectList = async (argContract: IArgContract, arg: { address: string, setValue: Dispatch<React.SetStateAction<any[]>> }) => {
   const list = await argContract?.contract.methods.getCollection(arg?.address).call();
-  arg?.setList && arg?.setList(list)
+  console.log(list, "getCollection")
+  arg?.setValue && arg?.setValue(list)
+}
+
+export const fetchGetMaterialLength = async (argContract: IArgContract, arg?: { setValue: Dispatch<React.SetStateAction<any>> }) => {
+  const len = await argContract?.contract.methods.getMaterialLength().call();
+  console.log(len, "list")
+  arg?.setValue && arg?.setValue(Number(len))
 }
 
 export const fetchGetGoodsIdList = async (argContract: IArgContract, arg?: { setValue: Dispatch<React.SetStateAction<any[]>>, newNumber?: number }) => {
@@ -81,18 +88,20 @@ export const fetchGetGoodsIdList = async (argContract: IArgContract, arg?: { set
   if (arg?.newNumber === -1) {
     for (let i = len; i >= 1; i--) {
       let item = await argContract?.contract?.methods.getMaterial(i).call()
+      const obj = { ...item, composeData: [] }
       arg?.setValue && arg?.setValue((pre) => {
         if (i === len) {
-          return [item]
+          return [obj]
         }
-        return [...pre, item]
+        return [...pre, obj]
       })
     }
   } else {
     for (let i = len - 1; i >= len - (arg?.newNumber || len); i--) {
       let item = await argContract?.contract?.methods.getMaterial(i + 1).call()
-      arg?.setValue && !arg.newNumber && arg?.setValue((pre) => ([...pre, item]))
-      arg?.setValue && arg.newNumber && arg?.setValue((pre) => ([item, ...pre]))
+      const obj = { ...item, composeData: [] }
+      arg?.setValue && !arg.newNumber && arg?.setValue((pre) => ([...pre, obj]))
+      arg?.setValue && arg.newNumber && arg?.setValue((pre) => ([obj, ...pre]))
     }
   }
 }

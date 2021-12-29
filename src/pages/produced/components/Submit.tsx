@@ -1,11 +1,13 @@
-import React, { ChangeEvent, InputHTMLAttributes, ReactNode, useCallback, useMemo, useState } from 'react';
+import { ChangeEvent, InputHTMLAttributes, ReactNode, useCallback, useMemo, useState } from 'react';
 import { Tooltip, Select, message, Modal, Button } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Dictionary, isEmpty, keys, map } from 'lodash';
+import { Dictionary, keys, map } from 'lodash';
 import { useUserInfo } from '../../../components/UserProvider';
 import { usePixelsMetaverseHandleImg } from '../../../pixels-metaverse';
-import { fetchApplication, fetchGetGoodsIdList, fetchMake, fetchRegister, fetchUserInfo, useRequest } from '../../../hook/api';
+import { fetchGetGoodsIdList, fetchMake, useRequest } from '../../../hook/api';
 import { useWeb3Info } from '../../../hook/web3';
+import { ClearIcon } from '../../lockers/components/SearchQuery';
+import React from 'react';
 const { Option } = Select;
 
 const Label = ({ children, noNeed }: { children: ReactNode, noNeed?: boolean }) => {
@@ -69,7 +71,7 @@ export const categoryData = [
 
 export interface IMerchandise {
   name: string;
-  category: string,
+  category?: string,
   amount: string;
   data?: string;
   price: string;
@@ -85,9 +87,9 @@ export const Submit = () => {
     amount,
     price,
     weight,
-  }, setMerchandies] = useState<IMerchandise>({
+  }, setMerchandies] = React.useState<IMerchandise>({
     name: "",
-    category: "",
+    category: undefined,
     amount: "",
     price: "",
     weight: "",
@@ -95,22 +97,9 @@ export const Submit = () => {
   const [positionData, setPostionData] = useState("")
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { address: addresss } = useWeb3Info()
-  const { userInfo, setUserInfo, setGoodsList } = useUserInfo()
+  const { userInfo, setGoodsList, register } = useUserInfo()
   const address = addresss
-  const getUserInfo = useRequest(fetchUserInfo)
   const getGoodsIdList = useRequest(fetchGetGoodsIdList)
-
-  const getInfo = () => {
-    if (isEmpty(address)) return
-    getUserInfo({ address, setUserInfo })
-  }
-
-  const application = useRequest(fetchApplication, {
-    onSuccess: () => {
-      message.success("入驻成功！")
-      getInfo()
-    }
-  }, [address])
 
   const postGoods = useRequest(fetchMake, {
     onSuccess: () => {
@@ -140,12 +129,6 @@ export const Submit = () => {
     config?.bgColor,
     setGoodsList
   ])
-
-  const register = useRequest(fetchRegister, {
-    onSuccess: () => {
-      getInfo()
-    }
-  }, [address])
 
   const min = useMemo(() => Math.min(...positionsArr), [positionsArr])
 
@@ -204,9 +187,7 @@ export const Submit = () => {
     return true;
   }, [name, category, amount, price]);
 
-  console.log(userInfo)
-
-  const isUser = useMemo(() => userInfo?.id != "0", [userInfo]);
+  const isUser = useMemo(() => userInfo?.id !== "0", [userInfo]);
 
   return (
     <div className="rounded-md text-gray-300 w-72 p-4 bg-white bg-opacity-10">
@@ -224,11 +205,13 @@ export const Submit = () => {
           bordered={false}
           dropdownClassName="bg-gray-300"
           size="large"
+          allowClear
           style={{ fontSize: 14, color: "rgba(255, 255, 255, 0.1) !important" }}
           value={category}
           placeholder="请选择种类"
           optionFilterProp="children"
           onChange={(e: string) => { setMerchandies((pre) => ({ ...pre, category: e })) }}
+          clearIcon={ClearIcon}
         >
           {map(categoryData, item => <Option key={item.value} value={item.value}>{item.label}</Option>)}
         </Select>
