@@ -3,15 +3,15 @@ import { useUserInfo } from "../../../components/UserProvider";
 import { categoryData } from "../../produced/components/Submit";
 import { useHistory } from "react-router";
 import { PixelsMetaverseImgByPositionData } from "../../../pixels-metaverse";
-import React, { useCallback, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ellipseAddress } from "../../../helpers/utilities";
 import { useWeb3Info } from "../../../hook/web3";
-import { Collection, Composes, MaterialItem, MaterialLabel } from "../../../components/Card";
+import { Collection, Composes, Details, MaterialItem, MaterialLabel } from "../../../components/Card";
+import { Modal } from "antd";
 
-
-
-export const GoodsCard = ({ item, i, }: { item: MaterialItem, i: number, }) => {
+export const GoodsCard = ({ item }: { item: MaterialItem }) => {
   const { userInfo, goodsListObj } = useUserInfo()
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const { address } = useWeb3Info()
   const history = useHistory()
   const data = useMemo(() => {
@@ -27,9 +27,14 @@ export const GoodsCard = ({ item, i, }: { item: MaterialItem, i: number, }) => {
       style={{
         height: 216 + 100,
         width: 216,
-        marginRight: i % 5 === 4 ? 0 : 17
+        margin: 7
       }}>
-      <PixelsMetaverseImgByPositionData data={{ ...item, positions: item?.baseInfo?.data, goodsData: data }} size={200} style={{ background: userInfo?.user?.bgColor || "#e1e1e11a", cursor: "pointer", boxShadow: "0px 0px 5px rgba(225,225,225,0.3)" }} />
+      <PixelsMetaverseImgByPositionData
+        data={{ ...item, positions: item?.baseInfo?.data, goodsData: data }}
+        size={200}
+        style={{ background: userInfo?.user?.bgColor || "#e1e1e11a", cursor: "pointer", boxShadow: "0px 0px 5px rgba(225,225,225,0.3)" }}
+        onClick={() => { setIsModalVisible(true) }}
+      />
       {/* <PixelsMetaverseImgByPositionData2 data={item} size={["50%", "50%"]} style={{ borderRadius: 4, background: item?.bgColor || userInfo?.user?.bgColor || "#e1e1e11a", cursor: "pointer", boxShadow: "0px 0px 5px rgba(225,225,225,0.3)" }} /> */}
       <div className="flex flex-col justify-between flex-1 mt-4" style={{ fontSize: 12, width: 200 }}>
         <div className="text-right flex-1" style={{ height: 40, textOverflow: "ellipsis", overflow: "hidden" }}>{item?.baseInfo?.name || "这什么鬼"}</div>
@@ -50,6 +55,15 @@ export const GoodsCard = ({ item, i, }: { item: MaterialItem, i: number, }) => {
           <Collection item={item} />
         </div>
       </div>
+      {isModalVisible && item?.material?.id && <Modal
+        title=""
+        width={1200}
+        visible={isModalVisible}
+        footer={null}
+        onCancel={() => { setIsModalVisible(false) }}
+      >
+        <Details id={item?.material?.id} />
+      </Modal>}
     </div>
   )
 }

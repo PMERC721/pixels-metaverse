@@ -6,6 +6,8 @@ import { usePixelsMetaverse } from "../pixels-metaverse";
 import { fetchCollectList, fetchGetGoodsIdList, fetchGetMaterialLength, fetchRegister, fetchUserInfo, useRequest } from "../hook/api";
 import { useWeb3Info } from "../hook/web3";
 import { MaterialItem } from "./Card";
+import { DataNode } from "antd/lib/tree";
+import { CarryOutOutlined } from "@ant-design/icons";
 
 export const UserInfoContext = createContext(
   {} as {

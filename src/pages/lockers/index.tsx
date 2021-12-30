@@ -25,7 +25,7 @@ export const Lockers = () => {
             className="flex flex-wrap overflow-scroll" style={{
               height: "calc(100vh - 175px)"
             }}>
-            {map(data, (item, i) => <GoodsCard key={i} item={item} i={i}/>)}
+            {map(data, (item, i) => <GoodsCard key={i} item={item}/>)}
           </div>
         </DataStateBox>
       </div>
