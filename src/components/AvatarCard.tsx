@@ -63,7 +63,7 @@ export const AvatarCard = ({ item, type }: {
             <MaterialLabel toRight toDetails>{item?.material?.id}</MaterialLabel>
             <MaterialLabel toRight>{(find(categoryData, ite => ite?.value === item?.baseInfo?.category) || {})?.label}</MaterialLabel>
           </div>
-          {(type === "homeBuyGoods" || type === "buyGoods") && <Collection item={item} />}
+          {type === "buyGoods" && <Collection item={item} />}
         </div>
       </div>
     </div>

@@ -21,17 +21,13 @@ export const AssetsInfo = ({ outfitEdList, noOutfitEdList }: {
         <div className="overflow-y-scroll flex-1 pr-4 border-r mr-4"
           style={{ borderColor: shopGoods?.length > 0 ? "rgba(225,225,225, 0.3" : "transparent", height: "calc(100vh - 170px)" }}>
           {!isEmpty(outfitEdList) && <div className="pb-8">
-            <div>已使用</div>
+            <div>Your Material</div>
             {map(outfitEdList, item => <AvatarCard key={item?.id} item={item} type="assets" />)}
           </div>}
-          {!isEmpty(noOutfitEdList) && <div>
-            <div>未使用</div>
-            {map(noOutfitEdList, item => <AvatarCard key={item?.id} item={item} type="assets" />)}
-          </div>}
         </div>
-        {!isEmpty(shopGoods) && <div className="flex-1 overflow-y-scroll" style={{ height: "calc(100vh - 170px)" }}>
-          <div>收藏夹</div>
-          {map(shopGoods, item => <AvatarCard key={item?.id} item={item} type="buyGoods" />)}
+        {!isEmpty(noOutfitEdList) && <div className="flex-1 overflow-y-scroll" style={{ height: "calc(100vh - 170px)" }}>
+          <div>Your Star</div>
+          {map(noOutfitEdList, item => <AvatarCard key={item?.id} item={item} type="" />)}
         </div>}
       </div>
     </DataStateBox>

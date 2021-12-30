@@ -12,15 +12,12 @@ import {
 import { useWeb3Info } from "../../hook/web3";
 import { MaterialItem } from "../../components/Card";
 
-export const PixelsMetaverse = () => {
+export const useGetPersonData = () => {
   const { address: addresss } = useWeb3Info()
   const { search } = useLocation()
   const address = search ? search.split("=")[1] : addresss
   const { goodsList, userInfo, goodsId, collectList } = useUserInfo()
-  const convertedPostion = useConvertedPostion()
-  const a = useParams()
-
-  const { noCollectionList, avater, colectionList, onwerList } = useMemo(() => {
+  return useMemo(() => {
     const noCollectionList: MaterialItem[] = [], colectionList: MaterialItem[] = [], onwerList: MaterialItem[] = [];
     let avater: MaterialItem | undefined;
     map(goodsList, (item: MaterialItem) => {
@@ -38,6 +35,16 @@ export const PixelsMetaverse = () => {
     })
     return { noCollectionList, avater, colectionList, onwerList }
   }, [goodsList, collectList, userInfo])
+}
+
+export const PixelsMetaverse = () => {
+  const { address: addresss } = useWeb3Info()
+  const { search } = useLocation()
+  const address = search ? search.split("=")[1] : addresss
+  const { goodsList, userInfo, goodsId, collectList } = useUserInfo()
+  const convertedPostion = useConvertedPostion()
+  const a = useParams()
+  const { noCollectionList, avater, colectionList, onwerList } = useGetPersonData()
 
   const positions = useMemo(() => {
     if (isEmpty(onwerList)) return "empty"
