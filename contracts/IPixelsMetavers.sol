@@ -7,10 +7,4 @@ interface IPixelsMetavers {
         address to,
         uint256 tokenId
     ) external;
-
-    function _testTransfer(
-        address from,
-        address to,
-        uint256 tokenId
-    ) external;
 }

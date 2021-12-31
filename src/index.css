@@ -8,6 +8,12 @@ body {
   color: rgba(255, 255, 255, 0.7);
 }
 
+.ellipsis {
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
 *::-webkit-scrollbar {
   display: none;
 }
@@ -95,6 +101,12 @@ input{
   background-color: rgba(255, 255, 255, 0.15) !important;
   border: rgba(255, 255, 255, 0.15) !important;
   color: rgba(255, 255, 255, 0.7) !important
+}
+
+#create-material .ant-select-selector{
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border: rgba(255, 255, 255, 0.15) !important;
+  color: rgba(0, 0, 0, 0.7) !important
 }
 
 .ant-select-selector:active{

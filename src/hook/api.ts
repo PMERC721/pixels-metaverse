@@ -134,9 +134,13 @@ export const fetchCollect = async (argContract: IArgContract, arg: { id: number,
   //fetchGetGoodsInfo(argContract, { id: arg?.id, setGoodsList: arg?.setGoodsList })
 }
 
-export const fetchCompose = async (argContract: IArgContract, arg: { ids: string[] }) => {
-  console.log(arg?.ids)
-  await argContract?.contract.methods.compose(arg.ids).send({ from: argContract?.address });
+export const fetchCompose = async (argContract: IArgContract, arg: { ids: string[], name: string, category: string }) => {
+  console.log(arg)
+  await argContract?.contract.methods.compose(arg.ids, arg.name, arg.category, "", "").send({ from: argContract?.address });
+}
+
+export const fetchSubjion = async (argContract: IArgContract, arg: { ids: string[], id: string }) => {
+  await argContract?.contract.methods.subjion(arg.ids, arg.id).send({ from: argContract?.address });
 }
 
 export const fetchOutfit = async (argContract: IArgContract, arg: { value: any, setGoodsList: Dispatch<React.SetStateAction<any[]>> }) => {

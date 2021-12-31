@@ -10,11 +10,11 @@ import { ClearIcon } from '../../lockers/components/SearchQuery';
 import React from 'react';
 const { Option } = Select;
 
-const Label = ({ children, noNeed }: { children: ReactNode, noNeed?: boolean }) => {
+export const Label = ({ children, noNeed }: { children: ReactNode, noNeed?: boolean }) => {
   return <div className="pt-4 mb-1">{children}{!noNeed && <span className="text-red-500">*</span>}</div>
 }
 
-const Input = (props: InputHTMLAttributes<HTMLInputElement>) => {
+export const Input = (props: InputHTMLAttributes<HTMLInputElement>) => {
   return (
     <input
       className="pl-2 inputPlaceholder outline-none :focus:outline-none h-10 bg-white bg-opacity-20 rounded-sm w-full"
@@ -24,7 +24,7 @@ const Input = (props: InputHTMLAttributes<HTMLInputElement>) => {
   )
 }
 
-const mustNum = (e: ChangeEvent<HTMLInputElement>) => {
+export const mustNum = (e: ChangeEvent<HTMLInputElement>) => {
   const val = Number(e?.target?.value);
   if (Number(e.target.value) >= 0 && !isNaN(val)) {
     return e.target.value
@@ -103,7 +103,7 @@ export const Submit = () => {
 
   const postGoods = useRequest(fetchMake, {
     onSuccess: () => {
-      message.success("物品发布成功！")
+      message.success("物品制造成功！")
       getGoodsIdList({ setValue: setGoodsList, newNumber: Number(amount) })
       setIsModalVisible(false)
       setMerchandies({
@@ -257,7 +257,7 @@ export const Submit = () => {
 
       <Modal
         title="是否发布物品"
-        okText={positionData?.length >= 64 ? "资产多，我不担心，硬核提交" : "确认"}
+        okText={positionData?.length >= 64 ? "不用担心，硬核提交" : "确认"}
         cancelText="取消"
         visible={isModalVisible}
         onOk={handleOk}

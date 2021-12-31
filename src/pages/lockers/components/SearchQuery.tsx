@@ -1,11 +1,12 @@
-import React, { Dispatch, useEffect, useMemo, useState } from "react";
+import React, { Dispatch, useCallback, useEffect, useMemo, useState } from "react";
 import { Dictionary, divide, filter, groupBy, keys, map, orderBy } from "lodash";
-import { Button, Input, message, Select } from "antd";
+import { Button, Input, message, Modal, Select } from "antd";
 import { useUserInfo } from "../../../components/UserProvider";
 import { categoryData } from "../../produced/components/Submit";
 import { CloseSquareOutlined } from "@ant-design/icons";
 import { fetchCompose, fetchGetGoodsIdList, useRequest } from "../../../hook/api";
 import { MaterialItem } from "../../../components/Card";
+import { ComposeDetails } from "./ComposeDetails";
 const { Option } = Select;
 
 export const ClearIcon = () => <div className="relative bg-white bg-opacity-10"><CloseSquareOutlined className="absolute" style={{ top: -2, left: -2, fontSize: 16 }} /></div>
@@ -16,6 +17,7 @@ export const SearchQuery = ({
   setData: Dispatch<React.SetStateAction<any[]>>;
 }) => {
   const getGoodsIdList = useRequest(fetchGetGoodsIdList)
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const { composeList, setComposeList, setGoodsList } = useUserInfo()
   const compose = useRequest(fetchCompose, {
     onSuccess: () => {
@@ -24,6 +26,9 @@ export const SearchQuery = ({
       getGoodsIdList({ setValue: setGoodsList, newNumber: Number(1) })
     }
   }, [])
+  const handleOk = useCallback(() => {
+    compose({ ids: composeList })
+  }, [composeList]);
 
   const { goodsList } = useUserInfo()
   const [{
@@ -74,9 +79,9 @@ export const SearchQuery = ({
   ]
 
   useEffect(() => {
-    const ownerList = owner ? filter(goodsList as  MaterialItem[] , item => item?.material?.owner === owner) : goodsList
-    const categoryList = category ? filter(ownerList as  MaterialItem[], item => item?.baseInfo?.category === category) : ownerList
-    const saleList = sale ? filter(categoryList as  MaterialItem[], item => String(item?.material?.id) === sale) : categoryList
+    const ownerList = owner ? filter(goodsList as MaterialItem[], item => item?.material?.owner === owner) : goodsList
+    const categoryList = category ? filter(ownerList as MaterialItem[], item => item?.baseInfo?.category === category) : ownerList
+    const saleList = sale ? filter(categoryList as MaterialItem[], item => String(item?.material?.id) === sale) : categoryList
     let sortList;
     if (sort) {
       sortList = orderBy(saleList, [sort?.split("-")[0]], [sort?.split("-")[1]]);
@@ -91,11 +96,19 @@ export const SearchQuery = ({
       <Button
         type="primary"
         disabled={composeList?.length < 2}
-        onClick={() => {
-          compose({
-            ids: composeList
-          })
-        }}>一键合成</Button>
+        onClick={() => { setIsModalVisible(true); }}
+      >一键合成</Button>
+      <Modal
+        title="合成虚拟物品"
+        okText={"合成"}
+        cancelText="取消"
+        width={1000}
+        visible={isModalVisible}
+        footer={null}
+        onCancel={() => { setIsModalVisible(false); }}
+      >
+        <ComposeDetails setIsModalVisible={setIsModalVisible}/>
+      </Modal>
       {/* <Input
         style={{ width: 120, marginLeft: 10 }}
         allowClear

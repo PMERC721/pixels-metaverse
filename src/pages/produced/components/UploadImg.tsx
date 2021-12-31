@@ -49,7 +49,7 @@ export const UploadImg = () => {
   return (
     <div className="mb-4 flex items-center justify-between h-10 text-white" style={{ width: config?.imgSize.width }}>
       <div className="flex items-center justify-between rounded-sm bg-white bg-opacity-10 w-96">
-        <input className="pl-4 bg-transparent search w-64" placeholder="请输入图片链接" value={url} onChange={(e) => setUrl(e.target.value)} />
+        <input className="pl-4 bg-transparent search w-64" style={{ outline: "none" }} placeholder="请输入图片链接" value={url} onChange={(e) => setUrl(e.target.value)} />
         {url && <CloseCircleOutlined onClick={() => setUrl("")} />}
         <Button type="primary" size="large" className="w-24"
           style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}

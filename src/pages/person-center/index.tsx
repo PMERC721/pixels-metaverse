@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo } from "react"
-import { Dictionary, filter, isEmpty, map } from "lodash";
+import { Dictionary, isEmpty, map } from "lodash";
 import { useLocation } from "react-router";
 import { useUserInfo } from "../../components/UserProvider";
-import { PixelsMetaverseHandleImgProvider, useConvertedPostion, useGetPositionStr, usePixelsMetaverse, usePixelsMetaverseUserInfo } from "../../pixels-metaverse";
+import { PixelsMetaverseHandleImgProvider, useConvertedPostion, usePixelsMetaverseUserInfo } from "../../pixels-metaverse";
 import { BaseInfo } from "./components/BaseInfo";
 import { AssetsInfo } from "./components/AssetsInfo";
 import { useWeb3Info } from "../../hook/web3";
@@ -12,23 +12,12 @@ import { useGetPersonData } from "../play";
 
 export const PersonCenter = () => {
   const { address: addresss, networkId } = useWeb3Info()
-  const { goodsList, userInfo } = useUserInfo()
+  const { userInfo } = useUserInfo()
   const { search } = useLocation()
   const address = search ? search.split("=")[1] : addresss
-  const { closeDelayLoading, openLoading, closeLoading } = useLoading()
+  const { closeDelayLoading, openLoading } = useLoading()
   const convertedPostion = useConvertedPostion()
-  const { noCollectionList, avater, colectionList, onwerList } = useGetPersonData()
-
-  const { noOutfitEdList, outfitEdList } = React.useMemo(() => {
-    if (isEmpty(goodsList)) return {
-      outfitEdList: [],
-      noOutfitEdList: [],
-    }
-    return {
-      outfitEdList: filter(goodsList, item => !item?.isSale && item?.isOutfit && item?.owner === address),
-      noOutfitEdList: filter(goodsList, item => !item?.isSale && !item?.isOutfit && item?.owner === address)
-    }
-  }, [goodsList, address])
+  const { colectionList, onwerList } = useGetPersonData()
 
   const positions = useMemo(() => {
     if (isEmpty(onwerList)) return "empty"
@@ -82,12 +71,15 @@ export const PersonCenter = () => {
   }, [address, networkId])
 
   return (
-    <>{positions && <PixelsMetaverseHandleImgProvider size={240} showGrid={userInfo?.withGrid} data={{
-      positions: positions,
-      size: 'large',
-      bgColor: userInfo?.bgColor,
-      gridColor: userInfo?.gridColor,
-    }}>
+    <>{positions && <PixelsMetaverseHandleImgProvider
+      size={240}
+      showGrid={userInfo?.withGrid}
+      data={{
+        positions: positions,
+        size: 'large',
+        bgColor: userInfo?.bgColor,
+        gridColor: userInfo?.gridColor,
+      }}>
       <div className="p-8 pt-20 h-screen">
         <div className="flex justify-between p-8 m-auto rounded-md text-opacity-80 text-white bg-white bg-opacity-5 h-full">
           <BaseInfo />

@@ -1,7 +1,7 @@
 import { PersonCenter } from "./components/PersonCenter";
 import { Avatar } from "./components/Avatar";
 import { Collections } from "./components/Collections";
-import { Dictionary, filter, isEmpty, map } from "lodash";
+import { Dictionary, isEmpty, map } from "lodash";
 import React, { useMemo } from "react";
 import { useUserInfo } from "../../components/UserProvider";
 import { useLocation, useParams } from "react-router-dom";
@@ -16,7 +16,7 @@ export const useGetPersonData = () => {
   const { address: addresss } = useWeb3Info()
   const { search } = useLocation()
   const address = search ? search.split("=")[1] : addresss
-  const { goodsList, userInfo, goodsId, collectList } = useUserInfo()
+  const { goodsList, userInfo, collectList } = useUserInfo();
   return useMemo(() => {
     const noCollectionList: MaterialItem[] = [], colectionList: MaterialItem[] = [], onwerList: MaterialItem[] = [];
     let avater: MaterialItem | undefined;
@@ -38,13 +38,13 @@ export const useGetPersonData = () => {
 }
 
 export const PixelsMetaverse = () => {
-  const { address: addresss } = useWeb3Info()
-  const { search } = useLocation()
-  const address = search ? search.split("=")[1] : addresss
-  const { goodsList, userInfo, goodsId, collectList } = useUserInfo()
-  const convertedPostion = useConvertedPostion()
-  const a = useParams()
-  const { noCollectionList, avater, colectionList, onwerList } = useGetPersonData()
+  const { address: addresss } = useWeb3Info();
+  const { search } = useLocation();
+  const address = search ? search.split("=")[1] : addresss;
+  const { userInfo, } = useUserInfo();
+  const convertedPostion = useConvertedPostion();
+  const a = useParams();
+  const { noCollectionList, avater, colectionList, onwerList } = useGetPersonData();
 
   const positions = useMemo(() => {
     if (isEmpty(onwerList)) return "empty"

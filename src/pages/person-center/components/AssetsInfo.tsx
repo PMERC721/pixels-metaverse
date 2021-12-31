@@ -1,9 +1,9 @@
-import React from "react"
-import { filter, isEmpty, map } from "lodash";
+import React from "react";
 import { useLocation } from "react-router";
+import { filter, isEmpty, map } from "lodash";
+import { useWeb3Info } from "../../../hook/web3";
 import { useUserInfo } from "../../../components/UserProvider";
 import { AvatarCard } from "../../../components/AvatarCard";
-import { useWeb3Info } from "../../../hook/web3";
 import { DataStateBox } from "../../../components/DataStateBox";
 
 export const AssetsInfo = ({ outfitEdList, noOutfitEdList }: {

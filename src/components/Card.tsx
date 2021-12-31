@@ -1,8 +1,8 @@
-import { CarryOutOutlined, CloseOutlined, CopyOutlined, FormOutlined, SmileOutlined } from "@ant-design/icons";
+import { CarryOutOutlined, CopyOutlined, SmileOutlined } from "@ant-design/icons";
 import { Checkbox, message, Modal, Tooltip, Tree, Typography } from "antd";
 import { DataNode } from "antd/lib/tree";
-import { cloneDeep, divide, find, isEmpty, map } from "lodash";
-import React, { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import { cloneDeep, find, isEmpty, map } from "lodash";
+import React, { ReactNode, useEffect, useMemo, useState } from "react";
 import { useUserInfo } from "../components/UserProvider";
 import { fetchCollect, useRequest } from "../hook/api";
 import { useWeb3Info } from "../hook/web3";
@@ -35,31 +35,7 @@ export interface MaterialItem {
   composeData: MaterialItem[]
 }
 
-const initTreeData: DataNode[] = [
-  { title: 'Expand to load', key: '0' },
-  { title: 'Expand to load', key: '1' },
-  { title: 'Tree Node', key: '2', isLeaf: true },
-];
-
-function updateTreeData(list: DataNode[], key: React.Key, children: DataNode[]): DataNode[] {
-  return list.map(node => {
-    if (node.key === key) {
-      return {
-        ...node,
-        children,
-      };
-    }
-    if (node.children) {
-      return {
-        ...node,
-        children: updateTreeData(node.children, key, children),
-      };
-    }
-    return node;
-  });
-}
-
-export const DetailsBody = ({ item }: { item: MaterialItem }) => {
+export const DetailsBody = ({ item, child }: { item: MaterialItem, child?: boolean }) => {
   const { collectList, goodsListObj } = useUserInfo()
   const { address } = useWeb3Info()
   const data = useMemo(() => {
@@ -79,7 +55,7 @@ export const DetailsBody = ({ item }: { item: MaterialItem }) => {
       <div className="ml-10 flex flex-col justify-between">
         <div>物品名称：{item?.baseInfo?.name || "这什么鬼名称"}</div>
         <div>物品类别：{(find(categoryData, ite => ite?.value === item?.baseInfo?.category) || {})?.label || "这什么鬼类别"}</div>
-        <div>组成部分：{map(item?.composeData, ite => ite?.material?.id)?.join(",") || "暂无"}</div>
+        <div className="flex">组成部分：<div className="overflow-x-scroll" style={{ maxWidth: !child ? 800 : 400 }}>{map(item?.composeData, ite => ite?.material?.id)?.join(",") || "暂无"}</div></div>
         <div className="relative">所属地址：<Text copyable={{
           text: item?.material?.owner,
           icon: [<CopyOutlined className="absolute top-1" />, <SmileOutlined className="absolute top-1" />],
@@ -97,7 +73,7 @@ export const DetailsBody = ({ item }: { item: MaterialItem }) => {
 export const MaterialTreeData = ({ item }: { item: MaterialItem }) => {
   const { goodsListObj } = useUserInfo()
   const [select, setSelect] = useState<MaterialItem>()
-  const [treeData, setTreeData] = useState(initTreeData);
+  const [treeData, setTreeData] = useState<DataNode[]>();
 
   useEffect(() => {
     if (isEmpty(item) || isEmpty(goodsListObj)) return
@@ -128,7 +104,7 @@ export const MaterialTreeData = ({ item }: { item: MaterialItem }) => {
 
   return (
     <div className="flex justify-between" style={{ height: 300, minWidth: 1200 }}>
-      <Tree
+      { treeData && treeData[0] && <Tree
         className="flex-1"
         height={300}
         showLine={true}
@@ -136,9 +112,9 @@ export const MaterialTreeData = ({ item }: { item: MaterialItem }) => {
         defaultExpandedKeys={[treeData[0]?.key]}
         onSelect={onSelect}
         treeData={treeData}
-      />
+      />}
       {!isEmpty(treeData) && select && <div className="border-l border-black border-opacity-10 p-4" style={{ width: 800, minWidth: 800 }}>
-        <DetailsBody item={select} />
+        <DetailsBody item={select} child />
       </div>}
     </div>
   );

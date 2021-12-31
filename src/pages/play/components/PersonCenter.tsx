@@ -1,12 +1,12 @@
-import { map } from "lodash";
+import { isEmpty, map } from "lodash";
 import { useHistory, useLocation } from "react-router-dom";
 import { AvatarCard } from "../../../components/AvatarCard";
 import { MaterialItem } from "../../../components/Card";
 import { DataStateBox } from "../../../components/DataStateBox";
 
 export const PersonCenter = ({
-  avater, 
-  colectionList, 
+  avater,
+  colectionList,
   onwerList
 }: {
   avater?: MaterialItem;
@@ -26,22 +26,22 @@ export const PersonCenter = ({
           onClick={() => { history.push(`/person-center${address ? "?address=" + address : ""}`) }}
         >查看更多</div>
       </div>
-      <DataStateBox data={[...colectionList, ...onwerList, avater]}>
+      <DataStateBox data={[...colectionList, ...onwerList]}>
         <div
           className="overflow-y-scroll"
           style={{ height: "calc(100% - 30px)" }}>
-          { avater && <div className="mt-2 pb-4">
+          {avater && <div className="mt-2 pb-4">
             <div className="">Avater</div>
             {map([avater], item => <AvatarCard key={item?.material.id} item={item} type="assets" />)}
-          </div> }
-          <div className="mt-4">
+          </div>}
+          {!isEmpty(onwerList) && <div className="mt-4">
             <div className="">Your Material</div>
             {map(onwerList, item => <AvatarCard key={item?.material?.id} item={item} type="assets" />)}
-          </div>
-          <div className="mt-4">
+          </div>}
+          {!isEmpty(colectionList) && <div className="mt-4">
             <div className="">Your Star</div>
             {map(colectionList, item => <AvatarCard key={item?.material?.id} item={item} type="assets" />)}
-          </div>
+          </div>}
         </div>
       </DataStateBox>
     </div>
