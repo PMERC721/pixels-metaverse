@@ -104,7 +104,7 @@ export const Submit = () => {
   const postGoods = useRequest(fetchMake, {
     onSuccess: () => {
       message.success("物品制造成功！")
-      getGoodsIdList({ setValue: setGoodsList, newNumber: Number(amount) })
+      getGoodsIdList({ setValue: setGoodsList, createAmount: Number(amount) })
       setIsModalVisible(false)
       setMerchandies({
         name: "",

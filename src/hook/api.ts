@@ -2,10 +2,11 @@ import { Dispatch, useCallback, useEffect, useState } from "react";
 import { IMerchandise } from "../pages/produced/components/Submit";
 import { useLoading } from "../components/Loading";
 import { message } from "antd";
-import { cloneDeep, map } from "lodash";
+import { cloneDeep, find, findIndex, isArray, isObject, isUndefined, map } from "lodash";
 import { usePixelsMetaverse } from "../pixels-metaverse";
 import { useWeb3Info } from "./web3";
 import { Contract } from 'web3-eth-contract';
+import { MaterialItem } from "../components/Card";
 
 export interface IArgContract { contract: Contract, accounts?: any, address?: any }
 
@@ -27,7 +28,7 @@ export const useRequest = (
   const { closeDelayLoading, openLoading, closeLoading } = useLoading()
 
   return useCallback(async (arg?: any) => {
-    if (!contract || !address) return
+    if (!contract) return
     try {
       !arg?.closeLoading && openLoading()
       fetch({ address, contract }, arg).then(() => {
@@ -57,13 +58,13 @@ export const fetchRegister = async (argContract: IArgContract) => {
   await argContract?.contract.methods.register().send({ from: argContract?.address });
 }
 
-export const fetchGetGoodsInfo = async (argContract: IArgContract, arg: { id: number, setGoodsList: Dispatch<React.SetStateAction<any[]>> }) => {
-  const goods = await argContract?.contract.methods.goods(arg?.id).call();
+export const fetchGetMaterialInfo = async (argContract: IArgContract, arg: { id: number, setGoodsList: Dispatch<React.SetStateAction<any[]>> }) => {
+  const material = await argContract?.contract.methods.getMaterial(arg?.id).call();
   arg?.setGoodsList && arg?.setGoodsList((pre) => {
     const list = cloneDeep(pre)
     return map(list, item => {
-      if (item?.id === goods.id) {
-        return goods
+      if (item?.material?.id === arg?.id) {
+        return material
       }
       return item
     })
@@ -82,26 +83,57 @@ export const fetchGetMaterialLength = async (argContract: IArgContract, arg?: { 
   arg?.setValue && arg?.setValue(Number(len))
 }
 
-export const fetchGetGoodsIdList = async (argContract: IArgContract, arg?: { setValue: Dispatch<React.SetStateAction<any[]>>, newNumber?: number }) => {
-  const len = await argContract?.contract?.methods.getMaterialLength().call();
+const arrayToObject = (item: MaterialItem) => {
+  return {
+    baseInfo: {
+      category: item?.baseInfo?.category,
+      data: item?.baseInfo?.data,
+      decode: item?.baseInfo?.decode,
+      name: item?.baseInfo?.name,
+      userId: item?.baseInfo?.userId,
+    },
+    composes: item?.composes,
+    material: {
+      compose: item?.material?.compose,
+      data: item?.material?.data,
+      id: item?.material?.id,
+      owner: item?.material?.owner,
+      position: item?.material?.position,
+      time: item?.material?.time,
+      zIndex: item?.material?.zIndex
+    },
+    composeData: []
+  }
+}
 
-  if (arg?.newNumber === -1) {
+export const fetchGetGoodsIdList = async (argContract: IArgContract, arg?: { setValue: Dispatch<React.SetStateAction<any[]>>, createAmount?: number, list: string[] }) => {
+  const len = await argContract?.contract?.methods.getMaterialLength().call();
+  if (arg?.list && !isUndefined(arg?.createAmount)) {
+    const list = [...arg?.list]
+    for (let i = 0; i < arg?.createAmount; i++) {
+      list.push(String(len - i));
+    }
+    for (let i = 0; i < list?.length; i++) {
+      let item = await argContract?.contract?.methods.getMaterial(list[i]).call()
+      const obj = arrayToObject(item)
+      arg?.setValue && arg?.setValue((pre) => {
+        const data = cloneDeep(pre) as MaterialItem[];
+        const index = findIndex(data, ite => ite?.material?.id == list[i]);
+        if (index >= 0) data[index] = obj;
+        else data.unshift(obj)
+        return data
+      })
+    }
+  } else {
     for (let i = len; i >= 1; i--) {
       let item = await argContract?.contract?.methods.getMaterial(i).call()
-      const obj = { ...item, composeData: [] }
+      const obj = arrayToObject(item)
       arg?.setValue && arg?.setValue((pre) => {
         if (i === len) {
           return [obj]
         }
         return [...pre, obj]
       })
-    }
-  } else {
-    for (let i = len - 1; i >= len - (arg?.newNumber || len); i--) {
-      let item = await argContract?.contract?.methods.getMaterial(i + 1).call()
-      const obj = { ...item, composeData: [] }
-      arg?.setValue && !arg.newNumber && arg?.setValue((pre) => ([...pre, obj]))
-      arg?.setValue && arg.newNumber && arg?.setValue((pre) => ([obj, ...pre]))
     }
   }
 }
@@ -126,12 +158,17 @@ export const fetchMake = async (argContract: IArgContract, arg: { value: IMercha
 
 export const fetchBuyGoods = async (argContract: IArgContract, arg: { id: number, price: number, setGoodsList: Dispatch<React.SetStateAction<any[]>> }) => {
   await argContract?.contract.methods.buyGoods(arg.id).send({ from: argContract?.address, value: arg.price });
-  fetchGetGoodsInfo(argContract, { id: arg?.id, setGoodsList: arg?.setGoodsList })
+  fetchGetMaterialInfo(argContract, { id: arg?.id, setGoodsList: arg?.setGoodsList })
 }
 
-export const fetchCollect = async (argContract: IArgContract, arg: { id: number, setGoodsList: Dispatch<React.SetStateAction<any[]>> }) => {
+export const fetchCollect = async (argContract: IArgContract, arg: { id: number, setCollectList: Dispatch<React.SetStateAction<any[]>> }) => {
   await argContract?.contract.methods.collect(arg.id).send({ from: argContract?.address });
-  //fetchGetGoodsInfo(argContract, { id: arg?.id, setGoodsList: arg?.setGoodsList })
+  fetchCollectList(argContract, { address: argContract?.address, setValue: arg?.setCollectList })
+}
+
+export const fetchCancelCollect = async (argContract: IArgContract, arg: { id: number, index: number, setCollectList: Dispatch<React.SetStateAction<any[]>> }) => {
+  await argContract?.contract.methods.cancelCollect(arg.id, arg?.index).send({ from: argContract?.address });
+  fetchCollectList(argContract, { address: argContract?.address, setValue: arg?.setCollectList })
 }
 
 export const fetchCompose = async (argContract: IArgContract, arg: { ids: string[], name: string, category: string }) => {
@@ -145,7 +182,7 @@ export const fetchSubjion = async (argContract: IArgContract, arg: { ids: string
 
 export const fetchOutfit = async (argContract: IArgContract, arg: { value: any, setGoodsList: Dispatch<React.SetStateAction<any[]>> }) => {
   await argContract?.contract.methods.outfit(arg?.value.id, arg?.value.isOutfit).send({ from: argContract?.address });
-  fetchGetGoodsInfo(argContract, { id: arg?.value.id, setGoodsList: arg?.setGoodsList })
+  fetchGetMaterialInfo(argContract, { id: arg?.value.id, setGoodsList: arg?.setGoodsList })
 }
 
 export const fetchSetPMT721 = async (argContract: IArgContract) => {

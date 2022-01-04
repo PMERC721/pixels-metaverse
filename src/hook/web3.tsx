@@ -144,10 +144,13 @@ export const useGetWeb3Info = () => {
     if (!provider.on) {
       return;
     }
+    
     provider.on("close", () => resetApp());
+
     provider.on("accountsChanged", async (accounts: string[]) => {
       await setWeb3Info((pre) => ({ ...pre, address: accounts[0] }));
     });
+
     provider.on("chainChanged", async (chainId: number) => {
       const networkId = await web3?.eth.net.getId();
       await setWeb3Info((pre) => ({ ...pre, chainId, networkId }))

@@ -4,7 +4,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Dictionary, isEmpty, keys, map } from 'lodash';
 import { useUserInfo } from '../../../components/UserProvider';
 import { PixelsMetaverseImgByPositionData, usePixelsMetaverseHandleImg } from '../../../pixels-metaverse';
-import { fetchCompose, fetchGetGoodsIdList, fetchMake, fetchSubjion, useRequest } from '../../../hook/api';
+import { fetchCompose, fetchGetGoodsIdList, fetchGetMaterialInfo, fetchMake, fetchSubjion, useRequest } from '../../../hook/api';
 import { useWeb3Info } from '../../../hook/web3';
 import { ClearIcon } from './SearchQuery';
 import React from 'react';
@@ -40,26 +40,28 @@ export const ComposeDetails = ({ setIsModalVisible }: { setIsModalVisible: Dispa
     weight: "",
   })
 
+  const getMaterialInfo = useRequest(fetchGetMaterialInfo);
+
   const compose = useRequest(fetchCompose, {
     onSuccess: () => {
       message.success("合成成功！")
       setComposeList && setComposeList([])
-      getGoodsIdList({ setValue: setGoodsList, newNumber: Number(1) })
+      getGoodsIdList({ setValue: setGoodsList, createAmount: 1, list: composeList })
       setIsModalVisible(false)
     }
-  }, [])
+  }, [composeList])
 
   const jion = useRequest(fetchSubjion, {
     onSuccess: () => {
       message.success(`合成至 ${value} 成功！`)
       setComposeList && setComposeList([])
-      getGoodsIdList({ setValue: setGoodsList, newNumber: Number(1) })
+      getGoodsIdList({ setValue: setGoodsList, list: composeList })
       setIsModalVisible(false)
     }
-  }, [value])
+  }, [value, composeList])
 
   useEffect(() => {
-    if (isEmpty(composeList)) return
+    if (isEmpty(composeList) || isEmpty(goodsListObj)) return
     const type: ICompose = {
       singles: [],
       composes: [],
@@ -76,8 +78,6 @@ export const ComposeDetails = ({ setIsModalVisible }: { setIsModalVisible: Dispa
     })
     setType(type)
   }, [composeList, goodsListObj])
-
-  console.log(type)
 
   const data = useMemo(() => {
     if (isEmpty(type?.composesData)) return []

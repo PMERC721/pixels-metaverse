@@ -1,10 +1,8 @@
-import React, { Dispatch, useCallback, useEffect, useMemo, useState } from "react";
-import { Dictionary, divide, filter, groupBy, keys, map, orderBy } from "lodash";
-import { Button, Input, message, Modal, Select } from "antd";
+import React, { Dispatch, useEffect, useMemo, useState } from "react";
+import { Dictionary, filter, groupBy, orderBy } from "lodash";
+import { Button, Modal, Select } from "antd";
 import { useUserInfo } from "../../../components/UserProvider";
-import { categoryData } from "../../produced/components/Submit";
 import { CloseSquareOutlined } from "@ant-design/icons";
-import { fetchCompose, fetchGetGoodsIdList, useRequest } from "../../../hook/api";
 import { MaterialItem } from "../../../components/Card";
 import { ComposeDetails } from "./ComposeDetails";
 const { Option } = Select;
@@ -16,19 +14,8 @@ export const SearchQuery = ({
 }: {
   setData: Dispatch<React.SetStateAction<any[]>>;
 }) => {
-  const getGoodsIdList = useRequest(fetchGetGoodsIdList)
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const { composeList, setComposeList, setGoodsList } = useUserInfo()
-  const compose = useRequest(fetchCompose, {
-    onSuccess: () => {
-      message.success("合成成功！")
-      setComposeList && setComposeList([])
-      getGoodsIdList({ setValue: setGoodsList, newNumber: Number(1) })
-    }
-  }, [])
-  const handleOk = useCallback(() => {
-    compose({ ids: composeList })
-  }, [composeList]);
+  const { composeList } = useUserInfo()
 
   const { goodsList } = useUserInfo()
   const [{
@@ -107,7 +94,7 @@ export const SearchQuery = ({
         footer={null}
         onCancel={() => { setIsModalVisible(false); }}
       >
-        <ComposeDetails setIsModalVisible={setIsModalVisible}/>
+        <ComposeDetails setIsModalVisible={setIsModalVisible} />
       </Modal>
       {/* <Input
         style={{ width: 120, marginLeft: 10 }}

@@ -3,9 +3,10 @@ import { SearchQuery } from "./components/SearchQuery";
 import { GoodsCard } from "./components/GoodsCard";
 import { DataStateBox } from "../../components/DataStateBox";
 import { map } from "lodash";
+import { MaterialItem } from "../../components/Card";
 
 export const Lockers = () => {
-  const [data, setData] = React.useState<any[]>([])
+  const [data, setData] = React.useState<MaterialItem[]>([])
 
   return (
     <main className="pt-20">
@@ -18,14 +19,11 @@ export const Lockers = () => {
         }}>
         <div className="mb-4 flex justify-between">
           <div className="text-2xl">储物室</div>
-          <SearchQuery setData={setData}/>
+          <SearchQuery setData={setData} />
         </div>
         <DataStateBox data={data}>
-          <div
-            className="flex flex-wrap overflow-scroll" style={{
-              height: "calc(100vh - 175px)"
-            }}>
-            {map(data, (item, i) => <GoodsCard key={i} item={item}/>)}
+          <div className="flex flex-wrap overflow-scroll" style={{ height: "calc(100vh - 175px)" }}>
+            {map(data, (item, i) => <GoodsCard key={`${i}`} item={item} />)}
           </div>
         </DataStateBox>
       </div>

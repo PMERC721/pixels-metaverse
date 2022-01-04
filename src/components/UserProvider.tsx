@@ -3,11 +3,9 @@ import * as React from "react";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { createContext, Dispatch } from "react";
 import { usePixelsMetaverse } from "../pixels-metaverse";
-import { fetchCollectList, fetchGetGoodsIdList, fetchGetMaterialLength, fetchRegister, fetchUserInfo, useRequest } from "../hook/api";
+import { fetchCollectList, fetchGetGoodsIdList, fetchRegister, fetchUserInfo, useRequest } from "../hook/api";
 import { useWeb3Info } from "../hook/web3";
 import { MaterialItem } from "./Card";
-import { DataNode } from "antd/lib/tree";
-import { CarryOutOutlined } from "@ant-design/icons";
 
 export const UserInfoContext = createContext(
   {} as {
@@ -47,6 +45,11 @@ export const UserInfoProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [address])
 
+  const getInfo = () => {
+    if (!address) return
+    getUserInfo({ address, setUserInfo })
+  }
+
   useEffect(() => {
     getInfo()
   }, [address, contract])
@@ -55,28 +58,20 @@ export const UserInfoProvider = ({ children }: { children: ReactNode }) => {
   const getCollectList = useRequest(fetchCollectList)
 
   useEffect(() => {
-    getGoodsIdList({ setValue: setGoodsList, newNumber: -1 })
-  }, [address, contract])
-
-  useEffect(() => {
+    if (!address) return
     getCollectList({ setValue: setCollectList, address })
   }, [address, contract])
 
   useEffect(() => {
-    if (isEmpty(networkId)) return
+    if (!networkId) return
     setGoodsList([])
-    getGoodsIdList({ setValue: setGoodsList, newNumber: -1 })
-  }, [networkId])
+    getGoodsIdList({ setValue: setGoodsList })
+  }, [networkId, contract])
 
   useEffect(() => {
     if (!goodsId) return
     //getGoodsInfo({ id: goodsId, setGoodsList })
   }, [goodsId])
-
-  const getInfo = () => {
-    if (isEmpty(address)) return
-    getUserInfo({ address, setUserInfo })
-  }
 
   useEffect(() => {
     if (!isEmpty(goodsList)) {
@@ -101,6 +96,8 @@ export const UserInfoProvider = ({ children }: { children: ReactNode }) => {
       setGoodsListObj(obj)
     }
   }, [goodsList])
+
+  console.log(goodsList)
 
   return (
     <UserInfoContext.Provider value={{

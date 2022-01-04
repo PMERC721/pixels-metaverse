@@ -1,10 +1,10 @@
 import { CarryOutOutlined, CopyOutlined, SmileOutlined } from "@ant-design/icons";
 import { Checkbox, message, Modal, Tooltip, Tree, Typography } from "antd";
 import { DataNode } from "antd/lib/tree";
-import { cloneDeep, find, isEmpty, map } from "lodash";
+import { cloneDeep, find, isEmpty, lowerCase, map } from "lodash";
 import React, { ReactNode, useEffect, useMemo, useState } from "react";
 import { useUserInfo } from "../components/UserProvider";
-import { fetchCollect, useRequest } from "../hook/api";
+import { fetchCancelCollect, fetchCollect, fetchGetMaterialInfo, useRequest } from "../hook/api";
 import { useWeb3Info } from "../hook/web3";
 import { categoryData } from "../pages/produced/components/Submit";
 import { PixelsMetaverseImgByPositionData } from "../pixels-metaverse";
@@ -174,7 +174,7 @@ export const MaterialLabel = ({
 }
 
 export const Collection = ({ item }: { item: MaterialItem }) => {
-  const { setGoodsList, collectList, userInfo } = useUserInfo()
+  const { setCollectList, collectList, userInfo } = useUserInfo()
   const { address } = useWeb3Info()
 
   const collect = useRequest(fetchCollect, {
@@ -183,24 +183,29 @@ export const Collection = ({ item }: { item: MaterialItem }) => {
     }
   }, [])
 
+  const cancelCollect = useRequest(fetchCancelCollect, {
+    onSuccess: () => {
+      message.success("已取消收藏！")
+    }
+  }, [])
+
+  const index = useMemo(() => collectList?.indexOf(item?.material?.id), [collectList, item, address])
+
   return (
     <>
-      {address !== item?.material?.owner ? <button className="p px-2 bg-red-500 rounded-sm"
+      {address?.toLowerCase() !== item?.material?.owner?.toLowerCase() ? <button className="p px-2 bg-red-500 rounded-sm"
         style={{
-          background: !collectList?.includes(item?.material?.id) ? "rgba(239, 68, 68)" : "rgba(225,225,225, 0.1)",
-          cursor: !collectList?.includes(item?.material?.id) ? "pointer" : "no-drop",
-          width: 60
+          background: index < 0 ? "rgba(239, 68, 68)" : "rgba(225,225,225, 0.1)",
+          padding: "1px 10px"
         }} onClick={() => {
           if (Number(userInfo?.id) < 1) {
             message.warning("你还不是平台用户，请激活自己的账户！")
             return
           }
-          collect({
-            id: Number(item?.material?.id),
-            setGoodsList
-          })
+          if (index >= 0) cancelCollect({ id: Number(item?.material?.id), setCollectList, index })
+          else collect({ id: Number(item?.material?.id), setCollectList })
         }}
-        disabled={collectList?.includes(item?.material?.id)}>{collectList?.includes(item?.material?.id) ? "已收藏" : "收藏"}</button> : <div>当前账户</div>}
+      >{index >= 0 ? "取消收藏" : "收藏"}</button> : <div>当前账户</div>}
     </>
   )
 }
@@ -216,7 +221,7 @@ export const Composes = ({
   return (
     <>
       {Number(item?.material?.compose) === 0
-        ? (address === item?.material?.owner ? <Checkbox
+        ? (address?.toLowerCase() === item?.material?.owner?.toLowerCase() ? <Checkbox
           checked={composeList.includes(item?.material?.id)}
           onChange={(checked) => {
             setComposeList && setComposeList((pre: string[]) => {
