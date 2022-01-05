@@ -17,12 +17,17 @@ export const PersonCenter = () => {
   const address = search ? search.split("=")[1] : addresss
   const { closeDelayLoading, openLoading } = useLoading()
   const convertedPostion = useConvertedPostion()
-  const { colectionList, onwerList, avater } = useGetPersonData()
+  const { avater } = useGetPersonData()
+
+  const avaterData = useMemo(()=>{ 
+    avater?.composeData?.push(avater)
+    return avater
+  },[avater?.composeData])
 
   const positions = useMemo(() => {
-    if (isEmpty(avater?.composeData)) return "empty"
+    if (isEmpty(avaterData?.composeData)) return "empty"
     let data: Dictionary<any> = {}
-    map(avater?.composeData, item => {
+    map(avaterData?.composeData, item => {
       const positionsData = convertedPostion({
         positions: item?.baseInfo?.data
       })
@@ -41,7 +46,7 @@ export const PersonCenter = () => {
       str += `${parseInt(i.slice(1), 16).toString(36)}-${position}-`
     }
     return `${str}${min}`
-  }, [avater])
+  }, [avaterData?.composeData])
 
   const getUserInfo = usePixelsMetaverseUserInfo({
     onRequestBefore: () => {

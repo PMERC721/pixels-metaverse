@@ -45,15 +45,22 @@ export const PixelsMetaverse = () => {
   const convertedPostion = useConvertedPostion();
   const a = useParams();
   const { noCollectionList, avater, colectionList, onwerList } = useGetPersonData();
+  
+  const avaterData = useMemo(()=>{ 
+    avater?.composeData?.push(avater)
+    return avater
+  },[avater?.composeData])
 
   const positions = useMemo(() => {
-    if (isEmpty(avater?.composeData)) return "empty"
+    if (isEmpty(avaterData?.composeData)) return "empty"
     let data: Dictionary<any> = {}
-    map(avater?.composeData, item => {
-      const positionsData = convertedPostion({
-        positions: item?.baseInfo?.data
-      })
-      data = { ...data, ...positionsData }
+    map(avaterData?.composeData, item => {
+      if (item?.baseInfo?.data) {
+        const positionsData = convertedPostion({
+          positions: item?.baseInfo?.data
+        })
+        data = { ...data, ...positionsData }
+      }
     })
 
     const colors: Dictionary<number[]> = {}
@@ -68,7 +75,7 @@ export const PixelsMetaverse = () => {
       str += `${parseInt(i.slice(1), 16).toString(36)}-${position}-`
     }
     return `${str}${min}`
-  }, [avater])
+  }, [avaterData?.composeData])
 
   return (
     <PixelsMetaverseHandleImgProvider

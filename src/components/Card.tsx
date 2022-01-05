@@ -70,9 +70,7 @@ export const RemoveCompose = ({ item, setIsModalVisible }: { item: MaterialItem,
 }
 
 export const SetAvater = ({ item }: { item: MaterialItem }) => {
-  const getGoodsIdList = useRequest(fetchGetGoodsIdList)
-  const { setGoodsList, goodsListObj, userInfo, getInfo } = useUserInfo()
-
+  const { userInfo, getInfo } = useUserInfo()
   const setAvater = useRequest(fetchSetUserConfig, {
     onSuccess: () => {
       message.success("头像设置成功！")
@@ -103,7 +101,7 @@ export const DetailsBody = ({ item, child, setIsModalVisible }: { item: Material
         size={200}
         style={{ background: "#323945", cursor: "pointer", boxShadow: "0px 0px 5px rgba(225,225,225,0.3)" }} />
       <div className="ml-10 flex flex-col justify-between">
-        <div>物品名称：{item?.baseInfo?.name || "这什么鬼名称"}{address?.toLowerCase() === item?.material?.owner?.toLowerCase() && userInfo?.avater !== item?.material.id && <SetAvater item={item}/>}</div>
+        <div>物品名称：{item?.baseInfo?.name || "这什么鬼名称"}{address?.toLowerCase() === item?.material?.owner?.toLowerCase() && userInfo?.avater !== item?.material.id && <SetAvater item={item} />}</div>
         <div>物品类别：{(find(categoryData, ite => ite?.value === item?.baseInfo?.category) || {})?.label || "这什么鬼类别"}</div>
         <div className="flex">组成部分：<div className="overflow-x-scroll" style={{ maxWidth: !child ? 800 : 400 }}>{item?.composes?.join(",") || "暂无"}{!isEmpty(item?.composes) && Number(item?.material?.compose) === 0 && <CancelCompose item={item} setIsModalVisible={setIsModalVisible} />}</div></div>
         <div className="relative">所属地址：<Text copyable={{
@@ -241,11 +239,8 @@ export const Collection = ({ item }: { item: MaterialItem }) => {
 
   return (
     <>
-      {address?.toLowerCase() !== item?.material?.owner?.toLowerCase() ? <button className="p px-2 bg-red-500 rounded-sm"
-        style={{
-          background: index < 0 ? "rgba(239, 68, 68)" : "rgba(225,225,225, 0.1)",
-          padding: "1px 10px"
-        }} onClick={() => {
+      {address?.toLowerCase() !== item?.material?.owner?.toLowerCase() ? <button
+        className="p px-2 bg-red-500 rounded-sm " onClick={() => {
           if (Number(userInfo?.id) < 1) {
             message.warning("你还不是平台用户，请激活自己的账户！")
             return
