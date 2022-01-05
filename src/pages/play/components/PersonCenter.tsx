@@ -32,15 +32,15 @@ export const PersonCenter = ({
           style={{ height: "calc(100% - 30px)" }}>
           {avater && <div className="mt-2 pb-4">
             <div className="">Avater</div>
-            {map([avater], item => <AvatarCard key={item?.material.id} item={item} type="assets" />)}
+            {map([avater], item => <AvatarCard key={item?.material.id} item={item} />)}
           </div>}
           {!isEmpty(onwerList) && <div className="mt-4">
             <div className="">Your Material</div>
-            {map(onwerList, item => <AvatarCard key={item?.material?.id} item={item} type="assets" />)}
+            {map(onwerList, item => <AvatarCard key={item?.material?.id} item={item} />)}
           </div>}
           {!isEmpty(colectionList) && <div className="mt-4">
             <div className="">Your Star</div>
-            {map(colectionList, item => <AvatarCard key={item?.material?.id} item={item} type="assets" />)}
+            {map(colectionList, item => <AvatarCard key={item?.material?.id} item={item} star/>)}
           </div>}
         </div>
       </DataStateBox>

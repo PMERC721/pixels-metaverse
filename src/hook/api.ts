@@ -195,6 +195,10 @@ export const fetchSubtract = async (argContract: IArgContract, arg: { ids: strin
   await argContract?.contract.methods.subtract(arg.ids, arg.id, arg?.index).send({ from: argContract?.address });
 }
 
+export const fetchSetUserConfig = async (argContract: IArgContract, arg: { role: string, id: string, other: number }) => {
+  await argContract?.contract.methods.setConfig(arg.role, arg.id, arg?.other).send({ from: argContract?.address });
+}
+
 export const fetchOutfit = async (argContract: IArgContract, arg: { value: any, setGoodsList: Dispatch<React.SetStateAction<any[]>> }) => {
   await argContract?.contract.methods.outfit(arg?.value.id, arg?.value.isOutfit).send({ from: argContract?.address });
   fetchGetMaterialInfo(argContract, { id: arg?.value.id, setGoodsList: arg?.setGoodsList })

@@ -1,4 +1,4 @@
-import { cloneDeep, find, isEmpty, map } from "lodash";
+import { cloneDeep, divide, find, isEmpty, map } from "lodash";
 import {
   PixelsMetaverseImgByPositionData,
   usePixelsMetaverseHandleImg
@@ -10,8 +10,8 @@ import { useWeb3Info } from "../hook/web3";
 import { useMemo } from "react";
 import { Collection, Composes, MaterialItem, MaterialLabel } from "./Card";
 
-export const AvatarCard = ({ item, type }: {
-  item: MaterialItem, type: string
+export const AvatarCard = ({ item, star }: {
+  item: MaterialItem, star?: boolean
 }) => {
   const { address: addresss } = useWeb3Info()
   const { setSelectList } = usePixelsMetaverseHandleImg()
@@ -50,12 +50,12 @@ export const AvatarCard = ({ item, type }: {
       <div className="flex justify-end flex-1">
         <div className="ml-2 flex flex-col justify-between items-end">
           <div className="text-right" style={{ height: 40, textOverflow: "ellipsis", overflow: "hidden" }}>{item?.baseInfo?.name || "这什么鬼"}</div>
-          {!(type === "homeBuyGoods" || type === "buyGoods") && <Composes item={item} />}
-          <div className="flex justify-end items-center mt-2">
+          {!star && <Composes item={item} />}
+          <div className="flex justify-end items-center">
             <MaterialLabel toRight toDetails>{item?.material?.id}</MaterialLabel>
             <MaterialLabel toRight>{(find(categoryData, ite => ite?.value === item?.baseInfo?.category) || {})?.label}</MaterialLabel>
           </div>
-          {type === "buyGoods" && <Collection item={item} />}
+          {star && <Collection item={item} />}
         </div>
       </div>
     </div>

@@ -17,12 +17,12 @@ export const PersonCenter = () => {
   const address = search ? search.split("=")[1] : addresss
   const { closeDelayLoading, openLoading } = useLoading()
   const convertedPostion = useConvertedPostion()
-  const { colectionList, onwerList } = useGetPersonData()
+  const { colectionList, onwerList, avater } = useGetPersonData()
 
   const positions = useMemo(() => {
-    if (isEmpty(onwerList)) return "empty"
+    if (isEmpty(avater?.composeData)) return "empty"
     let data: Dictionary<any> = {}
-    map(onwerList, item => {
+    map(avater?.composeData, item => {
       const positionsData = convertedPostion({
         positions: item?.baseInfo?.data
       })
@@ -41,7 +41,7 @@ export const PersonCenter = () => {
       str += `${parseInt(i.slice(1), 16).toString(36)}-${position}-`
     }
     return `${str}${min}`
-  }, [onwerList])
+  }, [avater])
 
   const getUserInfo = usePixelsMetaverseUserInfo({
     onRequestBefore: () => {
@@ -82,7 +82,7 @@ export const PersonCenter = () => {
       <div className="p-8 pt-20 h-screen">
         <div className="flex justify-between p-8 m-auto rounded-md text-opacity-80 text-white bg-white bg-opacity-5 h-full">
           <BaseInfo />
-          <AssetsInfo outfitEdList={onwerList} noOutfitEdList={colectionList} />
+          <AssetsInfo />
         </div>
       </div>
     </PixelsMetaverseHandleImgProvider>}

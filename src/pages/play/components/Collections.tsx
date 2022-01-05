@@ -15,7 +15,7 @@ export const Collections = ({ noCollectionList }: { noCollectionList: MaterialIt
       </div>
       <DataStateBox data={noCollectionList}>
         <div className="overflow-y-scroll" style={{ height: "calc(100% - 30px)" }}>
-          {map(noCollectionList, item => <AvatarCard key={item?.material?.id} item={item} type={"buyGoods"} />)}
+          {map(noCollectionList, item => <AvatarCard key={item?.material?.id} item={item} star/>)}
         </div>
       </DataStateBox>
     </div>
