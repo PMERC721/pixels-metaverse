@@ -64,6 +64,13 @@ contract PixelsMetavers {
         _;
     }
 
+    // Must Outermost Layer，No Compose.
+    modifier MustOutermostLayer(uint256 id) {
+        Material memory m = material[id];
+        require(m.compose == 0, "error");
+        _;
+    }
+
     constructor() {
         _owner = msg.sender;
     }
@@ -126,7 +133,7 @@ contract PixelsMetavers {
         require(d != keccak256(abi.encodePacked("")), "error");
 
         for (uint256 i; i < num; i++) {
-            _make(d);
+            _make(d, msg.sender);
         }
 
         if (baseInfo[d].userId == 0) {
@@ -144,14 +151,14 @@ contract PixelsMetavers {
         Material storage m = material[id];
         require(baseInfo[m.data].userId == user[msg.sender].id, "error");
         for (uint256 i; i < num; i++) {
-            _make(m.data);
+            _make(m.data, msg.sender);
         }
     }
 
-    function _make(bytes32 data) private {
-        IPMT721(PMT721).mint(msg.sender);
+    function _make(bytes32 data, address _sender) private {
+        IPMT721(PMT721).mint(_sender);
         uint256 id = IPMT721(PMT721).currentID();
-        material[id] = Material(id, 0, "", "", "", msg.sender, data);
+        material[id] = Material(id, 0, "", "", "", _sender, data);
     }
 
     function collect(uint256 id) public MustExist(id) {
@@ -193,13 +200,10 @@ contract PixelsMetavers {
         uint256 nextID = curID + 1;
         bytes32 d = keccak256(abi.encodePacked(curID + 1));
         require(baseInfo[d].userId == 0, "error");
-        _make(d);
+        _make(d, msg.sender);
         for (uint256 i; i < len; i++) {
             uint256 id = ids[i];
-            Material memory m = material[id];
-            require(msg.sender == m.owner, "error");
-            require(m.compose == 0, "error");
-            material[id].compose = nextID;
+            _compose(nextID, id, msg.sender);
         }
         composes[nextID] = ids;
         baseInfo[d] = BaseInfo(
@@ -212,35 +216,51 @@ contract PixelsMetavers {
         emit ComposeEvent(msg.sender, nextID);
     }
 
-    function cancelCompose(uint256 id) public MustOwner(msg.sender, id) {
-        uint256[] memory c = composes[id];
+    function cancelCompose(uint256 ids)
+        public
+        MustOwner(msg.sender, ids)
+        MustOutermostLayer(ids)
+    {
+        uint256[] memory c = composes[ids];
         uint256 len = c.length;
         require(len > 1, "error");
         for (uint256 i; i < len; i++) {
             material[c[i]].compose = 0;
         }
-        IPMT721(PMT721).burn(id);
-        delete composes[id];
+        IPMT721(PMT721).burn(ids);
+        delete composes[ids];
     }
 
-    function subjion(uint256 ids, uint256 id)
+    function addition(uint256 ids, uint256[] memory idList)
         public
         MustOwner(msg.sender, ids)
-        MustOwner(msg.sender, id)
+        MustOutermostLayer(ids)
     {
         uint256[] memory c = composes[ids];
         require(c.length > 1, "error");
+        for (uint256 i; i < idList.length; i++) {
+            uint256 id = idList[i];
+            _compose(ids, id, msg.sender);
+            composes[ids].push(id);
+        }
+    }
+
+    function _compose(
+        uint256 ids,
+        uint256 id,
+        address _sender
+    ) private MustOwner(_sender, ids) MustOwner(_sender, id) {
         Material memory m = material[id];
+        require(_sender == m.owner, "error");
         require(m.compose == 0, "error");
         material[id].compose = ids;
-        composes[ids].push(id);
     }
 
     function subtract(
         uint256 ids,
         uint256 id,
         uint256 index
-    ) public MustOwner(msg.sender, ids) {
+    ) public MustOwner(msg.sender, ids) MustOutermostLayer(ids) {
         uint256[] memory c = composes[ids];
         uint256 len = c.length;
         require(len > index, "error");
@@ -258,10 +278,8 @@ contract PixelsMetavers {
         address from,
         address to,
         uint256 id
-    ) public {
+    ) public MustOutermostLayer(id) {
         require(msg.sender == address(PMT721), "error");
-        Material memory m = material[id];
-        require(m.compose == 0, "error");
         if (to == address(0)) {
             delete material[id];
         } else if (from != address(0)) {

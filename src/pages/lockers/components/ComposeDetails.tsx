@@ -1,15 +1,13 @@
-import { ChangeEvent, Dispatch, InputHTMLAttributes, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
-import { Tooltip, Select, message, Tabs, Button, Radio } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Dictionary, isEmpty, keys, map } from 'lodash';
+import { Dispatch, InputHTMLAttributes, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { Select, message, Tabs, Button, Radio } from 'antd';
+import { isEmpty, map } from 'lodash';
 import { useUserInfo } from '../../../components/UserProvider';
-import { PixelsMetaverseImgByPositionData, usePixelsMetaverseHandleImg } from '../../../pixels-metaverse';
-import { fetchCompose, fetchGetGoodsIdList, fetchGetMaterialInfo, fetchMake, fetchSubjion, useRequest } from '../../../hook/api';
-import { useWeb3Info } from '../../../hook/web3';
+import { PixelsMetaverseImgByPositionData } from '../../../pixels-metaverse';
+import { fetchCompose, fetchGetGoodsIdList, fetchSubjoin, useRequest } from '../../../hook/api';
 import { ClearIcon } from './SearchQuery';
 import React from 'react';
 import { MaterialItem } from '../../../components/Card';
-import { categoryData, IMerchandise, mustNum } from '../../produced/components/Submit';
+import { categoryData, IMerchandise } from '../../produced/components/Submit';
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -40,8 +38,6 @@ export const ComposeDetails = ({ setIsModalVisible }: { setIsModalVisible: Dispa
     weight: "",
   })
 
-  const getMaterialInfo = useRequest(fetchGetMaterialInfo);
-
   const compose = useRequest(fetchCompose, {
     onSuccess: () => {
       message.success("合成成功！")
@@ -51,11 +47,11 @@ export const ComposeDetails = ({ setIsModalVisible }: { setIsModalVisible: Dispa
     }
   }, [composeList])
 
-  const jion = useRequest(fetchSubjion, {
+  const join = useRequest(fetchSubjoin, {
     onSuccess: () => {
       message.success(`合成至 ${value} 成功！`)
       setComposeList && setComposeList([])
-      getGoodsIdList({ setValue: setGoodsList, list: composeList })
+      getGoodsIdList({ setValue: setGoodsList, createAmount: 0, list: composeList })
       setIsModalVisible(false)
     }
   }, [value, composeList])
@@ -105,7 +101,7 @@ export const ComposeDetails = ({ setIsModalVisible }: { setIsModalVisible: Dispa
         size={400}
         style={{ background: "#323945", cursor: "pointer", boxShadow: "0px 0px 5px rgba(225,225,225,0.3)", marginRight: 20 }} />
       <div className="flex flex-col justify-between h-full">
-        {/* {
+        {
           isEmpty(type?.composes)
             ? <CreateMaterial name={name} category={category} setMerchandies={setMerchandies} />
             : <Tabs defaultActiveKey="1" centered onChange={(key) => {
@@ -118,8 +114,7 @@ export const ComposeDetails = ({ setIsModalVisible }: { setIsModalVisible: Dispa
                 <MergeMaterial composes={type?.composes} value={value} setValue={setValue} />
               </TabPane>
             </Tabs>
-        } */}
-        <CreateMaterial name={name} category={category} setMerchandies={setMerchandies} />
+        }
         <Button
           type="primary"
           size="large" onClick={() => {
@@ -138,7 +133,7 @@ export const ComposeDetails = ({ setIsModalVisible }: { setIsModalVisible: Dispa
             if (tab === "new") {
               compose({ ids: composeList, name, category })
             } else {
-              jion({ ids: composeList, id: value })
+              join({ ids: Number(value), id: type?.singles[0] })
             }
           }}>确定</Button>
       </div>

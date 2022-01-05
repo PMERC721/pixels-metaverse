@@ -67,7 +67,6 @@ export const PersonCenter = () => {
   useEffect(() => {
     if (!address || !networkId) return
     getUserInfo(address)
-    console.log("networkId", networkId)
   }, [address, networkId])
 
   return (

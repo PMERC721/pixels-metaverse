@@ -1,10 +1,10 @@
-import { CarryOutOutlined, CopyOutlined, SmileOutlined } from "@ant-design/icons";
+import { CopyOutlined, SmileOutlined } from "@ant-design/icons";
 import { Checkbox, message, Modal, Tooltip, Tree, Typography } from "antd";
 import { DataNode } from "antd/lib/tree";
-import { cloneDeep, find, isEmpty, lowerCase, map } from "lodash";
-import React, { ReactNode, useEffect, useMemo, useState } from "react";
+import { cloneDeep, find, isEmpty, map } from "lodash";
+import React, { Dispatch, ReactNode, useEffect, useMemo, useState } from "react";
 import { useUserInfo } from "../components/UserProvider";
-import { fetchCancelCollect, fetchCollect, fetchGetMaterialInfo, useRequest } from "../hook/api";
+import { fetchCancelCollect, fetchCancelCompose, fetchCollect, fetchGetGoodsIdList, fetchSubtract, useRequest } from "../hook/api";
 import { useWeb3Info } from "../hook/web3";
 import { categoryData } from "../pages/produced/components/Submit";
 import { PixelsMetaverseImgByPositionData } from "../pixels-metaverse";
@@ -35,7 +35,41 @@ export interface MaterialItem {
   composeData: MaterialItem[]
 }
 
-export const DetailsBody = ({ item, child }: { item: MaterialItem, child?: boolean }) => {
+export const CancelCompose = ({ item, setIsModalVisible }: { item: MaterialItem, setIsModalVisible?: Dispatch<React.SetStateAction<boolean>> }) => {
+  const getGoodsIdList = useRequest(fetchGetGoodsIdList)
+  const { composeList, setComposeList, setGoodsList, goodsListObj, userInfo } = useUserInfo()
+
+  const cancelCompose = useRequest(fetchCancelCompose, {
+    onSuccess: () => {
+      message.success("分解成功！")
+      getGoodsIdList({ setValue: setGoodsList, createAmount: 0, list: item?.composes, burnID: item?.material?.id })
+      setIsModalVisible && setIsModalVisible(false)
+    }
+  }, [composeList])
+
+  return (<span className="inline-block bg-red-500 text-white ml-4 px-2 rounded-sm cursor-pointer" onClick={() => { cancelCompose({ ids: item?.material?.id }) }}>
+    分解
+  </span>)
+}
+
+export const RemoveCompose = ({ item, setIsModalVisible }: { item: MaterialItem, setIsModalVisible?: Dispatch<React.SetStateAction<boolean>> }) => {
+  const getGoodsIdList = useRequest(fetchGetGoodsIdList)
+  const { setGoodsList, goodsListObj } = useUserInfo()
+
+  const substract = useRequest(fetchSubtract, {
+    onSuccess: () => {
+      message.success("移除成功！")
+      getGoodsIdList({ setValue: setGoodsList, createAmount: 0, list: [...new Set([...item?.composes, item?.material?.id, goodsListObj[item?.material?.compose]?.composes])] })
+      setIsModalVisible && setIsModalVisible(false)
+    }
+  }, [item])
+
+  return (<span className="inline-block bg-red-500 text-white ml-4 px-2 rounded-sm cursor-pointer" onClick={() => { substract({ ids: item?.material?.compose, id: item?.material?.id, index: goodsListObj[item?.material?.compose]?.composes?.indexOf(item?.material?.id) }) }}>
+    移除所属ID
+  </span>)
+}
+
+export const DetailsBody = ({ item, child, setIsModalVisible }: { item: MaterialItem, child?: boolean, setIsModalVisible?: Dispatch<React.SetStateAction<boolean>> }) => {
   const { collectList, goodsListObj } = useUserInfo()
   const { address } = useWeb3Info()
   const data = useMemo(() => {
@@ -55,7 +89,7 @@ export const DetailsBody = ({ item, child }: { item: MaterialItem, child?: boole
       <div className="ml-10 flex flex-col justify-between">
         <div>物品名称：{item?.baseInfo?.name || "这什么鬼名称"}</div>
         <div>物品类别：{(find(categoryData, ite => ite?.value === item?.baseInfo?.category) || {})?.label || "这什么鬼类别"}</div>
-        <div className="flex">组成部分：<div className="overflow-x-scroll" style={{ maxWidth: !child ? 800 : 400 }}>{map(item?.composeData, ite => ite?.material?.id)?.join(",") || "暂无"}</div></div>
+        <div className="flex">组成部分：<div className="overflow-x-scroll" style={{ maxWidth: !child ? 800 : 400 }}>{item?.composes?.join(",") || "暂无"}{!isEmpty(item?.composes) && Number(item?.material?.compose) === 0 && <CancelCompose item={item} setIsModalVisible={setIsModalVisible} />}</div></div>
         <div className="relative">所属地址：<Text copyable={{
           text: item?.material?.owner,
           icon: [<CopyOutlined className="absolute top-1" />, <SmileOutlined className="absolute top-1" />],
@@ -63,7 +97,7 @@ export const DetailsBody = ({ item, child }: { item: MaterialItem, child?: boole
         }}>
           {item?.material?.owner}
         </Text></div>
-        <div>所属ID：{Number(item?.material?.compose) > 0 ? item?.material?.compose : "暂无"}</div>
+        <div>所属ID：{Number(item?.material?.compose) > 0 ? <>{item?.material?.compose}{/* <RemoveCompose item={item} setIsModalVisible={setIsModalVisible}/> */}</> : "暂未被合成"}</div>
         <div className="flex">是否收藏：{isCollect ? "是" : `否`} {!isCollect && <div className="ml-8 flex w-90" style={{ color: !isCollect && item?.material?.owner === address ? "rgba(0,0,0,0.7)" : "white" }}><Collection item={item} /></div>}</div>
       </div>
     </div>
@@ -85,7 +119,6 @@ export const MaterialTreeData = ({ item }: { item: MaterialItem }) => {
           node?.push({
             key: ite,
             title: ite,
-            icon: <CarryOutOutlined />,
             children: []
           })
           const childNode = find(node, it => it.key === ite)?.children;
@@ -108,7 +141,6 @@ export const MaterialTreeData = ({ item }: { item: MaterialItem }) => {
         className="flex-1"
         height={300}
         showLine={true}
-        showIcon={false}
         defaultExpandedKeys={[treeData[0]?.key]}
         onSelect={onSelect}
         treeData={treeData}
@@ -120,14 +152,14 @@ export const MaterialTreeData = ({ item }: { item: MaterialItem }) => {
   );
 }
 
-export const Details = ({ id }: { id: string }) => {
+export const Details = ({ id, setIsModalVisible }: { id: string, setIsModalVisible: Dispatch<React.SetStateAction<boolean>> }) => {
   const { goodsListObj } = useUserInfo()
   const item = useMemo(() => goodsListObj[id], [goodsListObj, id])
 
   return (
     <div className="text-black text-opacity-70">
       <p className="text-xl">ID:{id} 详情</p>
-      <DetailsBody item={item} />
+      <DetailsBody item={item} setIsModalVisible={setIsModalVisible} />
       { !isEmpty(item?.composes) && <div className="pt-4 mt-8 border-t border-black border-opacity-70 border-dashed">
         <MaterialTreeData item={item} />
       </div>}
@@ -167,7 +199,7 @@ export const MaterialLabel = ({
         footer={null}
         onCancel={() => { setIsModalVisible(false) }}
       >
-        <Details id={String(children)} />
+        <Details id={String(children)} setIsModalVisible={setIsModalVisible} />
       </Modal>}
     </>
   )

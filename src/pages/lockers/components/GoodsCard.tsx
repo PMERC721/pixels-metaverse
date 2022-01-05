@@ -3,7 +3,7 @@ import { useUserInfo } from "../../../components/UserProvider";
 import { categoryData } from "../../produced/components/Submit";
 import { useHistory } from "react-router";
 import { PixelsMetaverseImgByPositionData } from "../../../pixels-metaverse";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { ellipseAddress } from "../../../helpers/utilities";
 import { useWeb3Info } from "../../../hook/web3";
 import { Collection, Composes, Details, MaterialItem, MaterialLabel } from "../../../components/Card";
@@ -62,7 +62,7 @@ export const GoodsCard = ({ item }: { item: MaterialItem }) => {
         footer={null}
         onCancel={() => { setIsModalVisible(false) }}
       >
-        <Details id={item?.material?.id} />
+        <Details id={item?.material?.id} setIsModalVisible={setIsModalVisible}/>
       </Modal>}
     </div>
   )

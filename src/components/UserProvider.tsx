@@ -97,8 +97,6 @@ export const UserInfoProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [goodsList])
 
-  console.log(goodsList)
-
   return (
     <UserInfoContext.Provider value={{
       userInfo, setUserInfo,

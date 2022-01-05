@@ -1,8 +1,8 @@
-import { Dispatch, useCallback, useEffect, useState } from "react";
+import { Dispatch, useCallback } from "react";
 import { IMerchandise } from "../pages/produced/components/Submit";
 import { useLoading } from "../components/Loading";
 import { message } from "antd";
-import { cloneDeep, find, findIndex, isArray, isObject, isUndefined, map } from "lodash";
+import { cloneDeep, every, findIndex, isEmpty, isUndefined, map } from "lodash";
 import { usePixelsMetaverse } from "../pixels-metaverse";
 import { useWeb3Info } from "./web3";
 import { Contract } from 'web3-eth-contract';
@@ -73,13 +73,11 @@ export const fetchGetMaterialInfo = async (argContract: IArgContract, arg: { id:
 
 export const fetchCollectList = async (argContract: IArgContract, arg: { address: string, setValue: Dispatch<React.SetStateAction<any[]>> }) => {
   const list = await argContract?.contract.methods.getCollection(arg?.address).call();
-  console.log(list, "getCollection")
   arg?.setValue && arg?.setValue(list)
 }
 
 export const fetchGetMaterialLength = async (argContract: IArgContract, arg?: { setValue: Dispatch<React.SetStateAction<any>> }) => {
   const len = await argContract?.contract.methods.getMaterialLength().call();
-  console.log(len, "list")
   arg?.setValue && arg?.setValue(Number(len))
 }
 
@@ -106,7 +104,7 @@ const arrayToObject = (item: MaterialItem) => {
   }
 }
 
-export const fetchGetGoodsIdList = async (argContract: IArgContract, arg?: { setValue: Dispatch<React.SetStateAction<any[]>>, createAmount?: number, list: string[] }) => {
+export const fetchGetGoodsIdList = async (argContract: IArgContract, arg?: { setValue: Dispatch<React.SetStateAction<any[]>>, createAmount?: number, list: string[], burnID?: string }) => {
   const len = await argContract?.contract?.methods.getMaterialLength().call();
   if (arg?.list && !isUndefined(arg?.createAmount)) {
     const list = [...arg?.list]
@@ -115,6 +113,8 @@ export const fetchGetGoodsIdList = async (argContract: IArgContract, arg?: { set
     }
     for (let i = 0; i < list?.length; i++) {
       let item = await argContract?.contract?.methods.getMaterial(list[i]).call()
+      if (item?.material?.owner === "0x0000000000000000000000000000000000000000" && item?.material?.id === "0") continue
+      if (!isEmpty(item?.composes) && every(item?.composes, ite => ite === "0")) continue
       const obj = arrayToObject(item)
       arg?.setValue && arg?.setValue((pre) => {
         const data = cloneDeep(pre) as MaterialItem[];
@@ -127,6 +127,8 @@ export const fetchGetGoodsIdList = async (argContract: IArgContract, arg?: { set
   } else {
     for (let i = len; i >= 1; i--) {
       let item = await argContract?.contract?.methods.getMaterial(i).call()
+      if (item?.material?.owner === "0x0000000000000000000000000000000000000000" && item?.material?.id === "0") continue
+      if (!isEmpty(item?.composes) && every(item?.composes, ite => ite === "0")) continue
       const obj = arrayToObject(item)
       arg?.setValue && arg?.setValue((pre) => {
         if (i === len) {
@@ -136,6 +138,12 @@ export const fetchGetGoodsIdList = async (argContract: IArgContract, arg?: { set
       })
     }
   }
+  arg?.setValue && arg?.burnID && arg?.setValue((pre) => {
+    const data = cloneDeep(pre) as MaterialItem[];
+    const index = findIndex(data, ite => ite?.material?.id == arg?.burnID);
+    data.splice(index, 1);
+    return data
+  })
 }
 
 export const fetchSetConfig = async (argContract: IArgContract, arg: { config: string }) => {
@@ -172,12 +180,19 @@ export const fetchCancelCollect = async (argContract: IArgContract, arg: { id: n
 }
 
 export const fetchCompose = async (argContract: IArgContract, arg: { ids: string[], name: string, category: string }) => {
-  console.log(arg)
   await argContract?.contract.methods.compose(arg.ids, arg.name, arg.category, "", "").send({ from: argContract?.address });
 }
 
-export const fetchSubjion = async (argContract: IArgContract, arg: { ids: string[], id: string }) => {
+export const fetchCancelCompose = async (argContract: IArgContract, arg: { ids: string }) => {
+  await argContract?.contract.methods.cancelCompose(arg.ids).send({ from: argContract?.address });
+}
+
+export const fetchSubjoin = async (argContract: IArgContract, arg: { ids: string, id: string }) => {
   await argContract?.contract.methods.subjion(arg.ids, arg.id).send({ from: argContract?.address });
+}
+
+export const fetchSubtract = async (argContract: IArgContract, arg: { ids: string, id: string, index: number }) => {
+  await argContract?.contract.methods.subtract(arg.ids, arg.id, arg?.index).send({ from: argContract?.address });
 }
 
 export const fetchOutfit = async (argContract: IArgContract, arg: { value: any, setGoodsList: Dispatch<React.SetStateAction<any[]>> }) => {

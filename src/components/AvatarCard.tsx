@@ -1,4 +1,3 @@
-import message from "antd/lib/message";
 import { cloneDeep, find, isEmpty, map } from "lodash";
 import {
   PixelsMetaverseImgByPositionData,
@@ -6,26 +5,19 @@ import {
 } from "../pixels-metaverse";
 import { useLocation } from "react-router-dom";
 import { useUserInfo } from "./UserProvider";
-import { fetchBuyGoods, fetchOutfit, useRequest } from "../hook/api";
 import { categoryData } from "../pages/produced/components/Submit";
 import { useWeb3Info } from "../hook/web3";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Collection, Composes, MaterialItem, MaterialLabel } from "./Card";
 
 export const AvatarCard = ({ item, type }: {
   item: MaterialItem, type: string
 }) => {
-  const { address: addresss, networkId } = useWeb3Info()
+  const { address: addresss } = useWeb3Info()
   const { setSelectList } = usePixelsMetaverseHandleImg()
   const { search } = useLocation()
   const address = search ? search.split("=")[1] : addresss
-  const { setGoodsList, goodsListObj, setComposeList, userInfo } = useUserInfo()
-
-  const outfit = useRequest(fetchOutfit, {
-    onSuccess: () => {
-      message.success("设置成功！")
-    }
-  }, [address])
+  const { goodsListObj, userInfo } = useUserInfo()
 
   const data = useMemo(() => {
     if (isEmpty(item) || isEmpty(goodsListObj)) return []
