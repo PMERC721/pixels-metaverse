@@ -4,7 +4,7 @@ import { GoodsCard } from "./components/GoodsCard";
 import { DataStateBox } from "../../components/DataStateBox";
 import { map } from "lodash";
 
-export const Lockers = () => {
+export const Mall = () => {
   const [data, setData] = React.useState<any[]>([])
 
   return (
@@ -16,7 +16,7 @@ export const Lockers = () => {
           color: "rgba(225, 225, 225, 0.8)"
         }}>
         <div className="mb-4 flex justify-between">
-          <div className="text-2xl">储物柜</div>
+          <div className="text-2xl">商城商品</div>
           <SearchQuery setData={setData} />
         </div>
         <DataStateBox

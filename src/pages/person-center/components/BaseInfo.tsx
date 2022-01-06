@@ -1,11 +1,11 @@
 import { isEmpty } from "lodash";
-import { Button, message } from "antd";
+import { message } from "antd";
 import { AppstoreOutlined } from "@ant-design/icons";
-import { fetchRegister, fetchSetConfig, useRequest } from "../../../hook/api";
+import { fetchRegister, fetchSetConfig, useRequest } from "../../../helpers/api";
 import { useLocation } from "react-router";
 import { useUserInfo } from "../../../components/UserProvider";
-import { fetchUserInfo, PixelsMetaverseHandleImg, usePixelsMetaverse, usePixelsMetaverseHandleImg } from "../../../pixels-metaverse";
-import React, { ReactNode } from "react";
+import { fetchUserInfo, PixelsMetaverseHandleImg, usePixelsMetaverseContract, usePixelsMetaverseHandleImg } from "../../../pixels-metaverse";
+import { ReactNode } from "react";
 
 const InfoLabel = ({ children, label }: { children: ReactNode, label: string }) => {
   return (
@@ -18,7 +18,7 @@ const InfoLabel = ({ children, label }: { children: ReactNode, label: string }) 
 
 export const BaseInfo = () => {
   const { setConfig, config, canvas2Ref } = usePixelsMetaverseHandleImg()
-  const { accounts } = usePixelsMetaverse()
+  const { accounts } = usePixelsMetaverseContract()
   const { search } = useLocation()
   const { userInfo, setUserInfo } = useUserInfo()
   const address = search ? search.split("=")[1] : accounts.address
@@ -77,7 +77,7 @@ export const BaseInfo = () => {
           <input type="color" value={config?.bgColor} className="w-10 cursor-pointer"
             onChange={(e) => setConfig((pre) => ({ ...pre, bgColor: e.target.value }))} />
         </InfoLabel>
-        <Button type="primary" size="large" className="mt-6 bg-red-500 cursor-pointer h-10 w-full hover:text-white"
+        <button className="mt-6 bg-red-500 cursor-pointer h-10 w-full hover:text-white rounded"
           disabled={address?.toUpperCase() !== accounts?.address?.toUpperCase()}
           onClick={() => {
             goSetConfig({
@@ -88,7 +88,7 @@ export const BaseInfo = () => {
               }
             })
           }}
-        >{address?.toUpperCase() === accounts?.address?.toUpperCase() ? "更新设置" : "不可更新设置"}</Button>
+        >{address?.toUpperCase() === accounts?.address?.toUpperCase() ? "更新设置" : "不可更新设置"}</button>
       </div>
     </div>
   )

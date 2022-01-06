@@ -1,18 +1,18 @@
+import { transitions } from "../styles";
 import { useHistory } from "react-router";
 import { useLocation } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
+import { useWeb3js } from "../eos-api/hook";
+import React, { useEffect, useMemo, useState } from "react";
 import Web3 from "web3";
 import Web3Modal from "web3modal";
+import { getWeb3 } from "../eos-api/getWeb3";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import Authereum from "authereum";
 import { Bitski } from "bitski";
-import { ellipseAddress, getChainData, warning } from "../helpers/utilities";
+import { ellipseAddress, getChainData } from "../helpers/utilities";
 import { useTranslation } from "react-i18next"
-import { Button, Menu } from "antd";
-import { useWeb3js, useMyWeb3 } from "../hook/web3";
+import { Dropdown, Menu } from "antd";
 import i18n from "i18next";
-import { IChainData } from "../helpers/types";
-import { isEmpty } from "lodash";
 
 interface IWeb3InfoProps {
   connected?: boolean;
@@ -22,13 +22,12 @@ interface IWeb3InfoProps {
   networkId?: number,
   web3Modal?: Web3Modal,
   addressBalance?: string,
-  chainData?: IChainData
 }
 
 const nav = [
   { label: "首页", path: "/app" },
   { label: "制作虚拟物品", path: "/produced" },
-  { label: "储物柜", path: "/lockers" },
+  { label: "商城", path: "/mall" },
   { label: "个人中心", path: "/person-center" },
 ]
 
@@ -39,9 +38,9 @@ const menu = () => {
 
   return (
     <Menu>
-      <Menu.Item key="cd" onClick={() => changeLanguage("cn")}>简体</Menu.Item>
-      <Menu.Item key="hk" onClick={() => changeLanguage("hk")}>繁体</Menu.Item>
-      <Menu.Item key="en" onClick={() => changeLanguage("en")}>英文</Menu.Item>
+      <Menu.Item onClick={() => changeLanguage("cn")}>简体</Menu.Item>
+      <Menu.Item onClick={() => changeLanguage("hk")}>繁体</Menu.Item>
+      <Menu.Item onClick={() => changeLanguage("en")}>英文</Menu.Item>
     </Menu>
   )
 }
@@ -83,27 +82,15 @@ const useGetWeb3Info = () => {
     chainId,
     web3,
     networkId,
-    web3Modal,
-    chainData
+    web3Modal
   }, setWeb3Info] = useState<IWeb3InfoProps>({})
-  const getMyWeb3 = useMyWeb3()
 
   const resetApp = async () => {
     await web3Modal?.clearCachedProvider();
     setWeb3Info((pre) => ({ ...pre, ...INITIAL_STATE }));
   };
 
-  useEffect(() => {
-    if (chainId) {
-      const chainData = getChainData(chainId)
-      if (!chainData) {
-        warning(parseInt(String(chainId)))
-      }
-      setWeb3Info((pre) => ({ ...pre, chainData: chainData || null }));
-    }
-  }, [chainId])
-
-  const network = useMemo(() => !isEmpty(chainData) ? chainData?.network : "mainnet", [chainData]);
+  const network = useMemo(() => chainId ? getChainData(chainId).network : "mainnet", [chainId]);
 
   useEffect(() => {
     const web3Modal = new Web3Modal({
@@ -112,7 +99,7 @@ const useGetWeb3Info = () => {
       providerOptions: getProviderOptions()
     });
     setWeb3Info((pre) => ({ ...pre, web3Modal }));
-  }, [network])
+  }, [])
 
   useEffect(() => {
     if (web3Modal?.cachedProvider) {
@@ -162,7 +149,7 @@ const useGetWeb3Info = () => {
       web3 = initWeb3(provider);
       chainId = await web3?.eth.getChainId();
     } catch (error) {
-      web3 = await getMyWeb3()
+      web3 = await getWeb3()
       chainId = await web3?.eth.getChainId();
     }
 
@@ -197,65 +184,115 @@ const useGetWeb3Info = () => {
     killSession,
     toConnect,
     web3,
-    networkId,
-    chainData
+    networkId
   }
 }
 
-export const Header = () => {
-  const { connected, address, killSession, toConnect, web3, chainData } = useGetWeb3Info();
+const Header = () => {
+  const { connected, address, chainId, killSession, toConnect, web3, networkId } = useGetWeb3Info();
   const { t } = useTranslation()
+  const chainData = chainId ? getChainData(chainId) : null;
   const history = useHistory()
   const [inputStr, setInputStr] = useState("")
   const { pathname } = useLocation()
-  const web3js = useWeb3js()
+  const { setAccounts } = useWeb3js()
 
   useEffect(() => {
-    if (!web3 || web3js.web3) return
-    console.log(web3, web3js.web3)
-    web3js?.setWeb3(web3)
-  }, [web3])
+    if (!web3) return
+    setAccounts({
+      web3,
+      networkId,
+      address
+    })
+  }, [web3, networkId, address])
 
   return (
-    <div className="flex px-4 items-center justify-between text-l fixed w-full h-16 bg-white bg-opacity-10 text-white text-opacity-70">
-      <div className="text-2xl cursor-pointer" onClick={() => history.push("/")}>像素元宇宙</div>
-      <div className="flex justify-around items-center w-96">
-        {nav.map(item => {
-          return (<div
-            key={item?.label}
-            style={{ color: pathname === item?.path ? "#EF4444" : "rgba(225,225,225,.9)" }}
-            className="cursor-pointer hover:text-red-500"
-            onClick={() => history.push(item?.path)}
-          >{item?.label}</div>)
-        })}
-      </div>
-      <div className="flex justify-end">
-        <div className="mr-4 flex items-center bg-white bg-opacity-10" style={{ borderRadius: 20 }}>
-          <input
-            className="px-4 bg-transparent outline-none focus:outline-none w-60"
-            placeholder="请输入以太坊钱包地址"
-            onChange={(e) => setInputStr(e.target.value)}
-          />
-          <Button type="primary" size="large" className="w-24"
-            style={{ borderRadius: 0, borderTopRightRadius: 20, borderBottomRightRadius: 20 }}
-            onClick={() => history.push(`/app${inputStr ? "?address=" + inputStr : ""}`)}
-          >查询</Button>
+    <div className="flex px-4 items-center justify-end text-l fixed w-full header">
+      <div style={{
+        marginBottom: "1px",
+        height: "70px",
+        display: "flex",
+        alignItems: "center",
+        flex: 1,
+        justifyContent: "space-between"
+      }}>
+        <div className="text-2xl cursor-pointer" onClick={() => { history.push("/") }}>像素元宇宙，从头开始</div>
+        <div className="flex justify-around items-center w-96">
+          {nav.map(item => {
+            return <div key={item?.label} style={{ color: pathname === item?.path ? "#EF4444" : "rgba(225,225,225,.9)" }} className="cursor-pointer hover:text-red-500"
+              onClick={() => { history.push(item?.path) }}>{item?.label}</div>
+          })}
         </div>
+        <div className="flex justify-end" style={{ width: 500 }}>
+          <div className="mr-4 flex items-center search-box">
+            <input
+              className="py-2 pl-4 mr-2 bg-transparent search"
+              placeholder="请输入以太坊钱包地址"
+              onChange={(e) => { setInputStr(e.target.value) }}
+            />
+            <div className="flex items-center justify-center h-full w-20 bg-red-500 cursor-pointer hover:text-white"
+              style={{ borderTopRightRadius: 20, borderBottomRightRadius: 20 }}
+              onClick={() => {
+                history.push(`/app${inputStr ? "?address=" + inputStr : ""}`)
+              }}>查询</div>
+          </div>
 
-        {address && !isEmpty(chainData) && connected ? (
-          <div className="px-4 rounded bg-white bg-opacity-10 relative w-48">
-            <div className="font-bold">{ellipseAddress(address, 10)}</div>
-            <div className="flex justify-between text-xs">
-              {chainData?.name}<span className="cursor-pointer hover:text-white" onClick={killSession}>断开连接</span>
-            </div>
-          </div>)
-          : <div className="flex items-center justify-center rounded cursor-pointer bg-white bg-opacity-10 w-24 hover:text-white"
-            onClick={toConnect}>连接钱包</div>
-        }
-        {/* <Dropdown overlay={menu} placement="bottomLeft">
-          <div className="flex items-center justify-center rounded cursor-pointer bg-white bg-opacity-10 w-24 hover:text-white ml-4">{t("home.content")}</div>
-        </Dropdown> */}
+          {address && chainData ? (
+            <div className="bg-black contect px-4 rounded-md">
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                position: "relative",
+                fontWeight: 500
+              }}>
+                <div
+                  style={{
+                    transition: transitions.base,
+                    fontWeight: "bold",
+                    margin: connected ? "0px auto 1em" : "0"
+                  }}>{ellipseAddress(address)}</div>
+                <div
+                  style={{
+                    transition: transitions.button,
+                    fontSize: "12px",
+                    fontFamily: "monospace",
+                    position: "absolute",
+                    top: "20px",
+                    opacity: connected ? 1 : 0,
+                    visibility: connected ? "visible" : "hidden",
+                    pointerEvents: connected ? "auto" : "none",
+                    left: 0
+                  }}>
+                  {chainData.name}
+                </div>
+                <div style={{
+                  transition: transitions.button,
+                  fontSize: "12px",
+                  fontFamily: "monospace",
+                  position: "absolute",
+                  right: 0,
+                  top: "20px",
+                  opacity: 0.7,
+                  visibility: connected ? "visible" : "hidden",
+                  pointerEvents: connected ? "auto" : "none",
+                  cursor: "pointer"
+                }} onClick={killSession}>
+                  {"断开连接"}
+                </div>
+              </div>
+            </div>)
+            : <div className="flex items-center justify-center rounded-md cursor-pointer contect w-24" style={{ height: 40 }} onClick={() => {
+              toConnect()
+            }} >连接钱包</div>
+          }
+          {/* <Dropdown overlay={menu} placement="bottomLeft">
+            <div className="flex items-center justify-center rounded-md cursor-pointer contect ml-4" style={{ height: 40, minWidth: 80, marginTop: -1 }}>{t("home.content")}</div>
+          </Dropdown> */}
+        </div>
       </div>
     </div >
   );
 };
+
+export default Header;

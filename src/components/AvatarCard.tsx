@@ -2,18 +2,18 @@ import message from "antd/lib/message";
 import { cloneDeep, find } from "lodash";
 import {
   PixelsMetaverseImgByPositionData,
-  usePixelsMetaverse,
+  usePixelsMetaverseContract,
   usePixelsMetaverseHandleImg
 } from "../pixels-metaverse";
 import { useLocation } from "react-router-dom";
 import { useUserInfo } from "./UserProvider";
-import { fetchBuyGoods, fetchOutfit, useRequest } from "../hook/api";
+import { fetchBuyGoods, fetchOutfit, useRequest } from "../helpers/api";
 import { categoryData } from "../pages/produced/components/Submit";
 
 export const AvatarCard = ({ item, type }: {
   item: any, type: string
 }) => {
-  const { accounts } = usePixelsMetaverse()
+  const { accounts } = usePixelsMetaverseContract()
   const { setSelectList } = usePixelsMetaverseHandleImg()
   const { search } = useLocation()
   const address = search ? search.split("=")[1] : accounts?.address
@@ -28,14 +28,14 @@ export const AvatarCard = ({ item, type }: {
 
   const buyGoods = useRequest(fetchBuyGoods, {
     onSuccess: () => {
-      message.success("收藏成功！")
+      message.success("购买成功！")
     }
   }, [address])
   const { userInfo } = useUserInfo()
 
   return (
     <div
-      key={item?.id + accounts?.networkId}
+      key={item?.id + accounts?.newworkId}
       className="mt-2 item-avatar p-2 flex justify-between border-gray-500 border-b"
     >
       <PixelsMetaverseImgByPositionData
@@ -74,7 +74,7 @@ export const AvatarCard = ({ item, type }: {
           }}>{item?.isOutfit ? "移除" : "配置"}</div>}
 
           {(type === "homeBuyGoods" || type === "buyGoods") && <div className="flex justify-between items-center mt-2">
-            {/* <div className="p px-2 rounded-sm ml-2 mr-2" style={{ background: "rgba(225, 225, 225, 0.1)" }}>{Number(item?.price) / (10 ** 18)}ETH</div> */}
+            <div className="p px-2 rounded-sm ml-2 mr-2" style={{ background: "rgba(225, 225, 225, 0.1)" }}>{Number(item?.price) / (10 ** 18)}ETH</div>
             <button className="p px-4 bg-red-500 rounded-sm cursor-pointer"
               style={{ background: item?.isSale ? "rgba(239, 68, 68)" : "rgba(225,225,225, 0.1)" }}
               onClick={() => {
@@ -88,7 +88,7 @@ export const AvatarCard = ({ item, type }: {
                   setGoodsList
                 })
               }}
-              disabled={!item?.isSale}>{item?.isSale ? "收藏" : "已收藏"}</button>
+              disabled={!item?.isSale}>{item?.isSale ? "购买" : "已出售"}</button>
           </div>}
         </div>
       </div>

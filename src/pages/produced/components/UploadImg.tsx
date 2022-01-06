@@ -1,6 +1,5 @@
 import CloseCircleOutlined from "@ant-design/icons/lib/icons/CloseCircleOutlined"
-import { Button } from "antd";
-import React, { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { usePixelsMetaverseHandleImg } from "../../../pixels-metaverse";
 
 export const UploadImg = () => {
@@ -48,20 +47,26 @@ export const UploadImg = () => {
 
   return (
     <div className="mb-4 flex items-center justify-between h-10 text-white" style={{ width: config?.imgSize.width }}>
-      <div className="flex items-center justify-between rounded-sm bg-white bg-opacity-10 w-96">
-        <input className="pl-4 bg-transparent search w-64" placeholder="请输入图片链接" value={url} onChange={(e) => setUrl(e.target.value)} />
+      <div className="flex items-center justify-between rounded bg-white bg-opacity-10 w-96">
+        <input
+          className="pl-4 bg-transparent search w-64"
+          placeholder="请输入图片链接"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+        />
         {url && <CloseCircleOutlined onClick={() => setUrl("")} />}
-        <Button type="primary" size="large" className="w-24"
-          style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+        <div className="bg-red-500 cursor-pointer rounded-r w-24 leading-10 text-center"
           onClick={() => {
             setSrc(url);
             if (!url) setConfig((pre) => ({ ...pre, bgImg: null }))
-          }}>导入图片</Button>
+          }}>导入图片</div>
       </div>
-      <Button type="primary" size="large" className="ml-2 w-24" onClick={() => setSrc(url)}>
+      <div
+        className="bg-red-500 cursor-pointer ml-2 rounded w-24 leading-10 text-center"
+        onClick={() => setSrc(url)}>
         <input type="file" id="avatar" accept="image/png, image/jpeg, image.jpg" hidden onChange={fileOnChange} ref={filedomRef} />
         <label htmlFor="avatar" className="cursor-pointer">上传文件</label>
-      </Button>
+      </div>
     </div>
   )
 }

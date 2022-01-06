@@ -2,14 +2,14 @@ import React from "react"
 import { filter, isEmpty, map } from "lodash";
 import { useLocation } from "react-router";
 import { useUserInfo } from "../../../components/UserProvider";
-import { usePixelsMetaverse } from "../../../pixels-metaverse";
+import { usePixelsMetaverseContract } from "../../../pixels-metaverse";
 import { AvatarCard } from "../../../components/AvatarCard";
 import { NoData } from "../../../components/NoData";
 
 export const AssetsInfo = ({ outfitEdList, noOutfitEdList }: {
   noOutfitEdList: any[], outfitEdList: any[]
 }) => {
-  const { accounts } = usePixelsMetaverse()
+  const { accounts } = usePixelsMetaverseContract()
   const { search } = useLocation()
   const { goodsList } = useUserInfo()
   const address = search ? search.split("=")[1] : accounts.address
@@ -31,7 +31,7 @@ export const AssetsInfo = ({ outfitEdList, noOutfitEdList }: {
           </div>}
           {!isEmpty(shopGoods) && <div className="flex-1 overflow-y-scroll">
             <div>
-              <div className="">收藏夹</div>
+              <div className="">店铺商品</div>
               {map(shopGoods, item => <AvatarCard key={item?.id} item={item} type="buyGoods" />)}
             </div>
           </div>}

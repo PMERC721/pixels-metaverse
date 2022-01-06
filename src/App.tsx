@@ -1,10 +1,17 @@
-import { HashRouter, useLocation } from "react-router-dom";
-import { useWeb3js, Web3jsProvider } from './hook/web3';
+import './App.css';
+import { HashRouter, Switch, Route, useLocation } from "react-router-dom";
+import { Website } from './pages/home';
+import { PixelsMetaverse } from './pages/play';
+import { Produced } from './pages/produced';
+import { useWeb3js, Web3jsProvider } from './eos-api/hook';
+import bgSvg from "./assets/image/bg.svg"
 import { Loading, LoadingProvider } from './components/Loading';
 import { UserInfoProvider } from './components/UserProvider';
+import { PersonCenter } from './pages/person-center';
+import { Mall } from './pages/mall';
 import { PixelsMetaverseContextProvider } from './pixels-metaverse';
-import { Header } from './components/Header';
-import bgSvg from "./assets/image/bg.svg"
+import Header from './components/Header';
+import React from 'react';
 import { Routes } from './routes';
 
 declare global {
@@ -22,13 +29,13 @@ declare global {
 
 export const Main = () => {
   const { pathname } = useLocation()
-  const { web3 } = useWeb3js()
+  const { accounts } = useWeb3js()
 
   return (
     <div className="relative bg-white overflow-hidden" style={{ minWidth: 1400, minHeight: 600 }}>
       <div className="relative w-full h-full min-h-screen mx-auto bg-no-repeat md:bg-contain bg-cover bg-gray-900"
         style={{ backgroundImage: `url(${bgSvg})` }}>
-        <PixelsMetaverseContextProvider web3={web3}>
+        <PixelsMetaverseContextProvider web3={accounts?.web3} networkId={accounts?.networkId} currentAddress={accounts?.address}>
           <LoadingProvider>
             <UserInfoProvider>
               {pathname !== "/" && <Header />}

@@ -45,6 +45,22 @@ input{
 @tailwind components;
 @tailwind utilities;
 
+.header{
+  height: 60px;
+  box-shadow:  0px -5px 10px rgba(225,225,225,0.3);
+  background: rgba(225,225,225,0.1);
+  color: rgba(255, 255, 255, 0.7);
+  min-width: 1200px;
+}
+
+.contect{
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.contect:hover{
+  color: white
+}
+
 .card{
   height: calc(100vh - 130px);
   width: 320px;
@@ -71,7 +87,21 @@ input{
   background-image: linear-gradient(-90deg, #353437, #33626C);
 }
 
-.inputPlaceholder::-webkit-input-placeholder {
+.search-box{
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.search{
+  height: 40px;
+  outline: none;
+}
+
+.search:focus{
+  outline: none
+}
+
+.shangping::-webkit-input-placeholder {
   color: #bfbfbf;
 }
 
@@ -105,6 +135,28 @@ input{
 .ant-select-arrow{
   color: rgba(255, 255, 255, 0.7) !important
 }
+
+/* .ant-btn{
+  color: rgba(255, 255, 255, 0.7) !important;
+  background-color: #bfbfbf !important;
+  border: none !important;
+}
+
+.ant-btn-primary{
+  background-color: #EF4444 !important;
+} *//* 
+
+.ant-modal-content{
+
+  background-color: #bfbfbf !important;
+  border: none !important;
+}
+
+.ant-modal-header{
+  background-color: #bfbfbf !important;
+
+  border: none !important;
+} */
 
 #loading{
   background: rgba(0, 0, 0, 0.2);
