@@ -23,6 +23,6 @@ git commit -m 'deploy'
 # git push -f git@github.com:<USERNAME>/<REPO>.git master:gh-pages
 
 # 把上面的 <USERNAME> 换成你自己的 Github 用户名，<REPO> 换成仓库名，比如我这里就是：
-git push -f git@github.com:PixelsMetaverse/PixelsMetaverse.github.io.git master:gh-pages
+git push -f git@github.com:PixelsDAO/PixelsDAO.github.io.git master:gh-pages
 
 cd -
