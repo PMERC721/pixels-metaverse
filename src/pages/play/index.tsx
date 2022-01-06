@@ -41,15 +41,15 @@ export const PixelsMetaverse = () => {
   const { address: addresss } = useWeb3Info();
   const { search } = useLocation();
   const address = search ? search.split("=")[1] : addresss;
-  const { userInfo, } = useUserInfo();
+  const { userInfo } = useUserInfo();
   const convertedPostion = useConvertedPostion();
   const a = useParams();
   const { noCollectionList, avater, colectionList, onwerList } = useGetPersonData();
-  
-  const avaterData = useMemo(()=>{ 
+
+  const avaterData = useMemo(() => {
     avater?.composeData?.push(avater)
     return avater
-  },[avater?.composeData])
+  }, [avater?.composeData])
 
   const positions = useMemo(() => {
     if (isEmpty(avaterData?.composeData)) return "empty"

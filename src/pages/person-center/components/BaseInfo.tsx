@@ -1,11 +1,12 @@
 import { Button, message } from "antd";
 import { AppstoreOutlined } from "@ant-design/icons";
-import { fetchSetConfig, useRequest } from "../../../hook/api";
+import { fetchSetUserConfig, useRequest } from "../../../hook/api";
 import { useLocation } from "react-router";
 import { useUserInfo } from "../../../components/UserProvider";
 import { PixelsMetaverseHandleImg, usePixelsMetaverseHandleImg } from "../../../pixels-metaverse";
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useEffect, useMemo } from "react";
 import { useWeb3Info } from "../../../hook/web3";
+import { split } from "lodash";
 
 const InfoLabel = ({ children, label }: { children: ReactNode, label: string }) => {
   return (
@@ -16,6 +17,29 @@ const InfoLabel = ({ children, label }: { children: ReactNode, label: string }) 
   )
 }
 
+export const useGetUserConfig = () => {
+  const { userInfo } = useUserInfo()
+  return useMemo(() => {
+    let bgColor: string, gridColor: string, withGrid: boolean;
+    if (!userInfo?.other) {
+      bgColor = "";
+      gridColor = "";
+      withGrid = false;
+    }
+    try {
+      let other = split(userInfo?.other, "|")
+      bgColor = other[0];
+      gridColor = other[1];
+      withGrid = !!other[2];
+    } catch (error) {
+      bgColor = "";
+      gridColor = "";
+      withGrid = false;
+    }
+    return { bgColor, gridColor, withGrid }
+  }, [userInfo?.other])
+}
+
 export const BaseInfo = () => {
   const { setConfig, config, canvas2Ref } = usePixelsMetaverseHandleImg()
   const { address: addresss } = useWeb3Info()
@@ -23,12 +47,18 @@ export const BaseInfo = () => {
   const address = search ? search.split("=")[1] : addresss
   const { userInfo, getInfo, register } = useUserInfo()
 
-  const goSetConfig = useRequest(fetchSetConfig, {
+  const goSetConfig = useRequest(fetchSetUserConfig, {
     onSuccess: () => {
       message.success("更新信息成功！")
       getInfo()
     }
   }, [config, address])
+
+  const { bgColor, gridColor, withGrid } = useGetUserConfig()
+  useEffect(() => {
+    if (!bgColor && !gridColor && !withGrid) return
+    setConfig((pre) => ({ ...pre, withGrid, bgColor, gridColor }))
+  }, [bgColor, gridColor, withGrid])
 
   const isCurUser = useMemo(() => address?.toUpperCase() === addresss?.toUpperCase(), [addresss, address])
 
@@ -71,7 +101,7 @@ export const BaseInfo = () => {
           onClick={() => {
             console.log(`${config?.bgColor || ""}|${config?.withGrid ? config?.gridColor : ""}`)
             if (isCurUser && userInfo?.id !== "0") {
-              goSetConfig({ config: `${config?.bgColor || ""}|${config?.withGrid ? config?.gridColor : ""}` })
+              goSetConfig({ other: `${config?.bgColor || ""}|${config?.gridColor}|${config?.withGrid ? true : ""}`, role: userInfo?.role, id: userInfo?.avater })
             }
           }}
         >{address?.toUpperCase() === addresss?.toUpperCase() ? "更新设置" : "不可更新设置"}</Button>

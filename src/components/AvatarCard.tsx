@@ -35,7 +35,7 @@ export const AvatarCard = ({ item, star }: {
         size={96}
         style={{ background: userInfo?.user?.bgColor || "#e1e1e11a", cursor: 'pointer', boxShadow: "0px 0px 5px rgba(225,225,225,0.3)" }}
         onClick={() => {
-          setSelectList((pre: any) => {
+          /* setSelectList((pre: any) => {
             const list = cloneDeep(pre) as string[]
             const index = list.indexOf(item?.baseInfo?.data)
             if (index >= 0) {
@@ -44,7 +44,7 @@ export const AvatarCard = ({ item, star }: {
               list.push(item?.baseInfo?.data)
             }
             return list
-          })
+          }) */
         }}
       />
       <div className="flex justify-end flex-1">

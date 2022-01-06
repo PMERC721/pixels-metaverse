@@ -1,9 +1,9 @@
-import { useHistory } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { useLocation } from "react-router-dom";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { ellipseAddress } from "../helpers/utilities";
 import { useTranslation } from "react-i18next"
-import { Button, Menu } from "antd";
+import { Button, Menu, message } from "antd";
 import { useWeb3Info } from "../hook/web3";
 import { isEmpty } from "lodash";
 import i18n from "i18next";
@@ -29,12 +29,26 @@ const menu = () => {
   )
 }
 
+export const useQueryParams = () => {
+  const { search } = useLocation();
+  const parmasString = search.substring(1);
+  const params = new URLSearchParams(parmasString);
+  return params
+}
+
 export const Header = memo(() => {
   const { connected, address, killSession, toConnect, chainData } = useWeb3Info();
   const { t } = useTranslation()
   const history = useHistory()
-  const [inputStr, setInputStr] = useState("")
   const { pathname } = useLocation()
+  const params = useQueryParams()
+  const [inputStr, setInputStr] = useState<string | null>()
+
+  useEffect(() => {
+    if (params && params?.get("address")) {
+      setInputStr(params?.get("address"))
+    }
+  }, [params?.get("address")])
 
   return (
     <div className="flex px-4 items-center justify-between text-l fixed w-full h-16 bg-white bg-opacity-10 text-white text-opacity-70 z-50">
@@ -53,12 +67,19 @@ export const Header = memo(() => {
         <div className="mr-4 flex items-center bg-white bg-opacity-10" style={{ borderRadius: 20 }}>
           <input
             className="px-4 bg-transparent outline-none focus:outline-none w-60"
-            placeholder="请输入用户钱包地址/物品ID"
+            placeholder="请输入用户钱包地址"
+            value={inputStr || ""}
             onChange={(e) => setInputStr(e.target.value)}
           />
           <Button type="primary" size="large" className="w-24"
             style={{ borderRadius: 0, borderTopRightRadius: 20, borderBottomRightRadius: 20 }}
-            onClick={() => history.push(`/app${inputStr ? "?address=" + inputStr : ""}`)}
+            onClick={() => {
+              if (inputStr && (inputStr?.length !== 42 || inputStr?.indexOf("0x") !== 0)) {
+                message.warning("Please enter a well-formed address");
+                return;
+              }
+              history.push(`/app${inputStr ? "?address=" + inputStr : ""}`)
+            }}
           >查询</Button>
         </div>
 

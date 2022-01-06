@@ -50,11 +50,9 @@ export const PersonCenter = () => {
 
   const getUserInfo = usePixelsMetaverseUserInfo({
     onRequestBefore: () => {
-      console.log("请求数据了")
       openLoading()
     },
     onSuccess: (arg) => {
-      console.log(arg, "请求数据成功")
       closeDelayLoading()
     },
     onFail: (arg) => {
