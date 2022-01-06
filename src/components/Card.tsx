@@ -241,10 +241,6 @@ export const Collection = ({ item }: { item: MaterialItem }) => {
     <>
       {address?.toLowerCase() !== item?.material?.owner?.toLowerCase() ? <button
         className="p px-2 bg-red-500 rounded-sm " onClick={() => {
-          if (Number(userInfo?.id) < 1) {
-            message.warning("你还不是平台用户，请激活自己的账户！")
-            return
-          }
           if (index >= 0) cancelCollect({ id: Number(item?.material?.id), setCollectList, index })
           else collect({ id: Number(item?.material?.id), setCollectList })
         }}

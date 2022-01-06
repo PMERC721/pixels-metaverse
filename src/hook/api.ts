@@ -118,7 +118,7 @@ export const fetchGetGoodsIdList = async (argContract: IArgContract, arg?: { set
       const obj = arrayToObject(item)
       arg?.setValue && arg?.setValue((pre) => {
         const data = cloneDeep(pre) as MaterialItem[];
-        const index = findIndex(data, ite => ite?.material?.id == list[i]);
+        const index = findIndex(data, ite => ite?.material?.id === list[i]);
         if (index >= 0) data[index] = obj;
         else data.unshift(obj)
         return data
@@ -140,7 +140,7 @@ export const fetchGetGoodsIdList = async (argContract: IArgContract, arg?: { set
   }
   arg?.setValue && arg?.burnID && arg?.setValue((pre) => {
     const data = cloneDeep(pre) as MaterialItem[];
-    const index = findIndex(data, ite => ite?.material?.id == arg?.burnID);
+    const index = findIndex(data, ite => ite?.material?.id === arg?.burnID);
     data.splice(index, 1);
     return data
   })
