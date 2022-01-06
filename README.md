@@ -1,4 +1,4 @@
-[中文](https://github.com/PixelsMetaverse/pixels-metaverse/blob/main/README-ZH.md) / English
+[中文](https://github.com/UniqueDAO/pixels-metaverse/blob/main/README-ZH.md) / English
 
 # Pixels Metaverse 
 
@@ -42,7 +42,7 @@ The scenes of the future universe can be abundant, all of which are realized by 
 
 
 ## react-pixels-metaverse
-All drawings are encapsulated and pulled out of the project, and any project party or website can be installed [react-pixels-metaverse](https://github.com/PixelsMetaverse/react-pixels-metaverse) 
+All drawings are encapsulated and pulled out of the project, and any project party or website can be installed [react-pixels-metaverse](https://github.com/UniqueDAO/react-pixels-metaverse) 
 The npm package, and the introduction of UI components in its own project, passe in the user's address or identity data to generate his Pixel Metaverse identity pattern.
 
 ## The current task

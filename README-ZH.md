@@ -1,4 +1,4 @@
-中文 / [English](https://github.com/PixelsMetaverse/pixels-metaverse/blob/main/README.md)
+中文 / [English](https://github.com/UniqueDAO/pixels-metaverse/blob/main/README.md)
 
 # 像素元宇宙
 
@@ -41,7 +41,7 @@
 
 
 ## react-pixels-metaverse
-项目中将所有绘制进行了封装和抽离，任何项目方或网站都可以安装 [react-pixels-metaverse](https://github.com/PixelsMetaverse/react-pixels-metaverse) 该npm包，并在自己的项目中引入UI组件，传入用户地址或身份数据即可生成他的像素元宇宙身份图案。
+项目中将所有绘制进行了封装和抽离，任何项目方或网站都可以安装 [react-pixels-metaverse](https://github.com/UniqueDAO/react-pixels-metaverse) 该npm包，并在自己的项目中引入UI组件，传入用户地址或身份数据即可生成他的像素元宇宙身份图案。
 
 
 ## 当前任务
@@ -52,4 +52,4 @@
 1. 对项目整体进行优化，使其兼容移动端网页
 2. 优化加解密数据算法，使其gas消耗最小化
 
-> 链接 [https://pixelsmetaverse.github.io](https://pixelsmetaverse.github.io/#/) 的版本是参赛时候的版本，新版改动较大，仅做参考。
+> 链接 [https://uniquedao.github.io](https://UniqueDAO.github.io/#/) 的版本是参赛时候的版本，新版改动较大，仅做参考。
