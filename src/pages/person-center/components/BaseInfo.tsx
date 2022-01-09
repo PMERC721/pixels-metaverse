@@ -28,8 +28,8 @@ export const useGetUserConfig = () => {
     }
     try {
       let other = split(userInfo?.other, "|")
-      bgColor = other[0];
-      gridColor = other[1];
+      bgColor = other[0] === "T" ? "transparent" : `#${other[0]}`;
+      gridColor = `#${other[1]}`;
       withGrid = !!other[2];
     } catch (error) {
       bgColor = "";
@@ -80,9 +80,10 @@ export const BaseInfo = () => {
           </div>
         </InfoLabel>
         <InfoLabel label="类型">
-          {userInfo?.id === "0"
-            ? <div className="cursor-pointer text-red-500" onClick={register}>去激活账户</div>
-            : <div>{userInfo?.isMerchant ? "商户" : "用户"}</div>}
+          <div className="flex">
+            {userInfo?.id !== "0" ? "宇宙居民" : "访客"}
+            {userInfo?.id === "0" && <div className="cursor-pointer text-red-500 ml-2" onClick={register}>激活</div>}
+          </div>
         </InfoLabel>
         <InfoLabel label="显示辅助线">
           <AppstoreOutlined style={{ color: config?.withGrid ? 'white' : "gray", fontSize: 22 }}
@@ -97,11 +98,14 @@ export const BaseInfo = () => {
             onChange={(e) => setConfig((pre) => ({ ...pre, bgColor: e.target.value }))} />
         </InfoLabel>
         <Button type="primary" size="large" className="mt-6 bg-red-500 cursor-pointer h-10 w-full hover:text-white"
-          style={{ cursor: isCurUser && userInfo?.id !== "0" ? "pointer" : "no-drop" }}
+          style={{ cursor: isCurUser ? "pointer" : "no-drop" }}
           onClick={() => {
-            console.log(`${config?.bgColor || ""}|${config?.withGrid ? config?.gridColor : ""}`)
-            if (isCurUser && userInfo?.id !== "0") {
-              goSetConfig({ other: `${config?.bgColor || ""}|${config?.gridColor}|${config?.withGrid ? true : ""}`, role: userInfo?.role, id: userInfo?.avater })
+            if (isCurUser) {
+              goSetConfig({
+                other: `${config?.bgColor === "transparent" || config?.bgColor === "" ? "T" : config?.bgColor?.substring(1) || ""}|${config?.gridColor?.substring(1) || ""}|${config?.withGrid ? "T" : ""}`,
+                role: userInfo?.role,
+                id: userInfo?.avater
+              })
             }
           }}
         >{address?.toUpperCase() === addresss?.toUpperCase() ? "更新设置" : "不可更新设置"}</Button>

@@ -199,7 +199,7 @@ export const MaterialLabel = ({
     <>
       <Tooltip className="cursor-pointer text-sm" color="#29303d" title={toDetails ? `点击可查看详情` : ""}>
         <div
-          className={`p px-2 rounded-sm bg-white bg-opacity-10`}
+          className={`p px-2 rounded-sm bg-white bg-opacity-10 text-white text-opacity-90`}
           style={{ marginRight: toRight ? 0 : 10, marginLeft: toRight ? 10 : 0, cursor: toDetails ? "pointer" : "default" }}
           onClick={() => {
             toDetails && setIsModalVisible(true)
@@ -241,10 +241,6 @@ export const Collection = ({ item }: { item: MaterialItem }) => {
     <>
       {address?.toLowerCase() !== item?.material?.owner?.toLowerCase() ? <button
         className="p px-2 bg-red-500 rounded-sm " onClick={() => {
-          if (Number(userInfo?.id) < 1) {
-            message.warning("你还不是平台用户，请激活自己的账户！")
-            return
-          }
           if (index >= 0) cancelCollect({ id: Number(item?.material?.id), setCollectList, index })
           else collect({ id: Number(item?.material?.id), setCollectList })
         }}

@@ -133,7 +133,9 @@ export const ComposeDetails = ({ setIsModalVisible }: { setIsModalVisible: Dispa
             if (tab === "new") {
               compose({ ids: composeList, name, category })
             } else {
-              join({ ids: Number(value), id: type?.singles[0] })
+              const idList = [...composeList];
+              idList.splice(idList?.indexOf(value), 1);
+              join({ ids: Number(value), idList })
             }
           }}>确定</Button>
       </div>

@@ -44,11 +44,3 @@ The scenes of the future universe can be abundant, all of which are realized by 
 ## react-pixels-metaverse
 All drawings are encapsulated and pulled out of the project, and any project party or website can be installed [react-pixels-metaverse](https://github.com/UniqueDAO/react-pixels-metaverse) 
 The npm package, and the introduction of UI components in its own project, passe in the user's address or identity data to generate his Pixel Metaverse identity pattern.
-
-## The current task
-1. Redesign the project structure and refocus the project, separating transaction and circulation functions such as NFT and economic models to ensure that the project is operating in compliance.
-2. Optimize the contract as a whole, add some fields, and remove some code or variables that don't need to be chained, and optimize the contract as a whole to ensure a significant reduction in gas consumption.
-
-## Next plan
-1. Optimize the overall project to be compatible with mobile web pages
-2. Optimize the decryption data algorithm to minimize gas consumption
