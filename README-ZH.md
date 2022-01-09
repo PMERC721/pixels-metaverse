@@ -38,7 +38,7 @@
 
 > 合约部署后需要设置721合约token的发行者，可自行编写代码调用接口，或者是安装 [contract-json-converted-html](https://github.com/xiangzhengfeng/truffle-contract-json-converted-html) npm包，将truffle生成的智能合约json文件直接转换成html文件，可以自动生成可视化的页面进行调用和查看数据。
 
-> 新版本暂未在其他网络部署合约，仅在自己本地部署了。故其他开发者 <strong>yarn start</strong> 后的合约地址是无效的，此时可以通过truffle部署在本地或者其他网络便可，部署成功后，将部署后的新合约地址复制到 <strong>converted.config.js</strong> 中即可。
+> 新版本暂未在其他网络部署合约，仅在自己本地部署了。故其他开发者 <strong>yarn start</strong> 后的合约地址是无效的，此时可以通过truffle部署在本地或者其他网络便可，部署成功后，将部署后的新合约地址新增到 <strong>converted.config.js</strong> 中即可。
 
 
 ## react-pixels-metaverse
