@@ -199,7 +199,7 @@ export const MaterialLabel = ({
     <>
       <Tooltip className="cursor-pointer text-sm" color="#29303d" title={toDetails ? `点击可查看详情` : ""}>
         <div
-          className={`p px-2 rounded-sm bg-white bg-opacity-10`}
+          className={`p px-2 rounded-sm bg-white bg-opacity-10 text-white text-opacity-90`}
           style={{ marginRight: toRight ? 0 : 10, marginLeft: toRight ? 10 : 0, cursor: toDetails ? "pointer" : "default" }}
           onClick={() => {
             toDetails && setIsModalVisible(true)

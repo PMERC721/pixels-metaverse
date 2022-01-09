@@ -7,7 +7,7 @@ contract PixelsMetavers {
     IPMT721 private PMT721;
     address private immutable _owner;
 
-    uint256 amount;
+    uint256 public amount;
 
     struct User {
         uint256 id;
@@ -46,26 +46,24 @@ contract PixelsMetavers {
     }
 
     event ComposeEvent(address indexed owner, uint256 indexed id);
-    event CollectEvent(address indexed owner, uint256 indexed id);
 
-    modifier MustExist(uint256 id) {
+    modifier Exist(uint256 id) {
         require(IPMT721(PMT721).exits(id), "error");
         _;
     }
 
-    modifier MustUser(address u) {
+    modifier IsUser(address u) {
         require(user[u].id > 0, "error");
         _;
     }
 
-    modifier MustOwner(address sender, uint256 id) {
+    modifier IsOwner(address sender, uint256 id) {
         Material memory m = material[id];
         require(sender == m.owner, "error");
         _;
     }
 
-    // Must Outermost Layer，No Compose.
-    modifier MustOutermostLayer(uint256 id) {
+    modifier NoCompose(uint256 id) {
         Material memory m = material[id];
         require(m.compose == 0, "error");
         _;
@@ -85,27 +83,27 @@ contract PixelsMetavers {
         string memory role,
         uint256 id,
         string memory other
-    ) public MustUser(msg.sender) {
+    ) public IsOwner(msg.sender, id) {
         user[msg.sender].other = other;
         user[msg.sender].role = role;
         user[msg.sender].avater = id;
     }
 
-    function resetUser(address to) public MustUser(msg.sender) {
+    /*     function resetUser(address to) public IsUser(msg.sender) {
         require(user[to].id == 0, "error");
         User memory u = user[msg.sender];
         user[to].id = u.id;
         user[to].role = u.role;
         user[msg.sender].id = 0;
         user[msg.sender].role = "";
-    }
+    } */
 
     function setConfigMaterial(
         uint256 id,
         string memory time,
         string memory position,
         string memory zIndex
-    ) public MustOwner(msg.sender, id) {
+    ) public IsOwner(msg.sender, id) {
         material[id].time = time;
         material[id].position = position;
         material[id].zIndex = zIndex;
@@ -128,7 +126,7 @@ contract PixelsMetavers {
         string memory data,
         string memory decode,
         uint256 num
-    ) public MustUser(msg.sender) {
+    ) public IsUser(msg.sender) {
         bytes32 d = keccak256(abi.encodePacked(data));
         require(d != keccak256(abi.encodePacked("")), "error");
 
@@ -147,7 +145,7 @@ contract PixelsMetavers {
         }
     }
 
-    function reMake(uint256 id, uint256 num) public MustOwner(msg.sender, id) {
+    function reMake(uint256 id, uint256 num) public IsOwner(msg.sender, id) {
         Material storage m = material[id];
         require(baseInfo[m.data].userId == user[msg.sender].id, "error");
         for (uint256 i; i < num; i++) {
@@ -161,14 +159,14 @@ contract PixelsMetavers {
         material[id] = Material(id, 0, "", "", "", _sender, data);
     }
 
-    function collect(uint256 id) public MustExist(id) {
+    function collect(uint256 id) public Exist(id) {
         Material memory m = material[id];
         require(m.owner != msg.sender, "error");
         collection[msg.sender].push(id);
-        emit CollectEvent(msg.sender, id);
     }
 
-    function cancelCollect(uint256 id, uint256 index) public MustExist(id) {
+    function cancelCollect(uint256 id, uint256 index) public Exist(id) {
+        require(user[msg.sender].avater != id, "error");
         uint256[] memory c = collection[msg.sender];
         require(index < c.length, "error");
         require(c[index] == id, "error");
@@ -193,7 +191,7 @@ contract PixelsMetavers {
         string memory category,
         string memory data,
         string memory decode
-    ) public MustUser(msg.sender) {
+    ) public IsUser(msg.sender) {
         uint256 len = ids.length;
         require(len > 1, "error");
         uint256 curID = IPMT721(PMT721).currentID();
@@ -218,8 +216,8 @@ contract PixelsMetavers {
 
     function cancelCompose(uint256 ids)
         public
-        MustOwner(msg.sender, ids)
-        MustOutermostLayer(ids)
+        IsOwner(msg.sender, ids)
+        NoCompose(ids)
     {
         uint256[] memory c = composes[ids];
         uint256 len = c.length;
@@ -233,8 +231,8 @@ contract PixelsMetavers {
 
     function addition(uint256 ids, uint256[] memory idList)
         public
-        MustOwner(msg.sender, ids)
-        MustOutermostLayer(ids)
+        IsOwner(msg.sender, ids)
+        NoCompose(ids)
     {
         uint256[] memory c = composes[ids];
         require(c.length > 1, "error");
@@ -249,7 +247,7 @@ contract PixelsMetavers {
         uint256 ids,
         uint256 id,
         address _sender
-    ) private MustOwner(_sender, ids) MustOwner(_sender, id) {
+    ) private IsOwner(_sender, ids) IsOwner(_sender, id) {
         Material memory m = material[id];
         require(_sender == m.owner, "error");
         require(m.compose == 0, "error");
@@ -260,7 +258,7 @@ contract PixelsMetavers {
         uint256 ids,
         uint256 id,
         uint256 index
-    ) public MustOwner(msg.sender, ids) MustOutermostLayer(ids) {
+    ) public IsOwner(msg.sender, ids) NoCompose(ids) {
         uint256[] memory c = composes[ids];
         uint256 len = c.length;
         require(len > index, "error");
@@ -278,7 +276,7 @@ contract PixelsMetavers {
         address from,
         address to,
         uint256 id
-    ) public MustOutermostLayer(id) {
+    ) public NoCompose(id) {
         require(msg.sender == address(PMT721), "error");
         if (to == address(0)) {
             delete material[id];

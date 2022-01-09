@@ -187,8 +187,8 @@ export const fetchCancelCompose = async (argContract: IArgContract, arg: { ids: 
   await argContract?.contract.methods.cancelCompose(arg.ids).send({ from: argContract?.address });
 }
 
-export const fetchSubjoin = async (argContract: IArgContract, arg: { ids: string, id: string }) => {
-  await argContract?.contract.methods.subjion(arg.ids, arg.id).send({ from: argContract?.address });
+export const fetchSubjoin = async (argContract: IArgContract, arg: { ids: string, idList: string[] }) => {
+  await argContract?.contract.methods.addition(arg.ids, arg.idList).send({ from: argContract?.address });
 }
 
 export const fetchSubtract = async (argContract: IArgContract, arg: { ids: string, id: string, index: number }) => {
