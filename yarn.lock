@@ -4782,10 +4782,10 @@ content-type@~1.0.4:
   resolved "https://registry.npmjs.org/content-type/-/content-type-1.0.4.tgz"
   integrity sha512-hIP3EEPs8tB9AT1L+NUqtwOAps4mk2Zob89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA==
 
-contract-json-converted-html@^0.0.12:
-  version "0.0.12"
-  resolved "https://registry.npmjs.org/contract-json-converted-html/-/contract-json-converted-html-0.0.12.tgz#c19aa219922be3d1ab4395d810a0f52702319702"
-  integrity sha512-TqnHJfG3Xhom7q23CZj12NA+BdUVdbyvcJPL/6WkZnaynfRwZXNtEvX6xselIJkkHHxd85JBb1Qu0aXX5VOhdw==
+contract-json-converted-html@^0.0.13:
+  version "0.0.13"
+  resolved "https://registry.npmjs.org/contract-json-converted-html/-/contract-json-converted-html-0.0.13.tgz#faf98eb7de75bc07897029f4054851780740acbb"
+  integrity sha512-7NEKk529xRLQPBaQc6Y5ic+TJOp/90TZmInc/B8uFGToeFuYT4b9WJ0tE1BZfjX9MJ04p11hKHyGhZmde+vbjw==
   dependencies:
     async "^3.2.0"
     fs "^0.0.1-security"
