@@ -38,8 +38,10 @@
 
 > 合约部署后需要设置721合约token的发行者，可自行编写代码调用接口，或者是安装 [contract-json-converted-html](https://github.com/xiangzhengfeng/truffle-contract-json-converted-html) npm包，将truffle生成的智能合约json文件直接转换成html文件，可以自动生成可视化的页面进行调用和查看数据。
 
+> 新版本暂未在其他网络部署合约，仅在自己本地部署了。故其他开发者 <strong>yarn start</strong> 后的合约地址是无效的，此时可以通过truffle部署在本地或者其他网络便可，部署成功后，将部署后的新合约地址复制到 <strong>converted.config.js</strong> 中即可。
+
 
 ## react-pixels-metaverse
 项目中将所有绘制进行了封装和抽离，任何项目方或网站都可以安装 [react-pixels-metaverse](https://github.com/UniqueDAO/react-pixels-metaverse) 该npm包，并在自己的项目中引入UI组件，传入用户地址或身份数据即可生成他的像素元宇宙身份图案。
 
-> 链接 [https://uniquedao.github.io](https://UniqueDAO.github.io/#/) 的版本是参赛时候的版本，新版改动较大，仅做参考。
+> 链接 [https://uniquedao.github.io](https://UniqueDAO.github.io/#/) 的版本是最初不合规版本，新版改动较大，仅做参考。
