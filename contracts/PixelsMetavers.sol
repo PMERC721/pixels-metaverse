@@ -98,7 +98,7 @@ contract PixelsMetavers {
         user[msg.sender].role = "";
     } */
 
-    function setConfigMaterial(
+    /* function setConfigMaterial(
         uint256 id,
         string memory time,
         string memory position,
@@ -107,7 +107,7 @@ contract PixelsMetavers {
         material[id].time = time;
         material[id].position = position;
         material[id].zIndex = zIndex;
-    }
+    } */
 
     function getMaterialLength() public view returns (uint256) {
         return IPMT721(PMT721).currentID();
