@@ -1,55 +1,66 @@
 import { PersonCenter } from "./components/PersonCenter";
 import { Avatar } from "./components/Avatar";
-import { Merchants } from "./components/Merchants";
-import { Dictionary, filter, isEmpty, map } from "lodash";
-import { useMemo } from "react";
+import { Collections } from "./components/Collections";
+import { Dictionary, isEmpty, map } from "lodash";
+import React, { useMemo } from "react";
 import { useUserInfo } from "../../components/UserProvider";
 import { useLocation, useParams } from "react-router-dom";
 import {
   PixelsMetaverseHandleImgProvider,
-  useConvertedPostion,
-  usePixelsMetaverseContract
+  useConvertedPostion
 } from "../../pixels-metaverse";
+import { useWeb3Info } from "../../hook/web3";
+import { MaterialItem } from "../../components/Card";
+
+export const useGetPersonData = () => {
+  const { address: addresss } = useWeb3Info()
+  const { search } = useLocation()
+  const address = search ? search.split("=")[1] : addresss
+  const { goodsList, userInfo, collectList } = useUserInfo();
+  return useMemo(() => {
+    const noCollectionList: MaterialItem[] = [], colectionList: MaterialItem[] = [], onwerList: MaterialItem[] = [];
+    let avater: MaterialItem | undefined;
+    map(goodsList, (item: MaterialItem) => {
+      const isCollect = collectList?.includes(item?.material?.id);
+      const isCurAddress = address === item?.material?.owner
+      if (item?.material?.id === userInfo?.avater) {
+        avater = item;
+      } else if (isCollect) {
+        colectionList.push(item);
+      } else if (isCurAddress) {
+        onwerList.push(item)
+      } else {
+        noCollectionList.push(item);
+      }
+    })
+    return { noCollectionList, avater, colectionList, onwerList }
+  }, [goodsList, collectList, userInfo])
+}
 
 export const PixelsMetaverse = () => {
-  const { accounts } = usePixelsMetaverseContract()
-  const { search } = useLocation()
-  const address = search ? search.split("=")[1] : accounts?.address
-  const { goodsList, userInfo, goodsId } = useUserInfo()
-  const convertedPostion = useConvertedPostion()
-  const a = useParams()
-  console.log(a)
+  const { address: addresss } = useWeb3Info();
+  const { search } = useLocation();
+  const address = search ? search.split("=")[1] : addresss;
+  const { userInfo } = useUserInfo();
+  const convertedPostion = useConvertedPostion();
+  const a = useParams();
+  const { noCollectionList, avater, colectionList, onwerList } = useGetPersonData();
 
-  /* 
-  
-    const set = useRequest(fetchSetPMT721, {
-      onSuccess: () => {
-        message.success("设置成功！")
-      }
-    }, [address])
-    useEffect(() => {
-      set()
-    }, []) */
-
-  const { noOutfitEdList, outfitEdList } = useMemo(() => {
-    if (isEmpty(goodsList)) return {
-      outfitEdList: [],
-      noOutfitEdList: [],
-    }
-    return {
-      outfitEdList: filter(goodsList, item => !item?.isSale && item?.isOutfit && item?.owner === address),
-      noOutfitEdList: filter(goodsList, item => !item?.isSale && !item?.isOutfit && item?.owner === address)
-    }
-  }, [goodsList, address, goodsId])
+  const avaterData = useMemo(() => {
+    avater?.composeData?.push(avater)
+    return avater
+  }, [avater?.composeData])
 
   const positions = useMemo(() => {
-    if (isEmpty(outfitEdList)) return "empty"
+    if (isEmpty(avaterData?.composeData)) return "empty"
     let data: Dictionary<any> = {}
-    map(outfitEdList, item => {
-      const positionsData = convertedPostion({
-        positions: item?.data
-      })
-      data = { ...data, ...positionsData }
+    map(avaterData?.composeData, item => {
+      if (item?.baseInfo?.data) {
+        const positionsData = convertedPostion({
+          positions: item?.baseInfo?.data
+        })
+        data = { ...data, ...positionsData }
+      }
     })
 
     const colors: Dictionary<number[]> = {}
@@ -64,11 +75,7 @@ export const PixelsMetaverse = () => {
       str += `${parseInt(i.slice(1), 16).toString(36)}-${position}-`
     }
     return `${str}${min}`
-  }, [outfitEdList])
-
-  if (isEmpty(userInfo)) {
-    return <div className="flex justify-center item-center text-white pt-60">请链接钱包</div>
-  }
+  }, [avaterData?.composeData])
 
   return (
     <PixelsMetaverseHandleImgProvider
@@ -82,9 +89,9 @@ export const PixelsMetaverse = () => {
       }}
     >
       <div className="flex justify-between bg-transparent flex-1 pt-20">
-        <PersonCenter outfitEdList={outfitEdList} noOutfitEdList={noOutfitEdList} />
+        <PersonCenter avater={avater} colectionList={colectionList} onwerList={onwerList} />
         <Avatar />
-        <Merchants />
+        <Collections noCollectionList={noCollectionList} />
       </div>
     </PixelsMetaverseHandleImgProvider>
   )

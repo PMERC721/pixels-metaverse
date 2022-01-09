@@ -1,19 +1,15 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-/* import 'antd/lib/input/style/index.css';
-import 'antd/lib/menu/style/index.css';
-import 'antd/lib/dropdown/style/index.css'; */
 import './theme.less';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 import "./i18n/config"; // 引用配置文件
 
 ReactDOM.render(
-  <BrowserRouter>
+  <HashRouter>
     <App />
-  </BrowserRouter>,
+  </HashRouter>,
   document.getElementById('root')
 );
 

@@ -110,13 +110,9 @@ export const warning = throttle((chainId: number | string) => {
 }, 5000)
 
 export function getChainData(chainId: number): IChainData {
-  const chainData = supportedChains.filter(
+  const chainData = supportedChains?.filter(
     (chain: any) => chain.chain_id === parseInt(String(chainId))
   )[0];
-
-  if (!chainData) {
-    warning(parseInt(String(chainId)))
-  }
 
   const API_KEY = process.env.REACT_APP_INFURA_ID;
 

@@ -4738,10 +4738,10 @@ content-type@~1.0.4:
   resolved "https://registry.npmjs.org/content-type/-/content-type-1.0.4.tgz"
   integrity sha512-hIP3EEPs8tB9AT1L+NUqtwOAps4mk2Zob89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA==
 
-contract-json-converted-html@^0.0.10:
-  version "0.0.10"
-  resolved "https://registry.npmjs.org/contract-json-converted-html/-/contract-json-converted-html-0.0.10.tgz#e95da46706edd7057437d4ff8961c251935d0e99"
-  integrity sha512-Dc7yh5x4qR28wycknmyOC0/O6o7DOoD8tdd0qs6wBiCVd7RrENQi4EEVWLl2ELuxiRN9x64Ka3z03MnQAfBjWg==
+contract-json-converted-html@^0.0.12:
+  version "0.0.12"
+  resolved "https://registry.npmjs.org/contract-json-converted-html/-/contract-json-converted-html-0.0.12.tgz#c19aa219922be3d1ab4395d810a0f52702319702"
+  integrity sha512-TqnHJfG3Xhom7q23CZj12NA+BdUVdbyvcJPL/6WkZnaynfRwZXNtEvX6xselIJkkHHxd85JBb1Qu0aXX5VOhdw==
   dependencies:
     async "^3.2.0"
     fs "^0.0.1-security"
