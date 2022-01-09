@@ -29,7 +29,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-i18next": "^11.12.0",
-    "react-pixels-metaverse": "^0.0.7",
+    "react-pixels-metaverse": "^0.0.8",
     "react-router-dom": "^5.2.1",
     "react-scripts": "4.0.3",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",

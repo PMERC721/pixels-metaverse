@@ -12527,10 +12527,10 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.npmjs.org/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-pixels-metaverse@^0.0.7:
-  version "0.0.7"
-  resolved "https://registry.npmjs.org/react-pixels-metaverse/-/react-pixels-metaverse-0.0.7.tgz#2fc1937905172ca60a8c94077d7e7c8608f151e3"
-  integrity sha512-iW2vZuCGqAMyGfkZzBgyZrrDcAmICsVQe0SB/c2qaLwkhX1JcIv3YrO9zqOJ/wUmJ0p4JR8NVfGQSECfzjvQKA==
+react-pixels-metaverse@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.npmjs.org/react-pixels-metaverse/-/react-pixels-metaverse-0.0.8.tgz#73ec6dae0df8992ff819fc7fb01373d81ac93099"
+  integrity sha512-f4mGktDv7S+vCNbWC6JVltI8XiNDHfRBdn8uZlZQPqP/QKObfm6NPQ6uIIp8hSaO1MDAKuv4v1vSo9vnkYau9g==
   dependencies:
     "@types/lodash" "^4.14.173"
     "@typescript-eslint/parser" "^4.32.0"
