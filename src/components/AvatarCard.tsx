@@ -1,95 +1,61 @@
-import message from "antd/lib/message";
-import { cloneDeep, find } from "lodash";
+import { cloneDeep, divide, find, isEmpty, map } from "lodash";
 import {
   PixelsMetaverseImgByPositionData,
-  usePixelsMetaverseContract,
   usePixelsMetaverseHandleImg
 } from "../pixels-metaverse";
 import { useLocation } from "react-router-dom";
 import { useUserInfo } from "./UserProvider";
-import { fetchBuyGoods, fetchOutfit, useRequest } from "../helpers/api";
 import { categoryData } from "../pages/produced/components/Submit";
+import { useWeb3Info } from "../hook/web3";
+import { useMemo } from "react";
+import { Collection, Composes, MaterialItem, MaterialLabel } from "./Card";
 
-export const AvatarCard = ({ item, type }: {
-  item: any, type: string
+export const AvatarCard = ({ item, star }: {
+  item: MaterialItem, star?: boolean
 }) => {
-  const { accounts } = usePixelsMetaverseContract()
+  const { address: addresss } = useWeb3Info()
   const { setSelectList } = usePixelsMetaverseHandleImg()
   const { search } = useLocation()
-  const address = search ? search.split("=")[1] : accounts?.address
-  const { setGoodsList } = useUserInfo()
+  const address = search ? search.split("=")[1] : addresss
+  const { goodsListObj, userInfo } = useUserInfo()
 
-  const outfit = useRequest(fetchOutfit, {
-    onSuccess: () => {
-      message.success("设置成功！")
-    }
-  }, [address])
-
-
-  const buyGoods = useRequest(fetchBuyGoods, {
-    onSuccess: () => {
-      message.success("购买成功！")
-    }
-  }, [address])
-  const { userInfo } = useUserInfo()
+  const data = useMemo(() => {
+    if (isEmpty(item) || isEmpty(goodsListObj)) return []
+    if (isEmpty(item?.composes)) return [({ ...item, data: item?.baseInfo?.data } as any)]
+    return map(item?.composeData, it => ({ ...it, data: it?.baseInfo?.data } as any))
+  }, [item, goodsListObj])
 
   return (
     <div
-      key={item?.id + accounts?.newworkId}
+      key={item?.material?.id}
       className="mt-2 item-avatar p-2 flex justify-between border-gray-500 border-b"
     >
       <PixelsMetaverseImgByPositionData
-        data={{ ...item, positions: item.data, goodsData: [item] }}
+        data={{ ...item, positions: item?.baseInfo?.data, goodsData: data }}
         size={96}
-        style={{ borderRadius: 4, background: item?.bgColor || userInfo?.user?.bgColor || "#e1e1e11a", cursor: 'pointer', boxShadow: "0px 0px 5px rgba(225,225,225,0.3)" }}
+        style={{ background: userInfo?.user?.bgColor || "#e1e1e11a", cursor: 'pointer', boxShadow: "0px 0px 5px rgba(225,225,225,0.3)" }}
         onClick={() => {
-          setSelectList((pre: any) => {
+          /* setSelectList((pre: any) => {
             const list = cloneDeep(pre) as string[]
-            const index = list.indexOf(item?.data)
+            const index = list.indexOf(item?.baseInfo?.data)
             if (index >= 0) {
               list.splice(index, 1)
             } else {
-              list.push(item.data)
+              list.push(item?.baseInfo?.data)
             }
             return list
-          })
+          }) */
         }}
       />
       <div className="flex justify-end flex-1">
         <div className="ml-2 flex flex-col justify-between items-end">
-          <div className="text-right" style={{ height: 40, textOverflow: "ellipsis", overflow: "hidden" }}>{item?.name}</div>
-          <div className="flex justify-between items-center mt-2">
-            <div className="p px-2 rounded-sm mr-2" style={{ background: "rgba(225, 225, 225, 0.1)" }}>ID: {item?.id}</div>
-            <div className="p px-2 rounded-sm" style={{ background: "rgba(225, 225, 225, 0.1)" }}>{(find(categoryData, ite => ite?.value === item?.category) || {})?.label}</div>
+          <div className="text-right" style={{ height: 40, textOverflow: "ellipsis", overflow: "hidden" }}>{item?.baseInfo?.name || "这什么鬼"}</div>
+          {!star && <Composes item={item} />}
+          <div className="flex justify-end items-center">
+            <MaterialLabel toRight toDetails>{item?.material?.id}</MaterialLabel>
+            <MaterialLabel toRight>{(find(categoryData, ite => ite?.value === item?.baseInfo?.category) || {})?.label}</MaterialLabel>
           </div>
-          {accounts?.address === item?.owner && type === "assets" && <div className="p px-4 bg-red-500 rounded-sm cursor-pointer mt-2" onClick={() => {
-            outfit({
-              value: {
-                id: Number(item?.id),
-                index: item?.index,
-                isOutfit: !item?.isOutfit,
-              },
-              setGoodsList
-            })
-          }}>{item?.isOutfit ? "移除" : "配置"}</div>}
-
-          {(type === "homeBuyGoods" || type === "buyGoods") && <div className="flex justify-between items-center mt-2">
-            <div className="p px-2 rounded-sm ml-2 mr-2" style={{ background: "rgba(225, 225, 225, 0.1)" }}>{Number(item?.price) / (10 ** 18)}ETH</div>
-            <button className="p px-4 bg-red-500 rounded-sm cursor-pointer"
-              style={{ background: item?.isSale ? "rgba(239, 68, 68)" : "rgba(225,225,225, 0.1)" }}
-              onClick={() => {
-                if (userInfo?.account?.includes("0000000000000000000000000")) {
-                  message.warning("你还不是平台用户，请激活自己的账户！")
-                  return
-                }
-                buyGoods({
-                  id: Number(item?.id),
-                  price: Number(item?.price),
-                  setGoodsList
-                })
-              }}
-              disabled={!item?.isSale}>{item?.isSale ? "购买" : "已出售"}</button>
-          </div>}
+          {star && <Collection item={item} />}
         </div>
       </div>
     </div>

@@ -1,14 +1,17 @@
 import { isEmpty, map } from "lodash";
 import { useHistory, useLocation } from "react-router-dom";
 import { AvatarCard } from "../../../components/AvatarCard";
-import { NoData } from "../../../components/NoData";
+import { MaterialItem } from "../../../components/Card";
+import { DataStateBox } from "../../../components/DataStateBox";
 
 export const PersonCenter = ({
-  outfitEdList,
-  noOutfitEdList
+  avater,
+  colectionList,
+  onwerList
 }: {
-  noOutfitEdList: any[],
-  outfitEdList: any[]
+  avater?: MaterialItem;
+  colectionList: MaterialItem[];
+  onwerList: MaterialItem[]
 }) => {
   const history = useHistory()
   const { search } = useLocation()
@@ -23,20 +26,24 @@ export const PersonCenter = ({
           onClick={() => { history.push(`/person-center${address ? "?address=" + address : ""}`) }}
         >查看更多</div>
       </div>
-      {(!isEmpty(outfitEdList) || !isEmpty(noOutfitEdList))
-        ? <div
+      <DataStateBox data={[...colectionList, ...onwerList]}>
+        <div
           className="overflow-y-scroll"
           style={{ height: "calc(100% - 30px)" }}>
-          <div className="mt-2 pb-4">
-            <div className="">已使用</div>
-            {map(outfitEdList, item => <AvatarCard key={item?.id} item={item} type="assets" />)}
-          </div>
-          <div className="mt-4">
-            <div className="">未使用</div>
-            {map(noOutfitEdList, item => <AvatarCard key={item?.id} item={item} type="assets" />)}
-          </div>
+          {avater && <div className="mt-2 pb-4">
+            <div className="">Avater</div>
+            {map([avater], item => <AvatarCard key={item?.material.id} item={item} />)}
+          </div>}
+          {!isEmpty(onwerList) && <div className="mt-4">
+            <div className="">Your Material</div>
+            {map(onwerList, item => <AvatarCard key={item?.material?.id} item={item} />)}
+          </div>}
+          {!isEmpty(colectionList) && <div className="mt-4">
+            <div className="">Your Star</div>
+            {map(colectionList, item => <AvatarCard key={item?.material?.id} item={item} star/>)}
+          </div>}
         </div>
-        : <NoData />}
+      </DataStateBox>
     </div>
   );
 };

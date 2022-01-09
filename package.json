@@ -43,8 +43,10 @@
     "build": "craco build",
     "test": "craco test",
     "deploy": "bash deploy.sh",
-    "push-npm": "cd src/react-pixels-metaverse && git add . && git commit -m '人生何曾驻旧足，前端处处是新旅' && git push",
-    "converted": "truffle-contract-json-converted-html"
+    "push:npm": "cd src/react-pixels-metaverse && git add . && git commit -m '人生何曾驻旧足，前端处处是新旅' && git push",
+    "converted": "truffle-contract-json-converted-html",
+    "html": "yarn converted && cd out && http-server",
+    "push:dev": "git push origin dev"
   },
   "eslintConfig": {
     "extends": [
@@ -67,7 +69,7 @@
   "devDependencies": {
     "autoprefixer": "^9",
     "babel-plugin-import": "^1.13.3",
-    "contract-json-converted-html": "^0.0.10",
+    "contract-json-converted-html": "^0.0.12",
     "craco-less": "^1.20.0",
     "craco-plugin-react-hot-reload": "^0.1.0",
     "eosjs": "^22.1.0",

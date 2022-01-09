@@ -20,18 +20,23 @@ contract PMT721 is ERC721 {
     }
 
     constructor() ERC721("PixelsMetavers", "PMT") {
-        _owner = msg.sender;
+        _owner = _msgSender();
     }
 
-    function mint() public MustMinter(msg.sender) {
-        _mint(msg.sender, ++_tokenId);
+    function mint(address to) public MustMinter(_msgSender()) {
+        _mint(to, ++_tokenId);
+        _approve(_minter, _tokenId);
+    }
+
+    function burn(uint256 id) public MustMinter(_msgSender()) {
+        _burn(id);
     }
 
     function exits(uint256 id) public view returns (bool) {
         return _exists(id);
     }
 
-    function setMinter(address minter) public MustOwner(msg.sender) {
+    function setMinter(address minter) public MustOwner(_msgSender()) {
         _minter = minter;
     }
 
@@ -48,6 +53,6 @@ contract PMT721 is ERC721 {
         address to,
         uint256 tokenId
     ) internal virtual override {
-        IPixelsMetavers(_minter).transfer(from, to, tokenId);
+        IPixelsMetavers(_minter).handleTransfer(from, to, tokenId);
     }
 }

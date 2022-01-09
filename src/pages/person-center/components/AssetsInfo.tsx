@@ -1,41 +1,30 @@
-import React from "react"
-import { filter, isEmpty, map } from "lodash";
-import { useLocation } from "react-router";
-import { useUserInfo } from "../../../components/UserProvider";
-import { usePixelsMetaverseContract } from "../../../pixels-metaverse";
+import { isEmpty, map } from "lodash";
 import { AvatarCard } from "../../../components/AvatarCard";
-import { NoData } from "../../../components/NoData";
+import { DataStateBox } from "../../../components/DataStateBox";
+import { useGetPersonData } from "../../play";
 
-export const AssetsInfo = ({ outfitEdList, noOutfitEdList }: {
-  noOutfitEdList: any[], outfitEdList: any[]
-}) => {
-  const { accounts } = usePixelsMetaverseContract()
-  const { search } = useLocation()
-  const { goodsList } = useUserInfo()
-  const address = search ? search.split("=")[1] : accounts.address
-  const shopGoods = React.useMemo(() => filter(goodsList, item => item?.owner === address && item?.isSale), [goodsList])
+export const AssetsInfo = () => {
+  const { colectionList, onwerList, avater } = useGetPersonData()
 
   return (
-    <>
-      { (!isEmpty(outfitEdList) || !isEmpty(noOutfitEdList) || !isEmpty(shopGoods))
-        ? <div className="flex-1 flex justify-between">
-          {(!isEmpty(outfitEdList) || !isEmpty(noOutfitEdList)) && <div className="overflow-y-scroll flex-1 pr-4 border-r mr-4" style={{ borderColor: "rgba(225,225,225, 0.3" }}>
-            {!isEmpty(outfitEdList) && <div className="pb-8">
-              <div className="">已使用</div>
-              {map(outfitEdList, item => <AvatarCard key={item?.id} item={item} type="assets" />)}
-            </div>}
-            {!isEmpty(noOutfitEdList) && <div>
-              <div className="">未使用</div>
-              {map(noOutfitEdList, item => <AvatarCard key={item?.id} item={item} type="assets" />)}
-            </div>}
+    <DataStateBox data={[...onwerList, ...colectionList ]}>
+      <div className="flex-1 flex justify-between">
+        {!isEmpty(onwerList) && <div className="overflow-y-scroll flex-1 pr-4 border-r mr-4"
+          style={{ borderColor: onwerList?.length > 0 ? "rgba(225,225,225, 0.3" : "transparent", height: "calc(100vh - 170px)" }}>
+          {avater && <div className="pb-8">
+            <div className="">Avater</div>
+            {map([avater], item => <AvatarCard key={item?.material.id} item={item} />)}
           </div>}
-          {!isEmpty(shopGoods) && <div className="flex-1 overflow-y-scroll">
-            <div>
-              <div className="">店铺商品</div>
-              {map(shopGoods, item => <AvatarCard key={item?.id} item={item} type="buyGoods" />)}
-            </div>
-          </div>}
-        </div> : <NoData />}
-    </>
+          <div className="pb-8">
+            <div>Your Material</div>
+            {map(onwerList, item => <AvatarCard key={item?.material?.id} item={item} />)}
+          </div>
+        </div>}
+        {!isEmpty(colectionList) && <div className="flex-1 overflow-y-scroll" style={{ height: "calc(100vh - 170px)" }}>
+          <div>Your Star</div>
+          {map(colectionList, item => <AvatarCard key={item?.material?.id} item={item} star />)}
+        </div>}
+      </div>
+    </DataStateBox>
   )
 }
