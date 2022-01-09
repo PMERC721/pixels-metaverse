@@ -8,7 +8,7 @@ import { useWeb3Info } from "./web3";
 import { Contract } from 'web3-eth-contract';
 import { MaterialItem } from "../components/Card";
 
-export interface IArgContract { contract: Contract, accounts?: any, address?: any }
+export interface IArgContract { contract: any, accounts?: any, address?: any }
 
 export interface IHandle {
   onSuccess?: () => void,
