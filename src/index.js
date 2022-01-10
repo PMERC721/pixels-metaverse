@@ -4,7 +4,7 @@ import './theme.less';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { HashRouter } from "react-router-dom";
-import "./i18n/config"; // 引用配置文件
+import "./i18n/config";
 
 ReactDOM.render(
   <HashRouter>
