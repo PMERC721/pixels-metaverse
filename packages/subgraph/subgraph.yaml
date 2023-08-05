@@ -1,0 +1,33 @@
+specVersion: 0.0.4
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: PixelsMetaverse
+    network: kovan
+    source:
+      address: "0xe9b1Fb1B42C59aC6e660dAeCDe374505a1F0E75A"
+      abi: PixelsMetaverse
+      startBlock: 30684149
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - AvaterEvent
+        - MaterialEvent
+        - ComposeEvent
+        - ConfigEvent
+      abis:
+        - name: PixelsMetaverse
+          file: ./abis/localhost_PixelsMetaverse.json
+      eventHandlers:
+        - event: AvaterEvent(address,uint256)
+          handler: handleAvaterEvent
+        - event: MaterialEvent(address,uint256,uint256,uint256,string,bool)
+          handler: handleMaterialEvent
+        - event: ComposeEvent(uint256,uint256,uint256[],bool)
+          handler: handleComposeEvent
+        - event: ConfigEvent(uint256,string,string,string,string,string,uint256)
+          handler: handleConfigEvent
+      file: ./src/mapping.ts

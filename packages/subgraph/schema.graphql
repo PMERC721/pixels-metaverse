@@ -1,0 +1,25 @@
+type Avater @entity {
+  id: ID!
+  avater: Material!
+}
+
+type Material @entity {
+  id: ID!
+  owner: Bytes!
+  rawData: String
+  remake: Boolean
+  config: TConfig!
+  composed: BigInt
+  composes: [BigInt!]!
+  createID: BigInt
+}
+
+type TConfig @entity {
+  id: ID!
+  name: String!
+  time: String
+  position: String
+  zIndex: String
+  decode: String
+  sort: BigInt
+}

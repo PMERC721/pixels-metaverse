@@ -1,0 +1,17 @@
+{
+  "name": "pixels-metaverse",
+  "version": "1.0.0",
+  "main": "main.js",
+  "author": {
+    "name": "PixelsMetaverse"
+  },
+  "homepage": ".",
+  "scripts": {
+    "pack": "electron-packager . PixelsMetaverse --win --out=release --arch=x64 --app-version=1.0.0 --electron-version=1.8.4 --overwrite --icon=./favicon.ico"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^10.1.3",
+    "electron-packager": "^15.1.0"
+  }
+}
